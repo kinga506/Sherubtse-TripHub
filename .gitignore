@@ -7,3 +7,4 @@ coverage/
 private_uploads/
 *.log
 .DS_Store
+.env.test
