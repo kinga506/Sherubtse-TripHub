@@ -1,0 +1,4 @@
+<%- include('../partials/header') %>
+<header class="page-heading"><h1>DSA — Final Namelist Review</h1><p class="lead">This is a second approval, separate from approval of the trip proposal.</p></header>
+<section class="surface-card section-block"><% if(!items.length){ %><p>There are no pending final participant packages.</p><% } %><% items.forEach(item=>{ %><p><a href="/workspace/dsa/final-namelists/<%= item.trip_id %>"><%= item.title %></a> — version <%= item.submission_number %> submitted by <%= item.submitted_by_name %></p><% }); %></section>
+<%- include('../partials/footer') %>

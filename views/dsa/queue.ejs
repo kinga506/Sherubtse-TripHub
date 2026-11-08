@@ -1,0 +1,6 @@
+<%- include('../partials/header') %>
+<div class="page-heading"><p class="eyebrow">Dean of Student Affairs</p><h1>Trip Proposal Reviews</h1><p class="lead">Only DSA can approve trip proposals and assign Student Coordinators.</p></div>
+<section class="surface-card section-block"><h2>Awaiting review</h2>
+<% if(!trips.length){%><p>No proposals currently require review.</p><%}%>
+<% trips.forEach(function(t){%><article class="section-block"><h3><a href="/workspace/dsa/proposals/<%= t.id %>"><%= t.title %></a></h3><p>Submitted by <%= t.proposer_name %> · Version <%= t.submission_number %> · <%= t.approval_status %></p></article><%});%>
+</section><%- include('../partials/footer') %>

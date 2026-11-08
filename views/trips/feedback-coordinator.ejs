@@ -1,0 +1,6 @@
+<%- include('../partials/header') %>
+<header class="page-heading"><p class="eyebrow">Trip Coordinator history</p><h1>Feedback: <%= trip.title %></h1><p class="lead">Feedback belongs to this trip and is available to its assigned and former Coordinators.</p></header>
+<section class="surface-card section-block"><h2>Feedback summary</h2><p><strong><%= count %></strong> submitted review(s)</p><p>Average rating: <strong><%= average===null?'No reviews yet':average.toFixed(1)+' / 5' %></strong></p>
+<% if(!entries.length){ %><p>No feedback has been submitted for this trip yet.</p><% } %>
+<% entries.forEach(entry=>{ %><article class="section-block"><h3><%= entry.studentName %> — <%= entry.rating %> / 5</h3><p><%= entry.comment %></p><p class="helper-text"><%= new Date(entry.createdAt).toLocaleDateString('en-GB') %></p></article><% }) %>
+</section><%- include('../partials/footer') %>

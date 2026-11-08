@@ -1,0 +1,18 @@
+const router=require('express').Router();
+const auth=require('../middleware/authorization');
+const c=require('../controllers/siteAdminController');
+router.get('/about',c.help);
+router.get('/managed-photos/:photoId',c.servePhoto);
+router.get('/help',c.help);
+router.get('/faq',c.help);
+router.get('/safety',c.help);
+router.get('/photo-credits',c.help);
+router.get('/workspace/dsa/history',auth.requireDsa,c.history);
+router.get('/workspace/superadmin',auth.requireSuperadmin,c.overview);
+router.get('/workspace/superadmin/manage/:section',auth.requireSuperadmin,c.manage);
+router.post('/workspace/superadmin/manage/:section',auth.requireSuperadmin,c.create);
+router.post('/workspace/superadmin/manage/:section/:id',auth.requireSuperadmin,c.save);
+router.post('/workspace/superadmin/destinations/new',auth.requireSuperadmin,c.destinationCreate);
+router.post('/workspace/superadmin/photos/new',auth.requireSuperadmin,c.photoUpload);
+router.post('/workspace/superadmin/create-dsa',auth.requireSuperadmin,c.createDsa);
+module.exports=router;

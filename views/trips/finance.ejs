@@ -1,0 +1,47 @@
+<%- include('../partials/header') %>
+<header class="page-heading"><p class="eyebrow">Private trip finances</p><h1>Finances: <%= trip.title %></h1>
+<p class="lead">Actual expenses and manually recorded student contributions. No online payments are processed.</p></header>
+<% if(!canManage){ %><div class="form-message">You have read-only access to these financial records.</div><% } %>
+<% if(successMessage){ %><div role="status" class="form-message"><%= successMessage %></div><% } %>
+<section class="surface-card section-block"><h2>Estimated cost per student</h2>
+<p><strong><%= money(trip.estimated_cost) %></strong></p><p class="helper-text">This is the proposal estimate, not an actual expense. Balances below compare each student's recorded contributions to this estimate; they do not establish a payment obligation.</p></section>
+<% if(isCoordinator){ %>
+<section class="surface-card section-block"><h2>Trip financial summary</h2><dl class="detail-list">
+<div><dt>Actual expenses</dt><dd><%= money(totals.total_expenses) %></dd></div>
+<div><dt>Recorded contributions</dt><dd><%= money(totals.total_contributions) %></dd></div>
+<div><dt>Difference (contributions minus expenses)</dt><dd><%= money(Number(totals.total_contributions)-Number(totals.total_expenses)) %></dd></div>
+</dl><p class="helper-text">A positive difference is not proof of money in a bank account. These figures reflect manually entered records only.</p></section>
+<section class="surface-card section-block"><h2>Approved participants and estimated balances</h2>
+<% if(!participants.length){ %><p>No approved participants yet.</p><% } else { %>
+<div class="table-scroll"><table><thead><tr><th>Student</th><th>Recorded contributions</th><th>Estimated balance due</th><th>Excess recorded</th></tr></thead><tbody>
+<% participants.forEach(p=>{ %><tr><td><%= p.name %></td><td><%= money(p.contributed) %></td><td><%= money(p.due) %></td><td><%= money(p.excess) %></td></tr><% }) %>
+</tbody></table></div><% } %></section>
+<section class="surface-card section-block"><h2>Actual expenses</h2>
+<% if(!expenses.length){ %><p>No actual expenses have been recorded.</p><% } %>
+<% expenses.forEach(e=>{ %><details class="section-block"><summary><strong><%= money(e.amount) %></strong> — <%= e.category %>, <%= new Date(e.spent_on).toISOString().slice(0,10) %><% if(e.description){ %> — <%= e.description %><% } %></summary>
+<% if(canManage){ %><form method="post" action="/workspace/trips/<%= trip.id %>/finance/expenses/<%= e.id %>" class="stack-form"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+<label>Category <select name="category" required><% CATEGORIES.forEach(cat=>{ %><option value="<%= cat %>" <%= cat===e.category?'selected':'' %>><%= cat %></option><% }) %></select></label>
+<label>Description <input name="description" maxlength="500" value="<%= e.description||'' %>"></label><label>Amount (Nu.) <input name="amount" type="number" min="0" step="0.01" value="<%= e.amount %>" required></label>
+<label>Date spent <input name="spent_on" type="date" value="<%= new Date(e.spent_on).toISOString().slice(0,10) %>" required></label><button class="btn btn-secondary" type="submit">Save expense changes</button></form><% } %></details><% }) %>
+<% if(canManage){ %><h3>Add an actual expense</h3><form method="post" action="/workspace/trips/<%= trip.id %>/finance/expenses" class="stack-form"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+<label>Category <select name="category" required><% CATEGORIES.forEach(cat=>{ %><option value="<%= cat %>"><%= cat %></option><% }) %></select></label>
+<label>Description <input name="description" maxlength="500"></label><label>Amount (Nu.) <input name="amount" type="number" min="0" step="0.01" required></label>
+<label>Date spent <input name="spent_on" type="date" required></label><button class="btn btn-primary" type="submit">Record expense</button></form><% } %></section>
+<section class="surface-card section-block"><h2>Student contribution records</h2>
+<% if(!contributions.length){ %><p>No student contributions have been recorded.</p><% } %>
+<% contributions.forEach(c=>{ %><details class="section-block"><summary><strong><%= c.student_name %></strong> — <%= money(c.amount) %>, <%= new Date(c.paid_on).toISOString().slice(0,10) %></summary>
+<% if(canManage){ %><form method="post" action="/workspace/trips/<%= trip.id %>/finance/contributions/<%= c.id %>" class="stack-form"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="user_id" value="<%= c.user_id %>">
+<label>Amount (Nu.) <input name="amount" type="number" min="0" step="0.01" value="<%= c.amount %>" required></label><label>Date recorded <input name="paid_on" type="date" value="<%= new Date(c.paid_on).toISOString().slice(0,10) %>" required></label>
+<label>Note <input name="note" maxlength="500" value="<%= c.note||'' %>"></label><button class="btn btn-secondary" type="submit">Save contribution changes</button></form><% } %></details><% }) %>
+<% if(canManage){ %><h3>Add a contribution</h3><% if(!participants.length){ %><p>Approve a participant before recording their contribution.</p><% } else { %>
+<form method="post" action="/workspace/trips/<%= trip.id %>/finance/contributions" class="stack-form"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+<label>Approved student <select name="user_id" required><% participants.forEach(p=>{ %><option value="<%= p.user_id %>"><%= p.name %></option><% }) %></select></label>
+<label>Amount (Nu.) <input name="amount" type="number" min="0" step="0.01" required></label><label>Date recorded <input name="paid_on" type="date" required></label>
+<label>Note <input name="note" maxlength="500"></label><button class="btn btn-primary" type="submit">Record contribution</button></form><% } %><% } %></section>
+<% } else if(isParticipant){ %>
+<section class="surface-card section-block"><h2>My contributions</h2>
+<dl class="detail-list"><div><dt>Total recorded for me</dt><dd><%= money(ownTotal) %></dd></div><div><dt>Estimated balance due</dt><dd><%= money(ownBalance.due) %></dd></div><div><dt>Excess recorded</dt><dd><%= money(ownBalance.excess) %></dd></div></dl>
+<% if(!contributions.length){ %><p>No contributions have been recorded for your account.</p><% } %>
+<ul><% contributions.forEach(c=>{ %><li><%= money(c.amount) %> · <%= new Date(c.paid_on).toISOString().slice(0,10) %><% if(c.note){ %> · <%= c.note %><% } %></li><% }) %></ul>
+<p class="helper-text">If any record is incorrect, contact the assigned Trip Coordinator. No money is collected through this website.</p></section><% } %>
+<%- include('../partials/footer') %>

@@ -1,0 +1,29 @@
+<%- include('../partials/header') %>
+<div class="page-heading"><p class="eyebrow">Student workspace · <%= approvalStatus.replaceAll('_',' ') %></p><h1><%= tripId?'Edit your proposal':'Organise a Trip' %></h1><p class="lead">Save a private draft and preview all details. Save changes and review before submission to DSA. Material changes to an approved trip require renewed approval.</p></div>
+<% if(errors.length){%><div class="form-message form-error" role="alert"><strong>Check these fields:</strong><ul><%errors.forEach(function(e){%><li><%= e %></li><%});%></ul></div><%}%>
+<form method="post" action="<%= typeof actionOverride !== 'undefined' && actionOverride ? actionOverride : (tripId?'/workspace/proposals/'+tripId+'/edit':'/workspace/proposals/new') %>" class="proposal-form" data-proposal-form>
+<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+<input type="hidden" name="itinerary" id="itinerary-json" value="<%= JSON.stringify(itinerary) %>">
+<input type="hidden" name="costs" id="costs-json" value="<%= JSON.stringify(costs) %>">
+<section class="surface-card section-block"><h2>1. Trip information</h2><div class="proposal-grid">
+<label>Trip title <input name="title" maxlength="160" required value="<%= values.title||'' %>" placeholder="E.g. Eastern Bhutan nature visit"></label>
+<label>Destination <select name="destination_id" required><option value="">Choose a destination</option><% destinations.forEach(function(d){%><option value="<%= d.id %>" <%= String(values.destination_id||'')===String(d.id)?'selected':'' %>><%= d.name %> — <%= d.dzongkhag %></option><%});%></select></label>
+<label>Purpose <textarea name="purpose" maxlength="2000" rows="3"><%= values.purpose||'' %></textarea></label>
+<label>Description <textarea name="description" maxlength="4000" rows="3"><%= values.description||'' %></textarea></label>
+<label>Start date <input name="start_date" type="date" required value="<%= values.start_date||'' %>"></label>
+<label>End date <input name="end_date" type="date" required value="<%= values.end_date||'' %>"></label>
+<label>Meeting point <input name="meeting_point" maxlength="250" value="<%= values.meeting_point||'' %>"></label>
+<label>Meeting time <input name="meeting_time" type="time" value="<%= values.meeting_time||'' %>"></label>
+<label>Transport arrangements <textarea name="transport_information" maxlength="2000" rows="3"><%= values.transport_information||'' %></textarea></label>
+<label>Maximum participants <input name="max_participants" type="number" min="1" max="1000" required value="<%= values.max_participants||'' %>"></label>
+<label>Registration deadline <input name="registration_deadline" type="datetime-local" value="<%= values.registration_deadline||'' %>"></label>
+<label>Estimated total cost per student (Nu.) <input name="estimated_cost" type="number" min="0" max="10000000" step="0.01" required value="<%= values.estimated_cost??'' %>"></label>
+</div></section>
+<section class="surface-card section-block"><h2>2. Estimated cost breakdown</h2><p class="text-muted">Explain the cost categories. The breakdown should equal the stated per-student estimate, or include an explanation of the difference.</p><div id="cost-rows" data-initial='<%- JSON.stringify(costs).replaceAll("'", "&#39;") %>'></div><button type="button" class="btn btn-secondary" data-add-cost>Add cost item</button><label class="proposal-wide">Budget note or explanation of differences <textarea name="estimated_budget_note" maxlength="1500" rows="2"><%= values.estimated_budget_note||'' %></textarea></label></section>
+<section class="surface-card section-block"><h2>3. Proposed itinerary</h2><p class="text-muted">Include at least one scheduled activity for each day of the trip before submission.</p><div id="itinerary-rows" data-initial='<%- JSON.stringify(itinerary).replaceAll("'", "&#39;") %>'></div><button type="button" class="btn btn-secondary" data-add-day>Add activity</button></section>
+<section class="surface-card section-block"><h2>4. Safety and emergency information</h2><div class="proposal-grid"><label>Safety information<textarea name="safety_information" maxlength="4000" rows="4"><%= values.safety_information||'' %></textarea></label><label>Emergency contact name<input name="emergency_contact_name" maxlength="160" value="<%= values.emergency_contact_name||'' %>"></label><label>Emergency contact phone<input name="emergency_contact_phone" maxlength="80" value="<%= values.emergency_contact_phone||'' %>"></label></div></section>
+<div class="surface-card section-block"><button class="btn btn-primary" type="submit"><%= typeof actionOverride !== 'undefined' && actionOverride ? 'Submit material revision to DSA' : 'Save and preview draft' %></button> 
+<a class="text-link" href="/workspace/my-trips#my-proposals">Cancel</a><p class="text-muted">Saving does not send this proposal to DSA or assign you Coordinator permissions.</p></div>
+</form>
+<script defer src="/js/proposal-editor.js"></script>
+<%- include('../partials/footer') %>

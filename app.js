@@ -1,0 +1,82 @@
+const express=require('express');
+const path=require('node:path');
+const session=require('express-session');
+const PgSession=require('connect-pg-simple')(session);
+const {getConfig}=require('./config/env');
+const {getDb}=require('./config/db');
+const {ensureCsrf,loadUser}=require('./middleware/security');
+const indexRoutes=require('./routes/index');
+const apiRoutes=require('./routes/api');
+const devRoutes=require('./routes/dev');
+const authRoutes=require('./routes/auth');
+const {account}=require('./controllers/authController');
+const {requireAuth}=require('./middleware/authorization');
+const workspaceRoutes=require('./routes/workspaces');
+const proposalRoutes=require('./routes/proposals');
+const reviewRoutes=require('./routes/review');
+const {parseProposalUpload}=require('./middleware/proposalUpload');
+const {parseConsentUpload}=require('./middleware/consentUpload');
+const {parseConsentCorrection}=require('./middleware/consentCorrectionUpload');
+const joinReviewRoutes=require('./routes/joinReview');
+const finalNamelistRoutes=require('./routes/finalNamelist');
+const tripUpdatesRoutes=require('./routes/tripUpdates');
+const studentTravelFormRoutes=require('./routes/studentTravelForm');
+const packingRoutes=require('./routes/packing');
+const financeRoutes=require('./routes/finance');
+const attendanceRoutes=require('./routes/attendance');
+const feedbackRoutes=require('./routes/feedback');
+const finalReportRoutes=require('./routes/finalReport');
+const {requestTimeReconcile}=require('./services/tripLifecycle');
+const siteAdminRoutes=require('./routes/siteAdmin');
+const {parseAdminPhotoUpload}=require('./middleware/adminPhotoUpload');
+
+function createApp(config=getConfig()) {
+ const app=express();
+ app.disable('x-powered-by');
+ if(config.nodeEnv==='production') app.set('trust proxy',1);
+ app.set('view engine','ejs');
+ app.set('views',path.join(__dirname,'views'));
+ app.use(express.static(path.join(__dirname,'public')));
+ app.use(express.urlencoded({extended:false,limit:'20kb'}));
+ app.use(express.json({limit:'100kb'}));
+ if(!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length<32) throw new Error('Configure SESSION_SECRET (32+ characters)');
+ app.use(session({store:new PgSession({pgPromise:getDb(),tableName:'session',createTableIfMissing:false}),
+  name:'triphub.sid',secret:process.env.SESSION_SECRET,resave:false,saveUninitialized:false,
+  cookie:{httpOnly:true,secure:config.nodeEnv==='production',sameSite:'lax',maxAge:12*60*60*1000}}));
+ app.use(parseProposalUpload);
+ app.use(parseConsentUpload);
+ app.use(parseConsentCorrection);
+ app.use(parseAdminPhotoUpload);
+ app.use(ensureCsrf);
+ app.use(loadUser);
+ app.use(requestTimeReconcile);
+ app.use('/api',apiRoutes);
+ app.use('/auth',authRoutes);
+ app.use('/workspace/proposals',proposalRoutes);
+ app.use('/',reviewRoutes);
+ app.use('/',joinReviewRoutes);
+ app.use('/',finalNamelistRoutes);
+ app.use('/',tripUpdatesRoutes);
+ app.use('/',studentTravelFormRoutes);
+ app.use('/',packingRoutes);
+ app.use('/',financeRoutes);
+ app.use('/',attendanceRoutes);
+ app.use('/',feedbackRoutes);
+ app.use('/',finalReportRoutes);
+ app.use('/',siteAdminRoutes);
+ app.use('/workspace',workspaceRoutes);
+ app.get('/account',requireAuth,account);
+ app.use('/',indexRoutes);
+ if(config.nodeEnv==='development') app.use('/dev',devRoutes);
+ app.use((req,res)=>{
+  if(req.path==='/api' || req.path.startsWith('/api/')) return res.status(404).json({error:'API endpoint not found'});
+  return res.status(404).render('not-found',{title:'Not found'});
+ });
+ app.use((err,req,res,next)=>{
+  console.error('Request failed:',err.message);
+  if(req.path==='/api' || req.path.startsWith('/api/')) return res.status(500).json({error:'Internal server error'});
+  return res.status(500).render('error',{title:'Something went wrong'});
+ });
+ return app;
+}
+module.exports=createApp;

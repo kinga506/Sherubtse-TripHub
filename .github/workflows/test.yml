@@ -1,0 +1,83 @@
+name: Sherubtse TripHub Tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ci_only_postgres_password
+          POSTGRES_DB: sherubtse_triphub_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d sherubtse_triphub_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      mongo:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.adminCommand({ping:1}).ok'"
+          --health-interval 10s --health-timeout 5s --health-retries 10
+    env:
+      NODE_ENV: test
+      APP_URL: http://localhost:3001
+      PORT: '3001'
+      DB_HOST: localhost
+      DB_PORT: '5432'
+      DB_NAME: sherubtse_triphub_test
+      DB_USER: postgres
+      DB_PASS: ci_only_postgres_password
+      DB_SSL: 'false'
+      SESSION_SECRET: ci_ephemeral_session_secret_minimum_32_characters
+      MONGO_URI: mongodb://127.0.0.1:27017/sherubtse_triphub_feedback
+      EMAIL_MODE: log
+      EMAIL_PROVIDER: resend
+      STORAGE_MODE: local
+      LOCAL_UPLOAD_DIR: private_uploads/test
+      DEMO_MODE: 'true'
+      SEED_ADMIN_EMAIL: ci-admin@example.org
+      SEED_DSA_EMAIL: ci-dsa@example.org
+      SEED_ADMIN_PASSWORD: ci_only_admin_password_2026
+      SEED_DSA_PASSWORD: ci_only_dsa_password_2026
+      DEMO_PASSWORD: ci_only_student_password_2026
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install packages
+        run: npm install --no-audit --no-fund
+      - name: Check JavaScript and packaging
+        run: npm run check:release
+      - name: Prepare isolated PostgreSQL test schema
+        env:
+          PGPASSWORD: ci_only_postgres_password
+        run: |
+          for sql in \
+            db/schema.sql \
+            db/step3-auth-migration.sql \
+            db/step4-password-migration.sql \
+            db/step9-proposals-migration.sql \
+            db/step11-registration-migration.sql \
+            db/step12-join-review-migration.sql \
+            db/step12a-final-namelist-migration.sql \
+            db/step13a-student-travel-form-migration.sql \
+            db/step14-packing-migration.sql \
+            db/step18-lifecycle-migration.sql; do
+            psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d sherubtse_triphub_test -f "$sql"
+          done
+      - name: Run Jest and Supertest
+        run: npm test -- --ci
+      - name: Build production Docker image
+        run: docker build -t sherubtse-triphub:ci .

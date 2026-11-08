@@ -1,0 +1,241 @@
+
+<%- include('../partials/header') %>
+
+<header class="page-heading">
+  <p class="eyebrow">Student workspace</p>
+  <h1>My Trips</h1>
+  <p class="lead">
+    View your organised trip proposals, DSA review status,
+    and requests to join other trips.
+  </p>
+</header>
+
+<section class="section-block" id="my-proposals">
+  <h2>Trips I've Proposed</h2>
+
+  <p class="text-muted">
+    Track your draft proposals and DSA approval decisions.
+  </p>
+
+  <% if (!proposals.length) { %>
+    <div class="surface-card section-block">
+      <p>You have not proposed any trips yet.</p>
+      <a class="btn btn-secondary"
+         href="/workspace/proposals/new">
+        Organise a Trip
+      </a>
+    </div>
+  <% } else { %>
+
+    <div class="feature-grid">
+      <% proposals.forEach(function(p) { %>
+        <article class="feature-card">
+
+          <h3><%= p.title %></h3>
+
+          <p>
+            <strong>Destination:</strong>
+            <%= p.destination %>
+          </p>
+
+          <p>
+            <strong>DSA Status:</strong>
+            <span class="status-badge badge-neutral">
+              <%= p.approval_status.replaceAll('_', ' ') %>
+            </span>
+          </p>
+
+          <% if (p.approval_status === 'draft') { %>
+            <p>Saved draft — not submitted to DSA yet.</p>
+
+          <% } else if (p.approval_status === 'pending_dsa') { %>
+            <p>Submitted successfully — waiting for DSA review.</p>
+
+          <% } else if (p.approval_status === 'changes_requested') { %>
+            <p>DSA requested changes. Update and resubmit your proposal.</p>
+
+          <% } else if (p.approval_status === 'approved') { %>
+            <p>DSA approved this proposal. Registration is managed
+               separately by the assigned Coordinator.</p>
+
+          <% } else if (p.approval_status === 'rejected') { %>
+            <p>DSA rejected this proposal.</p>
+          <% } %>
+
+          <p>
+            <a class="btn btn-secondary"
+               href="/workspace/proposals/<%= p.id %>/preview">
+              View Proposal and Status
+            </a>
+
+            <% if (['draft', 'changes_requested'].includes(p.approval_status)) { %>
+              <a class="text-link"
+                 href="/workspace/proposals/<%= p.id %>/edit">
+                Edit Proposal
+              </a>
+            <% } %>
+          </p>
+
+        </article>
+      <% }); %>
+    </div>
+
+  <% } %>
+</section>
+
+<section class="section-block" id="my-join-requests">
+  <h2>Trips I've Requested to Join</h2>
+
+  <% if (!requests.length) { %>
+    <section class="surface-card">
+      <h2>No trip requests yet</h2>
+      <p>
+        Find a trip and submit a request with a
+        parent/guardian consent letter.
+      </p>
+      <a class="btn btn-primary" href="/trips">
+        Explore Upcoming Trips
+      </a>
+    </section>
+  <% } %>
+
+  <% requests.forEach(function(item) { %>
+    <section class="surface-card section-block">
+
+      <h2>
+        <a href="/trips/<%= item.trip_id %>">
+          <%= item.title %>
+        </a>
+      </h2>
+
+      <p>
+        <strong>Destination:</strong>
+        <%= item.destination_name %>
+      </p>
+
+      <p>
+        <strong>Request:</strong>
+        <span class="status-badge badge-neutral">
+          <%= item.status %>
+        </span>
+      </p>
+
+      <p>
+        <strong>Consent letter:</strong>
+        <%= item.consent_status || 'Not available' %>
+      </p>
+
+      <% if (item.status === 'approved') { %>
+        <p>
+          <a class="btn btn-secondary"
+             href="/workspace/trips/<%= item.trip_id %>/updates">
+            View Itinerary and Announcements
+          </a>
+
+          <a class="btn btn-secondary"
+             href="/workspace/trips/<%= item.trip_id %>/packing">
+            My Packing Checklist
+          </a>
+
+          <a class="btn btn-secondary"
+             href="/workspace/trips/<%= item.trip_id %>/finance"
+             data-step15-link="true">
+            My Contributions
+          </a>
+
+          <a class="btn btn-secondary"
+             href="/workspace/trips/<%= item.trip_id %>/attendance">
+            Attendance
+          </a>
+
+          <a class="btn btn-secondary"
+             href="/workspace/trips/<%= item.trip_id %>/feedback">
+            Leave Feedback After Trip
+          </a>
+        </p>
+      <% } %>
+
+      <p>
+        <strong>Reason:</strong>
+        <%= item.reason || 'Not provided' %>
+      </p>
+
+      <% if (item.status === 'pending' &&
+             item.consent_status === 'correction_requested') { %>
+
+        <details>
+          <summary>Replace consent letter (correction requested)</summary>
+
+          <form method="post"
+                enctype="multipart/form-data"
+                action="/workspace/my-trips/<%= item.trip_id %>/consent/replace"
+                class="stack-form">
+
+            <input type="hidden"
+                   name="_csrf"
+                   value="<%= csrfToken %>">
+
+            <label>
+              Corrected consent letter (PDF, JPG, PNG; max 10 MB)
+              <input type="file"
+                     name="consent_letter"
+                     accept=".pdf,.jpg,.jpeg,.png"
+                     required>
+            </label>
+
+            <button class="btn btn-primary" type="submit">
+              Upload Corrected Letter
+            </button>
+          </form>
+        </details>
+
+      <% } %>
+
+      <% if (['pending', 'approved'].includes(item.status)) { %>
+        <details>
+          <summary>Withdraw my request</summary>
+
+          <p>
+            Withdrawal releases your place, but another student
+            cannot apply for that vacancy until an assigned
+            Coordinator explicitly reopens it. After final
+            namelist approval, a new DSA review will be required.
+          </p>
+
+          <form method="post"
+                action="/trips/<%= item.trip_id %>/withdraw"
+                class="stack-form">
+
+            <input type="hidden"
+                   name="_csrf"
+                   value="<%= csrfToken %>">
+
+            <label for="withdraw-<%= item.id %>">
+              Withdrawal reason
+            </label>
+
+            <textarea id="withdraw-<%= item.id %>"
+                      name="reason"
+                      maxlength="800"
+                      required></textarea>
+
+            <label>
+              <input type="checkbox"
+                     name="confirm"
+                     value="yes"
+                     required>
+              I confirm I want to withdraw from this trip.
+            </label>
+
+            <button type="submit" class="btn btn-outline">
+              Confirm Withdrawal
+            </button>
+          </form>
+        </details>
+      <% } %>
+
+    </section>
+  <% }); %>
+</section>
+
+<%- include('../partials/footer') %>

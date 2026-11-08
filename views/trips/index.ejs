@@ -1,0 +1,32 @@
+<%- include('../partials/header') %>
+<nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> / <span aria-current="page">Upcoming trips</span></nav>
+<header class="page-heading"><p class="eyebrow">Approved college journeys</p><h1>Discover upcoming trips</h1><p class="lead">Browse only DSA-approved trip proposals with an assigned lead Coordinator. Registration is managed separately and may not yet be open.</p></header>
+<form class="trip-filters surface-card" method="get" action="/trips" role="search" aria-label="Filter upcoming trips">
+ <div class="trip-filters-grid">
+  <label>Search by trip or destination<input name="q" type="search" maxlength="100" value="<%= filters.q %>" placeholder="e.g., Merak"></label>
+  <label>Dzongkhag<select name="dzongkhag"><option value="">All dzongkhags</option><% dzongkhags.forEach(d=>{ %><option value="<%= d.dzongkhag %>" <%= filters.dzongkhag===d.dzongkhag?'selected':'' %>><%= d.dzongkhag %></option><% }) %></select></label>
+  <label>Registration<select name="registration"><option value="all" <%= filters.registration==='all'?'selected':'' %>>All</option><option value="open" <%= filters.registration==='open'?'selected':'' %>>Open with seats</option><option value="closed" <%= filters.registration==='closed'?'selected':'' %>>Not currently open</option></select></label>
+  <label>Sort<select name="sort"><option value="soonest" <%= filters.sort==='soonest'?'selected':'' %>>Departure: soonest</option><option value="cost_low" <%= filters.sort==='cost_low'?'selected':'' %>>Estimated cost: low to high</option><option value="cost_high" <%= filters.sort==='cost_high'?'selected':'' %>>Estimated cost: high to low</option></select></label>
+ </div><div class="button-row"><button class="btn btn-primary" type="submit">Apply filters</button><a class="btn btn-outline" href="/trips">Clear filters</a></div>
+</form>
+<p class="small-muted" role="status"><%= trips.length %> published upcoming <%= trips.length===1?'trip':'trips' %> found. Estimates are per student, in Bhutanese Ngultrum.</p>
+<% if(trips.length){ %>
+<div class="trip-discovery-grid"><% trips.forEach(trip=>{ %>
+ <article class="trip-public-card">
+  <a href="/trips/<%= trip.id %>" class="trip-public-photo"><img loading="lazy" src="<%= trip.destination_photo || '/images/destination-placeholder.svg' %>" alt="<%= trip.destination_name %> destination photograph"></a>
+  <div class="trip-public-body">
+   <p class="eyebrow"><%= trip.destination_name %> · <%= trip.dzongkhag %></p><h2><a href="/trips/<%= trip.id %>"><%= trip.title %></a></h2>
+   <% if(trip.is_sample){ %><span class="status-badge badge-neutral">Sample trip · simulated approval</span><% } %>
+   <p><%= trip.description || 'Trip information is available on the details page.' %></p>
+   <p><strong>Dates:</strong> <%= new Date(trip.start_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}) %> – <%= new Date(trip.end_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}) %></p>
+   <p><strong>Estimated cost / student:</strong> Nu. <%= Number(trip.estimated_cost).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) %></p>
+   <p><strong>Seats:</strong> <%= trip.occupied_seats %>/<%= trip.max_participants %> occupied · <%= trip.confirmed_participants %> confirmed · <%= trip.registration.available %> available</p>
+   <span class="status-badge <%= trip.registration.key==='open'?'badge-success':'badge-neutral' %>"><%= trip.registration.label %></span>
+   <p><a href="/trips/<%= trip.id %>" class="text-link">View costs, safety and trip details →</a></p>
+  </div>
+ </article>
+<% }) %></div>
+<section class="section-block"><h2>Compare upcoming trips</h2><div class="table-scroll"><table class="comparison-table"><thead><tr><th scope="col">Trip</th><th scope="col">Departure</th><th scope="col">Estimated cost/student</th><th scope="col">Occupied</th><th scope="col">Confirmed</th><th scope="col">Available</th><th scope="col">Registration</th></tr></thead><tbody><% trips.forEach(t=>{ %><tr><th scope="row"><a href="/trips/<%= t.id %>"><%= t.title %></a></th><td><%= new Date(t.start_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}) %></td><td>Nu. <%= Number(t.estimated_cost).toLocaleString('en-US') %></td><td><%= t.occupied_seats %>/<%= t.max_participants %></td><td><%= t.confirmed_participants %></td><td><%= t.registration.available %></td><td><%= t.registration.label %></td></tr><% }) %></tbody></table></div></section>
+<% } else { %><section class="empty-state surface-card"><h2>No matching public trips</h2><p>Try different filters. Unreviewed proposals are never shown here; trips will appear when approved and assigned a lead Coordinator.</p><a href="/trips" class="btn btn-outline">Show all public trips</a></section><% } %>
+<div class="alert alert-info">Registration and parent/guardian consent-letter submissions are implemented in Step 11. The current pages are for viewing and comparison only. Estimated travel costs are not payment requests.</div>
+<%- include('../partials/footer') %>

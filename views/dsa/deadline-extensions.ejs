@@ -1,0 +1,9 @@
+<%- include('../partials/header') %>
+<header class="page-heading"><p class="eyebrow">DSA review</p><h1>Replacement deadline requests</h1><p class="lead">DSA may approve or reject a replacement registration extension. Coordinators must still reopen the vacancy themselves.</p></header>
+<% if(!requests.length){ %><section class="surface-card"><p>No requests submitted.</p></section><% } %>
+<% requests.forEach(r=>{ %><section class="surface-card section-block"><h2><%= r.title %> — <%= r.status %></h2>
+<p><strong>Requested by:</strong> <%= r.requester_name %> · <strong>Vacancies:</strong> <%= r.vacancies_at_request %></p>
+<p><strong>Original deadline:</strong> <%= new Date(r.original_deadline).toLocaleString('en-GB',{timeZone:'Asia/Thimphu'}) %></p><p><strong>Proposed deadline:</strong> <%= new Date(r.proposed_deadline).toLocaleString('en-GB',{timeZone:'Asia/Thimphu'}) %></p>
+<p><strong>Reason:</strong> <%= r.reason %></p>
+<% if(r.status==='pending'){ %><form method="post" action="/workspace/dsa/deadline-extensions/<%= r.id %>/decision" class="stack-form"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><label>DSA review remarks<textarea name="note" maxlength="1000"></textarea></label><div class="action-row"><button class="btn btn-primary" name="action" value="approve">Approve extension</button><button class="btn btn-outline" name="action" value="reject">Reject extension</button></div></form><% }else{ %><p><strong>Review note:</strong> <%= r.review_note||'None' %></p><% } %></section><% }); %>
+<%- include('../partials/footer') %>

@@ -1,0 +1,27 @@
+<%- include('../partials/header') %>
+<div data-packing data-base="/workspace/trips/<%= trip.id %>/packing" data-csrf="<%= csrfToken %>">
+ <div class="page-heading"><p class="eyebrow">Private trip workspace</p><h1>Packing for <%= trip.title %></h1>
+ <p class="lead">Trip and destination suggestions are shared; your personal checklist belongs only to you.</p></div>
+ <% if(!canPersonal && hasPersonalAccess){ %><div class="form-message">This trip is read-only. Your historical checklist remains visible.</div><% } %>
+ <% if(!hasPersonalAccess){ %><div class="form-message">Only approved participants have personal packing checklists. Coordinators can manage shared suggestions below.</div><% } %>
+ <p role="status" aria-live="polite" data-feedback class="form-message"></p>
+ <% if(hasPersonalAccess){ %><section class="surface-card section-block"><h2>My personal checklist</h2>
+ <p data-progress-text>0 items packed</p><progress data-progress-bar max="100" value="0" style="width:100%">0%</progress>
+ <% if(!items.length){ %><p>You have no personal items yet. Add an item or copy suggestions.</p><% } %>
+ <ul class="packing-list"><% items.forEach(item=>{ %><li data-list-row class="packing-row"><label><input type="checkbox" data-packed data-id="<%= item.id %>" <%= item.is_packed?'checked':'' %> <%= canPersonal?'':'disabled' %>> <%= item.name %><% if(item.quantity){ %> · <%= item.quantity %><% } %></label>
+ <% if(canPersonal){ %><button type="button" class="btn btn-secondary" data-remove-item data-id="<%= item.id %>" data-path="/workspace/trips/<%= trip.id %>/packing/remove">Remove</button><% } %></li><% }) %></ul>
+ <% if(canPersonal){ %><form data-packing-form method="post" action="/workspace/trips/<%= trip.id %>/packing/add" class="stack-form"><label>Item name <input name="name" maxlength="120" required></label><label>Quantity (optional) <input name="quantity" maxlength="60"></label><button type="submit" class="btn btn-primary">Add personal item</button></form><% } %>
+ </section><% } %>
+ <section class="surface-card section-block"><h2>Destination suggestions</h2><p class="helper-text">Suggestions based on the sample packing lists in TripPack.</p>
+ <% if(!destinationSuggestions.length){%><p>No destination suggestions are available yet.</p><% } %>
+ <ul><% destinationSuggestions.forEach(item=>{ %><li><%= item.name %><% if(item.quantity){ %> · <%= item.quantity %><% } %></li><% }) %></ul></section>
+ <section class="surface-card section-block"><h2>Trip-specific packing suggestions</h2>
+ <% if(!tripSuggestions.length){%><p>No trip suggestions have been added.</p><% } %>
+ <ul><% tripSuggestions.forEach(item=>{ %><li data-list-row class="packing-row"><span><%= item.name %><% if(item.quantity){ %> · <%= item.quantity %><% } %></span>
+ <% if(canManage){ %><button type="button" class="btn btn-secondary" data-remove-item data-suggestion="true" data-id="<%= item.id %>" data-path="/workspace/trips/<%= trip.id %>/packing/suggestions/remove">Remove suggestion</button><% } %></li><% }) %></ul>
+ <% if(canPersonal){ %><form data-packing-form method="post" action="/workspace/trips/<%= trip.id %>/packing/copy"><button type="submit" class="btn btn-primary">Copy suggestions to my checklist</button></form><% } %>
+ <% if(canManage){ %><h3>Manage trip suggestions</h3><form data-packing-form method="post" action="/workspace/trips/<%= trip.id %>/packing/suggestions/add" class="stack-form"><label>Suggested item <input name="name" maxlength="120" required></label><label>Quantity <input name="quantity" maxlength="60"></label><button type="submit" class="btn btn-primary">Add trip suggestion</button></form><% } %>
+ </section>
+ </div>
+<script defer src="/js/packing.js"></script>
+<%- include('../partials/footer') %>

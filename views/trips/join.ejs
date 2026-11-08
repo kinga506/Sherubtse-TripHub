@@ -1,0 +1,23 @@
+<%- include('../partials/header') %>
+<nav class="breadcrumb"><a href="/trips">Trips</a> / <a href="/trips/<%= trip.id %>"><%= trip.title %></a> / Join</nav>
+<header class="page-heading"><p class="eyebrow">Student registration</p><h1>Request to join <%= trip.title %></h1><p class="lead">Your request is pending until a Coordinator verifies your consent letter and confirms participation.</p></header>
+<section class="surface-card"><h2>Review before requesting</h2>
+<p><strong>Estimated cost:</strong> Nu. <%= Number(trip.estimated_cost).toFixed(2) %> per student. Payments are not taken on this website.</p>
+<p><strong>Deadline:</strong> <%= new Date(trip.registration_deadline).toLocaleString('en-GB',{timeZone:'Asia/Thimphu',dateStyle:'medium',timeStyle:'short'}) %> (Bhutan time)</p>
+<p><strong>Safety:</strong> <%= trip.safety_information || 'Confirm safety requirements with the Coordinator.' %></p>
+<p><strong>Registration status:</strong> <%= trip.registration.label %> · <%= trip.registration.available %> places available.</p>
+<% if(existing && ['pending','approved'].includes(existing.status)){ %><div class="alert alert-info">You already have an active <%= existing.status %> request. See <a href="/workspace/my-trips">My Trips</a>.</div>
+<% } else if(trip.registration.key!=='open'){ %><div class="alert alert-info">Registration is not currently accepting new requests. The Coordinator must open registration or manually reopen a held vacancy.</div>
+<% } else { %>
+<form method="post" action="/trips/<%= trip.id %>/join" enctype="multipart/form-data" class="stack-form">
+<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+<label for="joining-reason">Why would you like to join?</label><textarea id="joining-reason" name="reason" maxlength="1000" rows="4" required></textarea>
+<label for="consent-letter">Parent/guardian consent letter (PDF, JPG, JPEG or PNG; max 10 MB)</label><input id="consent-letter" type="file" name="consent_letter" accept=".pdf,.jpg,.jpeg,.png" required>
+<label><input type="checkbox" name="accept_cost" value="yes" required> I understand the estimated cost and that no online payment is collected.</label>
+<label><input type="checkbox" name="accept_safety" value="yes" required> I have reviewed the trip's safety information and will follow the Coordinator's instructions.</label>
+<label><input type="checkbox" name="confirm_available" value="yes" required> I confirm I am available for the trip dates.</label>
+<button class="btn btn-primary" type="submit">Submit join request and consent letter</button>
+</form>
+<% } %>
+</section>
+<%- include('../partials/footer') %>

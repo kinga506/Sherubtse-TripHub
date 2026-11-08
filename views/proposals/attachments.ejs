@@ -1,0 +1,14 @@
+<%- include('../partials/header') %>
+<div class="page-heading"><p class="eyebrow">Private trip proposal</p><h1>Supporting Documents</h1><p class="lead">Upload PDF, Word, or image files. Maximum 10 MB each, 12 active files. Submitted versions are preserved.</p></div>
+<section class="surface-card section-block"><h2>Add a supporting document</h2>
+<form method="post" enctype="multipart/form-data" action="/workspace/proposals/<%= tripId %>/attachments" class="form-grid">
+<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+<label>Document title <input name="document_title" maxlength="160" required></label>
+<label>Document description <textarea name="description" maxlength="500"></textarea></label>
+<label>Choose file <input type="file" name="attachment" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required></label>
+<button class="btn btn-primary" type="submit">Upload document</button></form></section>
+<section class="surface-card section-block"><h2>Documents</h2>
+<% if(!files.length){%><p>No supporting documents uploaded yet.</p><%}%>
+<% files.forEach(function(f){%><article class="section-block"><strong><%= f.document_title %></strong> — <%= f.original_filename %> <span class="status-badge"><%= f.is_active?'Current':'Superseded' %></span><p><%= f.description||'' %></p><a href="/workspace/proposals/<%= tripId %>/attachments/<%= f.id %>/download">Download</a> <% if(f.is_active){%><form method="post" action="/workspace/proposals/<%= tripId %>/attachments/<%= f.id %>/remove" style="display:inline"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button type="submit" class="btn btn-secondary">Supersede</button></form><%}%></article><%});%>
+</section><p><a class="btn btn-primary" href="/workspace/proposals/<%= tripId %>/preview">Return to preview and submit</a></p>
+<%- include('../partials/footer') %>

@@ -1,0 +1,11 @@
+<%- include('../partials/header') %>
+<header class="page-heading"><p class="eyebrow">DSA authority</p><h1>Trip completion and cancellation</h1><p class="lead">Monitor completed reports, blocked or unfinished trips, and cancel approved trips with a recorded reason.</p></header>
+<section class="surface-card section-block"><h2>Approved trip lifecycle</h2>
+<% if(!trips.length){ %><p>No DSA-approved trips found.</p><% } %>
+<% trips.forEach(trip=>{ %><article class="section-block"><h3><%= trip.title %></h3><p><strong><%= trip.operational_status.replaceAll('_',' ') %></strong> · End date: <%= new Date(trip.end_date).toISOString().slice(0,10) %></p>
+<a href="/workspace/trips/<%= trip.id %>/final-report">View final report and history</a>
+<% if(trip.report_id){ %><p>Final report submitted: <%= new Date(trip.submitted_at).toLocaleString('en-GB') %></p><% } %>
+<% if(!['completed','cancelled'].includes(trip.operational_status)){ %>
+<details><summary>Cancel trip (DSA only)</summary><form method="post" action="/workspace/dsa/trips/<%= trip.id %>/cancel" class="stack-form"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><label>Cancellation reason<textarea name="reason" required maxlength="1500"></textarea></label><button type="submit" class="btn btn-secondary">Confirm trip cancellation</button></form></details><% } %>
+</article><% }) %></section>
+<%- include('../partials/footer') %>

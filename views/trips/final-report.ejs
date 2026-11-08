@@ -1,0 +1,24 @@
+<%- include('../partials/header') %>
+<header class="page-heading"><p class="eyebrow">Trip completion and archive</p><h1>Final report: <%= trip.title %></h1><p class="lead">Trip status: <strong><%= trip.operational_status.replaceAll('_',' ') %></strong>. Report snapshots are immutable once submitted.</p></header>
+<% if(report){ %>
+<section class="surface-card section-block"><h2>Archived report</h2><p>Submitted by <strong><%= report.submitted_by_name %></strong> on <%= new Date(report.submitted_at).toLocaleString('en-GB') %>.</p>
+<dl class="detail-list"><div><dt>Actual expenses</dt><dd>Nu. <%= Number(report.total_actual_expenses).toFixed(2) %></dd></div><div><dt>Contributions</dt><dd>Nu. <%= Number(report.total_student_contributions).toFixed(2) %></dd></div><div><dt>Feedback at submission</dt><dd><%= report.feedback_count_at_submission %> review(s)</dd></div></dl>
+<h3>Final attendance</h3><pre class="report-data"><%= JSON.stringify(report.final_attendance_summary,null,2) %></pre>
+<h3>Expenses by category</h3><pre class="report-data"><%= JSON.stringify(report.expense_summary,null,2) %></pre>
+<h3>Contribution summary</h3><pre class="report-data"><%= JSON.stringify(report.contribution_summary,null,2) %></pre>
+<h3>Incidents</h3><p><%= report.incident_report %></p><h3>Feedback snapshot</h3><p><%= report.feedback_summary_at_submission %></p><h3>Additional closing notes</h3><p><%= report.additional_notes||'None supplied.' %></p>
+<p class="helper-text">Feedback added after submission stays in the feedback module and does not rewrite this archived report. All trip Coordinator assignments have ended; Student accounts remain active.</p></section>
+<% } else { %>
+<section class="surface-card section-block"><h2>Review final records</h2><p>Attendance summary:</p><pre class="report-data"><%= JSON.stringify(figures.attendance,null,2) %></pre>
+<p>Actual expenses: <strong>Nu. <%= figures.totalExpenses.toFixed(2) %></strong></p><p>Recorded contributions: <strong>Nu. <%= figures.totalContributions.toFixed(2) %></strong></p>
+<p><%= feedback.summary %></p></section>
+<% if(canSubmit){ %><section class="surface-card section-block"><h2>Submit and archive</h2><p>Once submitted, the report is final and the trip becomes read-only. Every active lead/assistant assignment for this trip will end automatically.</p>
+<form method="post" action="/workspace/trips/<%= trip.id %>/final-report" class="stack-form">
+<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+<label>Incidents or problems (explicitly state if none were reported)<textarea name="incident_report" maxlength="3000" rows="5" required placeholder="No incidents were reported."></textarea></label>
+<label>Additional closing notes (optional)<textarea name="additional_notes" maxlength="3000" rows="4"></textarea></label>
+<button type="submit" class="btn btn-primary" data-confirm="Submit the immutable final report and end every Coordinator assignment?">Submit final report and archive trip</button>
+</form></section><% } else { %><section class="surface-card section-block"><p>Final submission is only available to the active lead Coordinator after the trip ends and the status is awaiting final report.</p></section><% } %>
+<% } %>
+<section class="surface-card section-block"><h2>Lifecycle audit history</h2><% if(!events.length){ %><p>No recorded lifecycle events.</p><% } %><ul><% events.forEach(event=>{ %><li><strong><%= event.action.replaceAll('_',' ') %></strong> — <%= new Date(event.created_at).toLocaleString('en-GB') %><% if(event.reason){ %>: <%= event.reason %><% } %></li><% }) %></ul></section>
+<%- include('../partials/footer') %>

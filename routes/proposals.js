@@ -1,0 +1,11 @@
+const router=require('express').Router();
+const {requireStudent,requireProposalOwner}=require('../middleware/authorization');
+const c=require('../controllers/proposalController');
+router.use(requireStudent);
+router.get('/',c.list);
+router.get('/new',c.renderEditor);
+router.post('/new',c.save);
+router.get('/:tripId/edit',requireProposalOwner,c.renderEditor);
+router.post('/:tripId/edit',requireProposalOwner,c.save);
+router.get('/:tripId/preview',c.preview);
+module.exports=router;

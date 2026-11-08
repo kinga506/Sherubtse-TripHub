@@ -1,0 +1,21 @@
+<%- include('../partials/header') %>
+<header class="page-heading"><p class="eyebrow">Discover Eastern Bhutan</p><h1>Destinations</h1><p class="lead">Explore six places from the supplied TripPack destination guide. Distances, times and shared transport costs are approximate starting from Sherubtse College.</p></header>
+<% if (destinations.length) { %>
+  <div class="destination-grid">
+    <% destinations.forEach(d => { %>
+      <article class="destination-card">
+        <a class="destination-image" href="/destinations/<%= d.slug %>"><img loading="lazy" src="<%= d.photo || '/images/destination-placeholder.svg' %>" alt="<%= d.alt_text || d.name %>"></a>
+        <div class="destination-card-body"><p class="eyebrow"><%= d.dzongkhag %></p><h2><a href="/destinations/<%= d.slug %>"><%= d.name %></a></h2>
+          <p><%= d.description %></p><div class="destination-meta"><span><%= d.distance_text || 'Distance not listed' %></span><span><%= d.drive_time_text || 'Travel time varies' %></span></div>
+          <a href="/destinations/<%= d.slug %>" class="text-link">Explore destination →</a>
+          <% if(d.photo_credit){ %><small>Photo: <%= d.photo_credit %></small><% } %>
+        </div>
+      </article>
+    <% }) %>
+  </div>
+  <section class="section-block" aria-labelledby="comparison-heading"><h2 id="comparison-heading">Compare destinations</h2><div class="table-scroll"><table class="comparison-table"><thead><tr><th scope="col">Destination</th><th scope="col">Dzongkhag</th><th scope="col">Distance</th><th scope="col">Driving</th><th scope="col">Transport estimate / student</th></tr></thead><tbody>
+    <% destinations.forEach(d => { %><tr><th scope="row"><a href="/destinations/<%= d.slug %>"><%= d.name %></a></th><td><%= d.dzongkhag %></td><td><%= d.distance_text || 'Check locally' %></td><td><%= d.drive_time_text || 'Check locally' %><% if(d.is_trek){ %><br><small>Plus trekking</small><% } %></td><td><%= d.transport_cost_min != null && d.transport_cost_max != null ? `Nu. ${Number(d.transport_cost_min).toLocaleString('en-US')}–${Number(d.transport_cost_max).toLocaleString('en-US')}` : 'Not listed' %></td></tr><% }) %>
+  </tbody></table></div></section>
+<% } else { %><div class="empty-state"><h2>No destinations available</h2><p>Destinations can be added through the database seed and managed later by Superadmin.</p></div><% } %>
+<div class="alert alert-info">Transport amounts are preliminary shared-transport estimates, not verified fares. Confirm road conditions, permits and local guidance before travelling. All travel information is provided for project demonstration.</div>
+<%- include('../partials/footer') %>

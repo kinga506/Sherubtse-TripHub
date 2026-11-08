@@ -1,0 +1,732 @@
+
+<%- include('../partials/header') %>
+
+<style>
+  .review-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 13px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: capitalize;
+  }
+
+  .review-status.verified,
+  .review-status.approved {
+    color: #176044;
+    background: #e1f3e9;
+  }
+
+  .review-status.pending {
+    color: #866015;
+    background: #fff2cc;
+  }
+
+  .review-status.correction,
+  .review-status.rejected {
+    color: #a33333;
+    background: #fce7e7;
+  }
+
+  .review-notice {
+    padding: 17px 20px;
+    margin: 18px 0;
+    border-radius: 12px;
+    border: 1px solid #b9dfca;
+    background: #eaf7ee;
+    color: #174e37;
+    line-height: 1.6;
+  }
+
+  .review-notice.warning {
+    border-color: #efd7a3;
+    background: #fff8e8;
+    color: #785319;
+  }
+
+  .review-note-display {
+    padding: 15px 18px;
+    border-radius: 10px;
+    background: #f1f5f2;
+    border: 1px solid #dce6df;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .review-section {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #dce7df;
+  }
+
+  .review-section h4 {
+    margin-bottom: 12px;
+    color: #123d32;
+  }
+
+  .review-help {
+    color: #62766b;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .review-status-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .review-disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  .review-modal {
+    width: min(92vw, 480px);
+    max-height: 90vh;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #dce7df;
+    border-radius: 20px;
+    background: white;
+    color: #15392e;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.25);
+  }
+
+  .review-modal::backdrop {
+    background: rgba(7, 31, 24, 0.56);
+    backdrop-filter: blur(3px);
+  }
+
+  .review-modal-body {
+    padding: 28px;
+  }
+
+  .review-modal-icon {
+    width: 50px;
+    height: 50px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: #e3f2e8;
+    color: #165442;
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 18px;
+  }
+
+  .review-modal h2 {
+    margin: 0 0 12px;
+    color: #123d32;
+  }
+
+  .review-modal p {
+    line-height: 1.6;
+    color: #50685d;
+  }
+
+  .review-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 25px;
+  }
+
+  .review-modal-actions .btn {
+    min-width: 115px;
+  }
+
+  @media (max-width: 480px) {
+    .review-modal-body {
+      padding: 20px;
+    }
+
+    .review-modal-actions {
+      flex-direction: column-reverse;
+    }
+
+    .review-modal-actions .btn {
+      width: 100%;
+    }
+  }
+</style>
+
+<p>
+  <a href="/workspace/trips/<%= trip.id %>/final-namelist">
+    Final Namelist &amp; Consent Package
+  </a>
+</p>
+
+<header class="page-heading">
+  <p class="eyebrow">Assigned Trip Coordinator</p>
+
+  <h1>Join Requests — <%= trip.title %></h1>
+
+  <p class="lead">
+    Review student applications, verify consent letters,
+    and manage participation requests.
+  </p>
+</header>
+
+<section class="surface-card section-block">
+
+  <h2>Student Applications</h2>
+
+  <% if (!requests.length) { %>
+    <div class="review-notice warning">
+      No student applications have been submitted yet.
+    </div>
+  <% } %>
+
+  <% requests.forEach(function(p) { %>
+
+    <article class="surface-card section-block">
+
+      <div class="review-status-row">
+        <h3><%= p.name %></h3>
+
+        <span class="review-status <%= p.status === 'approved' ? 'approved' : p.status === 'rejected' ? 'rejected' : 'pending' %>">
+          <%= p.status %>
+        </span>
+      </div>
+
+      <p>
+        <strong>Submitted:</strong>
+        <%= new Date(p.requested_at).toLocaleString(
+          'en-GB',
+          { timeZone: 'Asia/Thimphu' }
+        ) %>
+      </p>
+
+      <p>
+        <strong>Consent version:</strong>
+        <%= p.version_number || '—' %>
+      </p>
+
+      <p>
+        <strong>Joining reason:</strong>
+        <%= p.reason || 'Not provided' %>
+      </p>
+
+      <% if (p.consent_id) { %>
+        <p>
+          <a href="/workspace/trips/<%= trip.id %>/requests/<%= p.id %>/consent/<%= p.consent_id %>">
+            Download Current Consent Letter (Private)
+          </a>
+        </p>
+      <% } %>
+
+      <!-- CONSENT STATUS -->
+
+      <div class="review-section">
+
+        <h4>Parent/Guardian Consent Review</h4>
+
+        <% if (p.verification_status === 'verified') { %>
+
+          <div class="review-notice" role="status">
+            <strong>✓ Consent Letter Verified</strong>
+
+            <p>
+              The current consent letter has been reviewed
+              and verified by the Lead Coordinator.
+            </p>
+          </div>
+
+          <span class="review-status verified">
+            ✓ Verified
+          </span>
+
+        <% } else if (p.verification_status === 'correction_requested') { %>
+
+          <div class="review-notice warning" role="status">
+            <strong>Consent Correction Requested</strong>
+
+            <p>
+              The student must submit a corrected consent
+              letter before their participation can be approved.
+            </p>
+          </div>
+
+          <span class="review-status correction">
+            Correction Required
+          </span>
+
+        <% } else { %>
+
+          <div class="review-notice warning">
+            <strong>Consent Review Pending</strong>
+
+            <p>
+              Download and inspect the current consent
+              letter before verifying it or requesting corrections.
+            </p>
+          </div>
+
+          <span class="review-status pending">
+            Awaiting Verification
+          </span>
+
+        <% } %>
+
+        <!-- PREVIOUS REVIEW NOTE -->
+
+        <% if (p.reviewer_note) { %>
+
+          <h4 style="margin-top: 20px;">
+            Previous Consent Review Note
+          </h4>
+
+          <div class="review-note-display">
+            <%= p.reviewer_note %>
+          </div>
+
+        <% } %>
+
+        <% if (p.status === 'pending') { %>
+
+          <% if (p.verification_status !== 'verified') { %>
+
+            <form method="post"
+                  action="/workspace/trips/<%= trip.id %>/requests/<%= p.id %>/consent"
+                  class="stack-form review-confirm-form">
+
+              <input type="hidden"
+                     name="_csrf"
+                     value="<%= csrfToken %>">
+
+              <label>
+                Consent Review Note
+
+                <textarea name="note"
+                          maxlength="800"
+                          rows="4"
+                          placeholder="Write your review note or explain what the student must correct."></textarea>
+              </label>
+
+              <p class="review-help">
+                A note is required when requesting corrections.
+                For verification, a review note is optional.
+              </p>
+
+              <div class="action-row">
+
+                <button type="submit"
+                        name="action"
+                        value="verify"
+                        data-confirm-title="Verify Consent Letter?"
+                        data-confirm-message="Confirm that you have inspected the current consent letter and found it valid."
+                        data-confirm-button="Verify Letter"
+                        class="btn btn-primary">
+                  Mark Letter Reviewed
+                </button>
+
+                <button type="submit"
+                        name="action"
+                        value="correction"
+                        data-confirm-title="Request Consent Correction?"
+                        data-confirm-message="The student will need to correct their consent letter before final approval. Your correction note will be submitted."
+                        data-confirm-button="Request Correction"
+                        data-require-note="true"
+                        class="btn btn-outline">
+                  Request Correction
+                </button>
+
+              </div>
+
+            </form>
+
+          <% } else { %>
+
+            <div class="action-row" style="margin-top: 18px;">
+
+              <button type="button"
+                      class="btn btn-outline review-disabled"
+                      disabled>
+                ✓ Letter Already Reviewed
+              </button>
+
+            </div>
+
+            <p class="review-help">
+              The current consent letter is verified.
+              You may proceed with the student's
+              participation decision.
+            </p>
+
+          <% } %>
+
+        <% } %>
+
+      </div>
+
+      <!-- PARTICIPATION DECISION -->
+
+      <div class="review-section">
+
+        <h4>Final Participation Decision</h4>
+
+        <% if (p.status === 'pending') { %>
+
+          <form method="post"
+                action="/workspace/trips/<%= trip.id %>/requests/<%= p.id %>/decision"
+                class="stack-form review-confirm-form">
+
+            <input type="hidden"
+                   name="_csrf"
+                   value="<%= csrfToken %>">
+
+            <label>
+              Decision Reason
+
+              <textarea name="note"
+                        maxlength="800"
+                        rows="4"
+                        placeholder="Explain the decision. A reason is mandatory for rejection."></textarea>
+            </label>
+
+            <div class="action-row">
+
+              <button type="submit"
+                      name="action"
+                      value="approve"
+                      class="btn btn-primary"
+                      data-confirm-title="Approve Student?"
+                      data-confirm-message="This student will become a confirmed participant if all registration requirements are satisfied."
+                      data-confirm-button="Approve Student"
+                      <%= p.verification_status === 'verified' ? '' : 'disabled' %>>
+                Approve Student
+              </button>
+
+              <button type="submit"
+                      name="action"
+                      value="reject"
+                      class="btn btn-outline"
+                      data-confirm-title="Reject Student Request?"
+                      data-confirm-message="This will reject the student's application. Please ensure you have provided a clear reason."
+                      data-confirm-button="Reject Request"
+                      data-require-note="true">
+
+                Reject
+                <%= p.verification_status === 'correction_requested'
+                  ? 'Invalid Consent Request'
+                  : 'Request' %>
+
+              </button>
+
+            </div>
+
+          </form>
+
+          <% if (p.verification_status !== 'verified') { %>
+            <p class="review-help">
+              Student approval becomes available only
+              after the current consent letter is verified.
+            </p>
+          <% } %>
+
+        <% } else if (p.status === 'approved') { %>
+
+          <div class="review-notice" role="status">
+            <strong>✓ Student Approved</strong>
+            <p>
+              This student has been approved to participate
+              in the trip.
+            </p>
+          </div>
+
+        <% } else if (p.status === 'rejected') { %>
+
+          <div class="review-notice warning" role="status">
+            <strong>Student Request Rejected</strong>
+            <p>
+              This participation request has been rejected.
+            </p>
+          </div>
+
+        <% } else { %>
+
+          <p>
+            Current application status:
+            <strong><%= p.status %></strong>
+          </p>
+
+        <% } %>
+
+      </div>
+
+    </article>
+
+  <% }); %>
+
+</section>
+
+
+<!-- DEADLINE EXTENSION -->
+
+<section class="surface-card section-block">
+
+  <h2>Request Replacement Deadline Extension</h2>
+
+  <p>
+    After the registration deadline expires, the Lead
+    Coordinator may request DSA permission to extend
+    registration when a held vacancy exists.
+  </p>
+
+  <p class="review-help">
+    DSA permission does not automatically reopen
+    registration.
+  </p>
+
+  <form method="post"
+        action="/workspace/trips/<%= trip.id %>/extension"
+        class="stack-form review-confirm-form">
+
+    <input type="hidden"
+           name="_csrf"
+           value="<%= csrfToken %>">
+
+    <label>
+      Proposed Extended Deadline
+
+      <input name="proposed_deadline"
+             type="datetime-local"
+             required>
+    </label>
+
+    <label>
+      Reason for Replacement Deadline Extension
+
+      <textarea name="reason"
+                maxlength="1000"
+                rows="4"
+                required></textarea>
+    </label>
+
+    <button type="submit"
+            class="btn btn-outline"
+            data-confirm-title="Submit Deadline Extension Request?"
+            data-confirm-message="This request will be sent to DSA for review. It will not automatically reopen registration."
+            data-confirm-button="Submit Request">
+      Request DSA Permission
+    </button>
+
+  </form>
+
+  <h3 style="margin-top: 25px;">
+    Extension History
+  </h3>
+
+  <% if (!extensions.length) { %>
+    <p>No extension requests have been submitted.</p>
+  <% } %>
+
+  <% extensions.forEach(function(e) { %>
+
+    <div class="review-section">
+
+      <p>
+        <strong>Original Deadline:</strong>
+        <%= new Date(e.original_deadline).toLocaleString(
+          'en-GB',
+          { timeZone: 'Asia/Thimphu' }
+        ) %>
+      </p>
+
+      <p>
+        <strong>Proposed Deadline:</strong>
+        <%= new Date(e.proposed_deadline).toLocaleString(
+          'en-GB',
+          { timeZone: 'Asia/Thimphu' }
+        ) %>
+      </p>
+
+      <p>
+        <strong>Status:</strong>
+        <span class="review-status <%= e.status === 'approved' ? 'approved' : e.status === 'rejected' ? 'rejected' : 'pending' %>">
+          <%= e.status %>
+        </span>
+      </p>
+
+      <p>
+        <strong>Vacancies at Request:</strong>
+        <%= e.vacancies_at_request %>
+      </p>
+
+    </div>
+
+  <% }); %>
+
+</section>
+
+
+<!-- CUSTOM CONFIRMATION MODAL -->
+
+<dialog id="join-review-modal"
+        class="review-modal"
+        aria-labelledby="join-review-modal-title"
+        aria-describedby="join-review-modal-message">
+
+  <div class="review-modal-body">
+
+    <div class="review-modal-icon" aria-hidden="true">
+      ✓
+    </div>
+
+    <h2 id="join-review-modal-title">
+      Confirm Action
+    </h2>
+
+    <p id="join-review-modal-message">
+      Please confirm your decision.
+    </p>
+
+    <div class="review-modal-actions">
+
+      <button type="button"
+              id="join-review-cancel"
+              class="btn btn-outline">
+        Cancel
+      </button>
+
+      <button type="button"
+              id="join-review-confirm"
+              class="btn btn-primary">
+        Confirm
+      </button>
+
+    </div>
+
+  </div>
+
+</dialog>
+
+
+<!-- CONFIRMATION BEHAVIOR -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  const modal = document.getElementById('join-review-modal');
+
+  if (!modal) return;
+
+  const modalTitle = document.getElementById(
+    'join-review-modal-title'
+  );
+
+  const modalMessage = document.getElementById(
+    'join-review-modal-message'
+  );
+
+  const confirmButton = document.getElementById(
+    'join-review-confirm'
+  );
+
+  const cancelButton = document.getElementById(
+    'join-review-cancel'
+  );
+
+  let pendingForm = null;
+  let pendingButton = null;
+  let confirmedSubmission = false;
+
+  document.querySelectorAll('.review-confirm-form').forEach(
+    function(form) {
+
+      form.addEventListener('submit', function(event) {
+
+        if (confirmedSubmission) {
+          confirmedSubmission = false;
+          return;
+        }
+
+        const button = event.submitter;
+
+        if (!button || !button.dataset.confirmTitle) {
+          return;
+        }
+
+        event.preventDefault();
+
+        if (button.dataset.requireNote === 'true') {
+
+          const note = form.querySelector(
+            'textarea[name="note"]'
+          );
+
+          if (!note || !note.value.trim()) {
+            if (note) {
+              note.setCustomValidity(
+                'Please provide a reason before continuing.'
+              );
+              note.reportValidity();
+            }
+            return;
+          }
+        }
+
+        pendingForm = form;
+        pendingButton = button;
+
+        modalTitle.textContent =
+          button.dataset.confirmTitle;
+
+        modalMessage.textContent =
+          button.dataset.confirmMessage;
+
+        confirmButton.textContent =
+          button.dataset.confirmButton || 'Confirm';
+
+        modal.showModal();
+
+      });
+
+    }
+  );
+
+  document.querySelectorAll(
+    '.review-confirm-form textarea[name="note"]'
+  ).forEach(function(note) {
+
+    note.addEventListener('input', function() {
+      note.setCustomValidity('');
+    });
+
+  });
+
+  cancelButton.addEventListener('click', function() {
+    modal.close();
+  });
+
+  modal.addEventListener('close', function() {
+    pendingForm = null;
+    pendingButton = null;
+  });
+
+  confirmButton.addEventListener('click', function() {
+
+    if (!pendingForm || !pendingButton) return;
+
+    const form = pendingForm;
+    const button = pendingButton;
+
+    modal.close();
+
+    confirmedSubmission = true;
+
+    form.requestSubmit(button);
+
+    confirmedSubmission = false;
+
+  });
+
+});
+</script>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,260 @@
+
+<%- include('../partials/header') %>
+
+<header class="page-heading">
+  <p class="eyebrow">Trip Coordinator Workspace</p>
+
+  <h1>Manage Registration: <%= trip.title %></h1>
+
+  <p class="lead">
+    Manage student registration for your approved trip.
+    Registration opening and closing are separate from DSA approval.
+  </p>
+</header>
+
+<!-- REVIEW APPLICATIONS -->
+
+<p>
+  <a class="btn btn-primary"
+     href="/workspace/trips/<%= trip.id %>/requests">
+    Review Join Requests and Consent Letters
+  </a>
+</p>
+
+
+<!-- REGISTRATION MANAGEMENT -->
+
+<section class="surface-card section-block">
+
+  <h2>Registration Overview</h2>
+
+  <!-- ERROR MESSAGE -->
+
+  <% if (queryError) { %>
+    <div class="form-message form-error" role="alert">
+      <strong>Registration could not be updated</strong>
+      <p><%= queryError %></p>
+    </div>
+  <% } %>
+
+
+  <!-- SUCCESS MESSAGE -->
+
+  <% if (querySuccess) { %>
+    <div class="form-message" role="status">
+
+      <strong>
+        <%= querySuccess === 'open'
+          ? 'Registration opened successfully!'
+          : querySuccess === 'close'
+          ? 'Registration closed successfully!'
+          : 'Available slot reopened successfully!' %>
+      </strong>
+
+      <p>
+        <%= querySuccess === 'open'
+          ? 'Eligible students can now request to join this trip.'
+          : querySuccess === 'close'
+          ? 'New student registration requests are now closed.'
+          : 'The available vacancy can now accept eligible requests.' %>
+      </p>
+
+    </div>
+  <% } %>
+
+
+  <!-- CURRENT REGISTRATION STATUS -->
+
+  <dl class="detail-list">
+
+    <div>
+      <dt>Trip Approval</dt>
+      <dd>
+        <%= trip.approval_status %>
+      </dd>
+    </div>
+
+    <div>
+      <dt>Registration Status</dt>
+      <dd>
+        <span class="status-badge badge-neutral">
+          <%= trip.registration_open ? 'Open' : 'Closed' %>
+        </span>
+      </dd>
+    </div>
+
+    <div>
+      <dt>Held Vacancy</dt>
+      <dd>
+        <%= trip.vacancies_held_closed
+          ? 'Manual reopening required'
+          : 'No held vacancy' %>
+      </dd>
+    </div>
+
+    <div>
+      <dt>Occupied Slots</dt>
+      <dd>
+        <%= occupied %> of <%= trip.max_participants %>
+      </dd>
+    </div>
+
+    <div>
+      <dt>Confirmed Participants</dt>
+      <dd>
+        <%= confirmed %>
+      </dd>
+    </div>
+
+  </dl>
+
+
+  <!-- REGISTRATION ACTIONS -->
+
+  <div class="action-row">
+
+    <% if (trip.registration_open) { %>
+
+      <!-- SHOW CLOSE BUTTON WHEN REGISTRATION IS OPEN -->
+
+      <form method="post"
+            action="/workspace/trips/<%= trip.id %>/registration"
+            data-registration-confirm="close">
+
+        <input type="hidden"
+               name="_csrf"
+               value="<%= csrfToken %>">
+
+        <input type="hidden"
+               name="action"
+               value="close">
+
+        <button class="btn btn-outline" type="submit">
+          Close Registration
+        </button>
+
+      </form>
+
+    <% } else { %>
+
+      <!-- SHOW OPEN BUTTON WHEN REGISTRATION IS CLOSED -->
+
+      <form method="post"
+            action="/workspace/trips/<%= trip.id %>/registration"
+            data-registration-confirm="open">
+
+        <input type="hidden"
+               name="_csrf"
+               value="<%= csrfToken %>">
+
+        <input type="hidden"
+               name="action"
+               value="open">
+
+        <button class="btn btn-primary" type="submit">
+          Open Registration
+        </button>
+
+      </form>
+
+    <% } %>
+
+
+    <!-- REOPEN HELD VACANCY SEPARATELY -->
+
+    <% if (trip.vacancies_held_closed) { %>
+
+      <form method="post"
+            action="/workspace/trips/<%= trip.id %>/registration"
+            data-registration-confirm="reopen">
+
+        <input type="hidden"
+               name="_csrf"
+               value="<%= csrfToken %>">
+
+        <input type="hidden"
+               name="action"
+               value="reopen">
+
+        <button class="btn btn-secondary" type="submit">
+          Reopen Available Slot
+        </button>
+
+      </form>
+
+    <% } %>
+
+  </div>
+
+
+  <!-- REGISTRATION INFORMATION -->
+
+  <p class="small-muted">
+    Registration opening requires valid trip details,
+    itinerary, safety information, travel arrangements,
+    cost breakdown, an active Lead Coordinator,
+    a future registration deadline, and available capacity.
+  </p>
+
+  <p class="small-muted">
+    Reopening a released vacancy is a separate action
+    and remains subject to registration rules and DSA
+    approval where required.
+  </p>
+
+</section>
+
+
+<!-- CUSTOM CONFIRMATION MODAL -->
+
+<dialog id="registration-modal"
+        class="triphub-modal"
+        aria-labelledby="registration-modal-title"
+        aria-describedby="registration-modal-message">
+
+  <div class="triphub-modal-content">
+
+    <div class="triphub-modal-heading">
+
+      <span class="triphub-modal-icon" aria-hidden="true">
+        ✓
+      </span>
+
+      <button type="button"
+              class="triphub-modal-close"
+              onclick="document.getElementById('registration-modal').close()"
+              aria-label="Close confirmation dialog">
+        &times;
+      </button>
+
+    </div>
+
+    <h2 id="registration-modal-title">
+      Confirm Registration
+    </h2>
+
+    <p id="registration-modal-message">
+      Please confirm your action.
+    </p>
+
+    <div class="triphub-modal-actions">
+
+      <button type="button"
+              class="btn btn-secondary"
+              id="registration-modal-cancel">
+        Cancel
+      </button>
+
+      <button type="button"
+              class="btn btn-primary"
+              id="registration-modal-confirm">
+        Confirm
+      </button>
+
+    </div>
+
+  </div>
+
+</dialog>
+
+<%- include('../partials/footer') %>

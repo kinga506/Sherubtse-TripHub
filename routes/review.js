@@ -1,0 +1,17 @@
+const router=require('express').Router();
+const auth=require('../middleware/authorization');
+const c=require('../controllers/reviewController');
+router.get('/workspace/proposals/:tripId/attachments',auth.requireProposalOwner,c.attachmentsPage);
+router.post('/workspace/proposals/:tripId/attachments',auth.requireProposalOwner,c.upload);
+router.post('/workspace/proposals/:tripId/attachments/:attachmentId/remove',auth.requireProposalOwner,c.remove);
+router.get('/workspace/proposals/:tripId/attachments/:attachmentId/download',auth.requireAuth,c.download);
+router.post('/workspace/proposals/:tripId/submit',auth.requireProposalOwner,c.submit);
+router.get('/workspace/dsa/proposals',auth.requireDsa,c.dsaQueue);
+router.get('/workspace/dsa/proposals/:tripId',auth.requireDsa,c.dsaReview);
+router.post('/workspace/dsa/proposals/:tripId/decision',auth.requireDsa,c.decision);
+router.post('/workspace/dsa/proposals/:tripId/handover',auth.requireDsa,c.handover);
+router.get('/workspace/trips/:tripId/revise',auth.requireTripCoordinator,c.revisionForm);
+router.post('/workspace/trips/:tripId/revise',auth.requireTripCoordinator,c.revisionSubmit);
+router.get('/workspace/coordinating-trips',auth.requireStudent,c.coordinating);
+router.post('/workspace/trips/:tripId/request-handover',auth.requireTripCoordinator,c.requestHandover);
+module.exports=router;

@@ -1,0 +1,200 @@
+
+<%- include('../partials/header') %>
+
+<header class="page-heading">
+  <p class="eyebrow">Student Workspace</p>
+  <h1>My Coordinating Trips</h1>
+  <p class="lead">
+    Manage trips assigned to you by DSA.
+    Your account remains a Student account.
+  </p>
+</header>
+
+<% if (!trips.length) { %>
+  <section class="surface-card section-block">
+    <h2>No Coordinating Trips</h2>
+    <p>
+      You currently have no active Lead Coordinator
+      assignments.
+    </p>
+    <a class="btn btn-primary" href="/workspace/student">
+      Back to Student Dashboard
+    </a>
+  </section>
+<% } %>
+
+<% trips.forEach(function(trip) { %>
+
+<section class="surface-card section-block">
+
+  <div class="page-heading">
+    <p class="eyebrow">Lead Coordinator</p>
+    <h2><%= trip.title %></h2>
+    <p>
+      You are responsible for coordinating this trip
+      under DSA supervision.
+    </p>
+  </div>
+
+  <div class="feature-grid">
+
+    <article class="feature-card">
+      <h3>Registration Management</h3>
+      <p>
+        Open or close registration and manage
+        available participant slots.
+      </p>
+      <a class="btn btn-primary"
+         href="/workspace/trips/<%= trip.id %>/registration">
+        Manage Registration
+      </a>
+    </article>
+
+    <article class="feature-card">
+      <h3>Student Applications</h3>
+      <p>
+        Review registration requests and
+        verify consent letters.
+      </p>
+      <a class="btn btn-secondary"
+         href="/workspace/trips/<%= trip.id %>/requests">
+        Review Applications
+      </a>
+    </article>
+
+    <article class="feature-card">
+      <h3>Itinerary and Announcements</h3>
+      <p>
+        Manage trip schedules, activities
+        and participant announcements.
+      </p>
+      <a class="btn btn-secondary"
+         href="/workspace/trips/<%= trip.id %>/updates">
+        Manage Updates
+      </a>
+    </article>
+
+    <article class="feature-card">
+      <h3>Final Participant List</h3>
+      <p>
+        Prepare the confirmed participant list
+        and consent package for DSA review.
+      </p>
+      <a class="btn btn-secondary"
+         href="/workspace/trips/<%= trip.id %>/final-namelist">
+        Final Namelist
+      </a>
+    </article>
+
+    <article class="feature-card">
+      <h3>Packing Suggestions</h3>
+      <p>
+        Prepare recommended items and
+        equipment for the trip.
+      </p>
+      <a class="btn btn-secondary"
+         href="/workspace/trips/<%= trip.id %>/packing">
+        Packing Checklist
+      </a>
+    </article>
+
+    <article class="feature-card">
+      <h3>Expenses and Contributions</h3>
+      <p>
+        Manage estimated expenses and
+        participant contributions.
+      </p>
+      <a class="btn btn-secondary"
+         href="/workspace/trips/<%= trip.id %>/finance">
+        Manage Finances
+      </a>
+    </article>
+
+    <article class="feature-card">
+      <h3>Attendance</h3>
+      <p>
+        Record student attendance and
+        export attendance information.
+      </p>
+      <a class="btn btn-secondary"
+         href="/workspace/trips/<%= trip.id %>/attendance">
+        Manage Attendance
+      </a>
+    </article>
+
+    <article class="feature-card">
+      <h3>Official Travel Form</h3>
+      <p>
+        Prepare the official Student Travel Form
+        for required signatures.
+      </p>
+      <a class="btn btn-secondary"
+         href="/workspace/trips/<%= trip.id %>/student-travel-form">
+        Travel Form
+      </a>
+    </article>
+
+    <article class="feature-card">
+      <h3>Trip Feedback</h3>
+      <p>
+        View feedback submitted by
+        eligible participants.
+      </p>
+      <a class="btn btn-secondary"
+         href="/workspace/trips/<%= trip.id %>/feedback/summary">
+        View Feedback
+      </a>
+    </article>
+
+    <article class="feature-card">
+      <h3>Trip Changes</h3>
+      <p>
+        Request DSA review before making
+        material changes to the trip.
+      </p>
+      <a class="btn btn-secondary"
+         href="/workspace/trips/<%= trip.id %>/revise">
+        Request DSA Review
+      </a>
+    </article>
+
+  </div>
+
+  <details class="surface-card section-block">
+    <summary>
+      <strong>Request Coordinator Handover</strong>
+    </summary>
+
+    <p>
+      If you cannot continue coordinating this trip,
+      submit a handover request to DSA.
+      DSA must approve any Coordinator replacement.
+    </p>
+
+    <form method="post"
+          action="/workspace/trips/<%= trip.id %>/request-handover"
+          class="stack-form">
+
+      <input type="hidden"
+             name="_csrf"
+             value="<%= csrfToken %>">
+
+      <label>
+        Reason for Handover
+        <textarea name="reason"
+                  maxlength="2000"
+                  required></textarea>
+      </label>
+
+      <button type="submit" class="btn btn-outline">
+        Request DSA Handover
+      </button>
+
+    </form>
+  </details>
+
+</section>
+
+<% }); %>
+
+<%- include('../partials/footer') %>

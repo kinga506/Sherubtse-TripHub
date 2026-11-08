@@ -1,0 +1,35 @@
+<%- include('../partials/header') %>
+<header class="page-heading"><p class="eyebrow">Assigned Trip Coordinator</p><h1>Official Student Travel Form</h1><p class="lead"><%= trip.title %></p></header>
+<section class="surface-card section-block">
+ <h2>About this form</h2>
+ <p>This feature fills the original two-page Sherubtse College form. Generating a PDF does not submit it to the college or imply that it has been signed, accepted, or approved. Signature fields remain empty.</p>
+ <p><strong><%= participants.length %> approved students</strong> will be included. Pending, rejected and withdrawn applications are excluded. The original form has capacity for 30 students.</p>
+ <p><strong>Travel-time instruction:</strong> The original form says not to plan travel before 05:00 AM and after 12:00 PM. Please seek DSA clarification about its interpretation. TripHub does not automatically enforce this as a validation rule.</p>
+</section>
+<section class="surface-card section-block"><h2>Review and complete the official fields</h2>
+ <% if(missing.length){ %><div class="alert alert-warning" role="status">Missing information: <%= missing.join(', ') %>. Complete the required blank fields before generating the form.</div><% } %>
+ <form id="travelForm" method="post" action="/workspace/trips/<%= trip.id %>/student-travel-form">
+ <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+ <div class="form-grid">
+ <% [['Organizer name',fields.organizerName],['Programme',fields.programme],['Academic year',fields.year],['Travel date',fields.dateOfTravel],['Destination',fields.destination]].forEach(entry=>{ %>
+  <label><span><%= entry[0] %> <%= entry[1]?'(from college records)':'(missing — enter confirmed value)' %></span><% if(entry[1]){ %><input value="<%= entry[1] %>" disabled><% }else if(['Organizer name','Programme','Academic year'].includes(entry[0])){ %><input name="<%= {'Organizer name':'organizerName','Programme':'programme','Academic year':'year'}[entry[0]] %>" maxlength="70" required><% }else{ %><input value="Missing from trip — edit trip record first" disabled><% } %></label>
+ <% }); %>
+ <label><span>Contact number</span><input name="contact" maxlength="25" value="<%= fields.contact %>" required></label>
+ <label><span>Actual travel departure time (not meeting time)</span><input type="time" name="timeOfTravel" required></label>
+ <label><span>Via / route</span><input name="via" maxlength="48" placeholder="Enter confirmed route" required></label>
+ <label><span>Vehicle type</span><input name="vehicleType" maxlength="30" required></label>
+ <label><span>Vehicle number</span><input name="vehicleNumber" maxlength="30" required></label>
+ <label><span>Driver name and licence number</span><input name="driverNameAndLicense" maxlength="60" required></label>
+ </div>
+ <p class="form-hint">Trip meeting time: <%= trip.meeting_time||'Not provided' %>. Confirm the actual departure time; it may differ from the gathering time.</p>
+ <p class="form-hint">Unknown details must be confirmed and entered by the Coordinator. Do not invent driver or vehicle details. Profile and trip fields must be updated at their source if incomplete.</p>
+ <button type="submit" class="btn btn-primary" <%= participants.length===0||participants.length>30?'disabled':'' %>>Generate unsigned PDF</button>
+ </form>
+</section>
+<section class="surface-card section-block"><h2>Approved students</h2><ol><% participants.forEach(p=>{ %><li><strong><%= p.name %></strong> — <%= p.programme||'programme missing' %>, year <%= p.academic_year||'missing' %>, hall <%= p.residence_hall||'missing' %> <% if(!p.programme){ %><label>Confirmed programme <input form="travelForm" name="student_<%= p.id %>_programme" maxlength="75" required></label><% } %><% if(!p.academic_year){ %><label>Confirmed year <input form="travelForm" name="student_<%= p.id %>_academic_year" maxlength="4" required></label><% } %><% if(!p.residence_hall){ %><label>Confirmed residence hall <input form="travelForm" name="student_<%= p.id %>_residence_hall" maxlength="75" required></label><% } %></li><% }); %></ol></section>
+<section class="surface-card section-block"><h2>Previously generated forms</h2>
+ <% if(!forms.length){ %><p>No form generated yet.</p><% } %>
+ <% forms.forEach(f=>{ %><p>Version <%= f.form_version %> — <%= new Date(f.generated_at).toLocaleString('en-GB') %> · <a href="/workspace/student-travel-forms/<%= f.id %>/pdf?preview=1" target="_blank" rel="noopener">Preview / print PDF</a> · <a href="/workspace/student-travel-forms/<%= f.id %>/pdf">Download PDF</a></p><% }); %>
+ <p class="form-hint">Old versions are immutable historical records. Use your PDF viewer's print function for a paper copy; signatures must be supplied by the responsible people.</p>
+</section>
+<%- include('../partials/footer') %>

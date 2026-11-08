@@ -1,0 +1,9 @@
+<%- include('../partials/header') %>
+<h1>My account</h1>
+<p><strong>Name:</strong> <%= user.name %></p>
+<p><strong>Email:</strong> <%= user.email %></p>
+<p><strong>Account role:</strong> <%= user.role === 'admin' ? 'Superadmin' : user.role === 'dsa' ? 'DSA' : 'Student' %></p>
+<p><a href="/workspace/<%= user.role === 'admin' ? 'superadmin' : user.role %>">Open my dashboard</a></p>
+<h2>Account Settings</h2><p><a href="/auth/change-password">Security → Change Password</a></p><p>Trip-specific dashboards and further profile management will arrive in later steps.</p>
+<form method="post" action="/auth/logout"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button type="submit">Log out</button></form>
+<%- include('../partials/footer') %>

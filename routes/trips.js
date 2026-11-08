@@ -1,0 +1,10 @@
+const router=require('express').Router();
+const controller=require('../controllers/tripDiscoveryController');
+const reg=require('../controllers/registrationController');
+const {requireStudent}=require('../middleware/authorization');
+router.get('/',controller.gallery);
+router.get('/:id/join',requireStudent,reg.joinPage);
+router.post('/:id/join',requireStudent,reg.join);
+router.post('/:id/withdraw',requireStudent,reg.withdraw);
+router.get('/:id',controller.detail);
+module.exports=router;

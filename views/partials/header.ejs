@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#164d40">
+  <meta name="description" content="Sherubtse TripHub — a college trip planning and management project for Sherubtse College.">
+  <title><%= title %> | Sherubtse TripHub</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script defer src="/js/ui.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="/" aria-label="Sherubtse TripHub homepage">
+      <span class="brand-symbol" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" width="38" height="38"><path d="M6 32 18 13 26 25 33 17 43 32" stroke="currentColor" stroke-width="3.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M6 39c8-8 17 6 25-3 4-4 7-6 12-4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="36" cy="10" r="3" fill="currentColor"/></svg></span>
+      <span class="brand-text"><strong>Sherubtse TripHub</strong><small>Explore. Experience. Connect.</small></span>
+    </a>
+    <button type="button" class="nav-toggle" aria-controls="site-navigation" aria-expanded="false" data-nav-toggle aria-label="Open navigation"><span aria-hidden="true">☰</span><span class="sr-only">Menu</span></button>
+    <nav class="site-nav" id="site-navigation" aria-label="Main navigation" data-mobile-nav>
+      <a href="/" <% if(typeof activeNav !== 'undefined' && activeNav === 'home'){ %>aria-current="page"<% } %>>Home</a>
+      <a href="/trips" <% if(typeof activeNav !== 'undefined' && activeNav === 'trips'){ %>aria-current="page"<% } %>>Upcoming trips</a>
+      <a href="/help">Help</a>
+      <a href="/destinations" <% if(typeof activeNav !== 'undefined' && activeNav === 'destinations'){ %>aria-current="page"<% } %>>Destinations</a>
+      <% if (currentUser) { %>
+        <% if(currentUser.role === 'student') { %>
+          <a href="/workspace/student" <% if(typeof activeNav !== 'undefined' && activeNav === 'student'){ %>aria-current="page"<% } %>>Dashboard</a>
+          <a href="/workspace/student#organise-trip">Organise a Trip</a>
+          <a href="/workspace/my-trips">My Trips</a>
+          <% if(typeof hasCoordinatingTrips !== 'undefined' && hasCoordinatingTrips){ %><a href="/workspace/coordinating-trips">My Coordinating Trips</a><% } %>
+        <% } else if(currentUser.role === 'dsa') { %><a href="/workspace/dsa">DSA workspace</a><a href="/workspace/dsa/deadline-extensions">Deadline requests</a><a href="/workspace/dsa/final-namelists">Final namelists</a><a href="/workspace/dsa/trip-lifecycle">Trip completion</a><a href="/workspace/dsa/history">Review history</a>
+        <% } else if(currentUser.role === 'admin') { %><a href="/workspace/superadmin">Superadmin</a><% } %>
+        <a href="/account" class="nav-account">My account</a>
+        <form method="post" action="/auth/logout" class="nav-logout"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button type="submit" class="nav-link-button">Log out</button></form>
+      <% } else { %>
+        <a href="/auth/login">Log in</a><a class="nav-signup" href="/auth/signup">Student signup</a>
+      <% } %>
+    </nav>
+  </div>
+</header>
+<main id="main-content" class="shell page-content">

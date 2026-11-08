@@ -1,0 +1,10 @@
+const r=require('express').Router();
+const auth=require('../middleware/authorization');
+const c=require('../controllers/finalNamelistController');
+r.get('/workspace/trips/:tripId/final-namelist',auth.requireTripCoordinator,c.coordinatorPage);
+r.post('/workspace/trips/:tripId/final-namelist/submit',auth.requireLeadTripCoordinator,c.submit);
+r.get('/workspace/dsa/final-namelists',auth.requireDsa,c.queue);
+r.get('/workspace/dsa/final-namelists/:tripId',auth.requireDsa,c.review);
+r.post('/workspace/dsa/final-namelists/:tripId/submissions/:submissionId/decision',auth.requireDsa,c.decide);
+r.get('/workspace/final-namelist-packages/:submissionId/pdf',auth.requireAuth,c.download);
+module.exports=r;

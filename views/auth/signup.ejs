@@ -1,0 +1,14 @@
+<%- include('../partials/header') %>
+<h1>Create Student account</h1>
+<p>Only verified Sherubtse College Student accounts can register here.</p>
+<% if (error) { %><p role="alert"><%= error %></p><% } %>
+<form method="post" action="/auth/signup">
+ <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+ <label>Full name <input name="name" maxlength="100" required></label>
+ <label>Sherubtse email <input name="email" type="email" pattern="[0-9]+\.sherubtse@rub\.edu\.bt" placeholder="07270030.sherubtse@rub.edu.bt" required></label>
+ <label>Password (12–72 characters) <input name="password" type="password" minlength="12" maxlength="72" required></label>
+ <label>Confirm password <input name="confirmPassword" type="password" minlength="12" maxlength="72" required></label>
+ <button type="submit">Create account</button>
+</form>
+<p><a href="/auth/login">Already registered? Log in</a></p>
+<%- include('../partials/footer') %>

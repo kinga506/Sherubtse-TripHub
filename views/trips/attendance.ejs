@@ -1,0 +1,35 @@
+<%- include('../partials/header') %>
+<header class="page-heading"><p class="eyebrow">Private trip workspace</p><h1>Attendance: <%= trip.title %></h1>
+<p class="lead">Attendance is recorded by date for approved participants only.</p></header>
+<% if(saved){ %><p class="form-message" role="status">Attendance updated.</p><% } %>
+<% if(isCoordinator){ %>
+<section class="surface-card section-block"><h2>Attendance date</h2>
+<form method="get" class="stack-form" action="/workspace/trips/<%= trip.id %>/attendance">
+<label>Choose a trip date <input name="date" type="date" min="<%= new Date(trip.start_date).toISOString().slice(0,10) %>" max="<%= new Date(trip.end_date).toISOString().slice(0,10) %>" value="<%= selectedDate %>" required></label>
+<button class="btn btn-secondary" type="submit">View date</button></form></section>
+<section class="surface-card section-block"><h2>Approved participants · <%= selectedDate %></h2>
+<% if(!canManage){ %><p class="form-message">This trip is read-only.</p><% } %>
+<% if(!roster.length){ %><p>There are no approved participants for attendance.</p><% } %>
+<% roster.forEach(p=>{ %>
+<form method="post" action="/workspace/trips/<%= trip.id %>/attendance/one" class="stack-form section-block">
+<input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="user_id" value="<%= p.user_id %>">
+<input type="hidden" name="attendance_date" value="<%= selectedDate %>">
+<strong><%= p.name %></strong><span class="helper-text"><%= p.student_id||'' %></span>
+<label>Status <select name="status" <%= canManage?'':'disabled' %> required><option value="">Not marked</option>
+<% STATUSES.forEach(s=>{ %><option value="<%= s %>" <%= p.status===s?'selected':'' %>><%= s %></option><% }) %></select></label>
+<% if(canManage){ %><button class="btn btn-secondary" type="submit">Save attendance</button><% } %>
+</form><% }) %>
+<% if(canManage&&roster.length){ %><form method="post" action="/workspace/trips/<%= trip.id %>/attendance/all" class="stack-form">
+<input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="attendance_date" value="<%= selectedDate %>">
+<button class="btn btn-primary" type="submit" onclick="return confirm('Mark every approved participant present for this date? Existing marks for this date will be replaced.')">Mark all present</button></form><% } %>
+</section>
+<section class="surface-card section-block"><h2>Download CSV exports</h2><p class="helper-text">Exports contain private student and trip information. Handle downloads securely.</p>
+<p><a class="btn btn-secondary" href="/workspace/trips/<%= trip.id %>/exports/attendance.csv">Attendance CSV</a>
+<a class="btn btn-secondary" href="/workspace/trips/<%= trip.id %>/exports/expenses.csv">Actual expenses CSV</a></p></section>
+<% } else if(isParticipant){ %>
+<section class="surface-card section-block"><h2>My attendance records</h2>
+<% if(!records.length){ %><p>No attendance has been recorded for you.</p><% } else { %><div class="table-scroll"><table><thead><tr><th>Date</th><th>Status</th></tr></thead><tbody>
+<% records.forEach(r=>{ %><tr><td><%= new Date(r.attendance_date).toISOString().slice(0,10) %></td><td><%= r.status %></td></tr><% }) %>
+</tbody></table></div><% } %></section>
+<% } %>
+<%- include('../partials/footer') %>

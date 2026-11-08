@@ -1,0 +1,10 @@
+const F=require('../models/FinalNamelist');
+const {validId}=require('../models/Access');
+function fail(err,res,next){if(err.status)return res.status(err.status).send(err.message);next(err);}
+async function coordinatorPage(req,res,next){try{const state=await F.current(Number(req.params.tripId));res.render('trips/final-namelist',{title:'Final namelist and consent package',...state,events:await F.events(Number(req.params.tripId)),isLead:req.tripPermission?.assignment_role==='lead'});}catch(e){next(e);}}
+async function submit(req,res,next){try{await F.submit(Number(req.params.tripId),req.currentUser.id);res.redirect(`/workspace/trips/${req.params.tripId}/final-namelist`);}catch(e){fail(e,res,next);}}
+async function queue(req,res,next){try{res.render('dsa/final-namelists',{title:'Final namelist review',items:await F.queue()});}catch(e){next(e);}}
+async function review(req,res,next){try{if(!validId(req.params.tripId))return res.status(400).send('Invalid trip');const state=await F.current(Number(req.params.tripId));res.render('dsa/final-namelist-review',{title:'Review final participant package',...state,events:await F.events(Number(req.params.tripId))});}catch(e){next(e);}}
+async function decide(req,res,next){try{if(!validId(req.params.submissionId))return res.status(400).send('Invalid submission');const result=await F.decide(Number(req.params.submissionId),req.currentUser.id,req.body.action,req.body.remarks);res.redirect(`/workspace/dsa/final-namelists/${result.tripId}`);}catch(e){fail(e,res,next);}}
+async function download(req,res,next){try{if(!validId(req.params.submissionId))return res.status(400).send('Invalid submission');const {submission,bytes}=await F.document(Number(req.params.submissionId),req.currentUser.id);res.set('Cache-Control','private, no-store');res.type('application/pdf');res.set('Content-Disposition',`${req.query.preview==='1'?'inline':'attachment'}; filename="triphub-final-list-${submission.trip_id}-v${submission.submission_number}.pdf"`);res.send(bytes);}catch(e){fail(e,res,next);}}
+module.exports={coordinatorPage,submit,queue,review,decide,download};

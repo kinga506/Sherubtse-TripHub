@@ -1,0 +1,51 @@
+{
+  "info": {
+    "name": "Sherubtse TripHub Public REST API \u2014 Step 20",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Public read-only JSON routes. Configure baseUrl to match local or deployed environment."
+  },
+  "item": [
+    {
+      "name": "List public trips",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/trips"
+      },
+      "response": []
+    },
+    {
+      "name": "Search published trips",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/trips?q=Merak&registration=open&sort=soonest"
+      },
+      "response": []
+    },
+    {
+      "name": "Get published trip",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/trips/{{tripId}}"
+      },
+      "response": []
+    },
+    {
+      "name": "List destinations",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/destinations"
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "tripId",
+      "value": "1"
+    }
+  ]
+}

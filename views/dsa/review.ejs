@@ -1,0 +1,67 @@
+<%- include('../partials/header') %>
+<div class="page-heading"><p class="eyebrow">DSA institutional review</p><h1><%= trip.title %></h1><p class="lead">Proposal status: <%= trip.approval_status %> · Submitted by <%= trip.proposer_name %> · Version <%= sub.submission_number %></p></div>
+<section class="surface-card section-block"><h2>Submitted versions</h2><p><% versions.forEach(function(v){%><a href="/workspace/dsa/proposals/<%= trip.id %>?version=<%= v.submission_number %>">Version <%= v.submission_number %></a> · <%});%></p></section><section class="surface-card section-block"><h2>Submitted proposal snapshot</h2>
+<% const snapshot=sub.proposal_snapshot; %>
+<p><strong>Purpose:</strong> <%= snapshot.trip.purpose %></p><p><strong>Description:</strong> <%= snapshot.trip.description %></p>
+<p><strong>Dates:</strong> <%= String(snapshot.trip.start_date).slice(0,10) %> to <%= String(snapshot.trip.end_date).slice(0,10) %></p>
+<p><strong>Meeting:</strong> <%= snapshot.trip.meeting_point %> · <%= snapshot.trip.meeting_time %></p>
+<p><strong>Transport:</strong> <%= snapshot.trip.transport_information %></p><p><strong>Limit:</strong> <%= snapshot.trip.max_participants %> students</p><p><strong>Estimated cost:</strong> Nu. <%= snapshot.trip.estimated_cost %></p>
+<p><strong>Safety:</strong> <%= snapshot.trip.safety_information %></p><p><strong>Emergency:</strong> <%= snapshot.trip.emergency_contact_name %>, <%= snapshot.trip.emergency_contact_phone %></p>
+<h3>Itinerary</h3><ol><% snapshot.itinerary.forEach(function(i){%><li>Day <%= i.day_number %>: <%= i.title %> — <%= i.description %></li><%});%></ol>
+<h3>Estimated breakdown</h3><ul><% snapshot.costs.forEach(function(c){%><li><%= c.label %>: Nu. <%= c.amount %></li><%});%></ul>
+<h3>Submitted attachments</h3><% if(!files.length){%><p>None attached.</p><%}%><ul><%files.forEach(function(f){%><li><a href="/workspace/proposals/<%= trip.id %>/attachments/<%= f.id %>/download"><%= f.document_title %> (<%= f.original_filename %>)</a></li><%});%></ul>
+</section>
+<% if(trip.approval_status==='pending_dsa' && Number(sub.submission_number)===Number(versions[0].submission_number)){%>
+<section class="surface-card section-block"><h2>Record DSA decision</h2>
+<form method="post" action="/workspace/dsa/proposals/<%= trip.id %>/decision" class="form-grid"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+<label>Decision <select name="decision" required><option value="approved">Approve</option><option value="changes_requested">Request changes</option><option value="rejected">Reject</option></select></label>
+<label>Lead Coordinator (required for approval) <select name="lead_user_id"><option value="">Select verified Student</option><%students.forEach(function(s){%><option value="<%= s.id %>" <%= Number(s.id)===Number(trip.proposed_by_user_id)?'selected':'' %>><%= s.name %> — <%= s.email %></option><%});%></select></label>
+
+<label>Decision remarks (mandatory for changes or rejection) <textarea name="remarks" maxlength="2000"></textarea></label><button class="btn btn-primary" type="submit">Save DSA decision</button></form>
+</section><%}%>
+<section class="surface-card section-block"><h2>Coordinator assignment history</h2><ul><%assignments.forEach(function(a){%><li><%= a.name %> — <%= a.assignment_role %> (<%= a.status %>)</li><%});%></ul>
+
+<% if (trip.approval_status === 'approved') { %>
+
+  <h3>DSA-supervised Coordinator Reassignment</h3>
+
+  <form method="post"
+        action="/workspace/dsa/proposals/<%= trip.id %>/handover">
+
+    <input type="hidden"
+           name="_csrf"
+           value="<%= csrfToken %>">
+
+    <label>
+      Lead Coordinator
+      <select name="lead_user_id" required>
+        <% students.forEach(function(s) { %>
+          <option value="<%= s.id %>"
+            <%= assignments.some(a =>
+              a.status === 'active' &&
+              a.assignment_role === 'lead' &&
+              Number(a.user_id) === Number(s.id)
+            ) ? 'selected' : '' %>>
+            <%= s.name %>
+          </option>
+        <% }); %>
+      </select>
+    </label>
+
+    <label>
+      Reason for reassignment
+      <textarea name="reason"
+                required
+                maxlength="2000"></textarea>
+    </label>
+
+    <button class="btn btn-secondary" type="submit">
+      Confirm Coordinator Change
+    </button>
+
+  </form>
+
+<% } %>
+
+</section><section class="surface-card section-block"><h2>Review history</h2><ol><%events.forEach(function(h){%><li><%= h.action %> — <%= h.created_at.toISOString().slice(0,16) %> — <%= h.remarks||'No remarks' %></li><%});%></ol></section>
+<%- include('../partials/footer') %>

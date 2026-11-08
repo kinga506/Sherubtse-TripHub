@@ -1,0 +1,13 @@
+<%- include('../partials/header') %>
+<header class="page-heading"><p class="eyebrow">Student trip feedback</p><h1><%= trip.title %></h1><p class="lead">You can submit one rating and comment after the trip has ended.</p></header>
+<section class="surface-card section-block">
+<% if(typeof existing!=='undefined' && existing){ %>
+<h2>Your submitted feedback</h2><p><strong><%= existing.rating %> / 5 stars</strong></p><p><%= existing.comment %></p><p class="helper-text">Submitted <%= new Date(existing.createdAt).toLocaleDateString('en-GB') %>. Feedback cannot be submitted twice.</p>
+<% }else if(typeof saved!=='undefined' && saved){ %><p class="form-message">Feedback recorded.</p>
+<% }else{ %>
+<h2>Rate this trip</h2><form class="stack-form" method="post" action="/workspace/trips/<%= trip.id %>/feedback">
+<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+<label>Rating <select name="rating" required><option value="">Choose a rating</option><% [1,2,3,4,5].forEach(n=>{ %><option value="<%= n %>"><%= n %> / 5</option><% }) %></select></label>
+<label>Feedback <textarea name="comment" maxlength="1500" minlength="1" required placeholder="Share your experience of the trip"></textarea></label>
+<button class="btn btn-primary" type="submit">Submit trip feedback</button></form><% } %>
+</section><%- include('../partials/footer') %>

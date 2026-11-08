@@ -1,0 +1,11 @@
+<%- include('partials/header') %>
+<div class="page-heading"><p class="eyebrow">Restricted workspace</p><h1><%= heading %></h1><p class="lead"><%= detail %></p></div>
+<% if (currentUser && currentUser.role === 'student' && heading === 'Student dashboard') { %>
+<section id="organise-trip" class="surface-card section-block"><p class="eyebrow">Student tools</p><h2>Organise a Trip</h2><p>Create a draft, prepare your itinerary and estimated costs, then preview your proposal and submit it to DSA for review.</p><a class="btn btn-primary" href="/workspace/proposals/new">Create Trip Proposal</a> <a class="text-link" href="/workspace/proposals">My proposals →</a> <a class="text-link" href="/workspace/my-trips">My Trips →</a></section>
+<% } %>
+<% if(assigned.length) { %>
+<section class="section-block" id="coordinating-trips"><h2>My Coordinating Trips</h2><div class="feature-grid"><% assigned.forEach(function(trip){ %><article class="feature-card"><h3><%= trip.title %></h3><span class="status-badge badge-info"><%= trip.assignment_role %></span><p><a href="/workspace/trips/<%= trip.id %>/coordinator">Open restricted workspace →</a> · <a href="/workspace/trips/<%= trip.id %>/registration">Manage registration →</a> · <a href="/workspace/trips/<%= trip.id %>/updates">Itinerary and announcements →</a> · <a href="/workspace/trips/<%= trip.id %>/student-travel-form">Official Student Travel Form →</a> · <a href="/workspace/trips/<%= trip.id %>/finance" data-step15-link="true">Finances →</a> <a class="btn btn-secondary" href="/workspace/trips/<%= trip.id %>/attendance">Attendance</a> <a class="btn btn-secondary" href="/workspace/trips/<%= trip.id %>/feedback/summary">Trip feedback</a></p></article><% }); %></div></section>
+<% } else if(currentUser && currentUser.role === 'student' && heading === 'Student dashboard') { %>
+<section class="empty-state section-block" id="coordinating-trips"><span class="empty-icon" aria-hidden="true">◌</span><h2>No coordinating trips yet</h2><p>DSA can assign you to coordinate a trip after approving its proposal.</p></section><% } %>
+<a class="text-link" href="/account">Back to My Account →</a>
+<%- include('partials/footer') %>

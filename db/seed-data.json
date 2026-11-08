@@ -1,0 +1,1018 @@
+{
+  "source": "TripPack.docx",
+  "notice": "Source trip schedules, prices and users are DEMONSTRATION examples, not real trips or official college-approved events.",
+  "programmes": [
+    {
+      "name": "Data Science and Data Analytics",
+      "code": "DSDA"
+    },
+    {
+      "name": "Computer Science",
+      "code": "CS"
+    },
+    {
+      "name": "Economics",
+      "code": "Economics"
+    },
+    {
+      "name": "Political Science and Sociology",
+      "code": "PSS"
+    },
+    {
+      "name": "English Studies",
+      "code": "English"
+    },
+    {
+      "name": "Geography",
+      "code": "Geography"
+    },
+    {
+      "name": "Life Science",
+      "code": "Life Science"
+    },
+    {
+      "name": "Physical Science",
+      "code": "Physical Science"
+    }
+  ],
+  "destinations": [
+    {
+      "slug": "chorten-kora",
+      "name": "Chorten Kora",
+      "source_name": "Chorten Kora",
+      "dzongkhag": "Trashiyangtse",
+      "description": "Chorten Kora is a famous Buddhist stupa located beside the Kholong Chhu River in Trashiyangtse. Built in 1740 by Lama Ngawang Loday, it is believed to resemble the famous Boudhanath Stupa in Nepal. The site is an important religious destination and attracts many pilgrims during its annual Chorten Kora festival.",
+      "best_season": "February–April, especially during the annual Chorten Kora festival, and September–November for pleasant weather.",
+      "transport": "Private car, taxi or hired group vehicle from Sherubtse College via Trashigang.",
+      "transport_cost_min": 300,
+      "transport_cost_max": 600,
+      "transport_cost_source": "Nu. 300–600 per student (shared transport budget).",
+      "entry_fee_note": "No standard entry ticket for visiting the stupa.",
+      "distance_text": "Approximately 75–80 km.",
+      "drive_time_text": "Approximately 2–2.5 hours.",
+      "trek_time_text": null,
+      "travel_note": null,
+      "practical_tip": "Walk clockwise around the stupa, dress modestly and avoid disturbing people during prayers.",
+      "is_trek": false,
+      "photo": "/images/destinations/chorten-kora.jpg"
+    },
+    {
+      "slug": "bumdeling",
+      "name": "Bumdeling Wildlife Sanctuary",
+      "source_name": "Bumdeling (Bumdeling Wildlife Sanctuary)",
+      "dzongkhag": "Trashiyangtse",
+      "description": "Bumdeling is a beautiful protected area in north-eastern Bhutan, famous for its rich biodiversity, wetlands and natural landscapes. It is particularly known as a winter habitat for endangered black-necked cranes, which migrate to the valley during the colder months. Visitors can enjoy birdwatching, nature photography and peaceful surroundings.",
+      "best_season": "November–February, especially for observing black-necked cranes.",
+      "transport": "Private car, taxi or hired group vehicle from Sherubtse College via Trashigang and Trashiyangtse.",
+      "transport_cost_min": 350,
+      "transport_cost_max": 650,
+      "transport_cost_source": "Nu. 350–650 per student (shared transport budget).",
+      "entry_fee_note": "No standard general visitor ticket is listed. Confirm whether a forestry or protected-area permit is required for the specific area being visited.",
+      "distance_text": "Approximately 85–95 km to the Bumdeling Valley viewing area.",
+      "drive_time_text": "Approximately 2.5–3 hours.",
+      "trek_time_text": null,
+      "travel_note": null,
+      "practical_tip": "Visit during winter when the black-necked cranes are present. Carry binoculars if available and avoid disturbing the birds.",
+      "is_trek": false,
+      "photo": "/images/destinations/bumdeling.jpg"
+    },
+    {
+      "slug": "merak-village",
+      "name": "Merak Village",
+      "source_name": "Merak Village",
+      "dzongkhag": "Trashigang",
+      "description": "Merak is a remote highland village in eastern Bhutan, located at an altitude of approximately 3,500 metres. It is home to the Brokpa community, known for their distinctive traditional clothing, language, culture and semi-nomadic yak-herding lifestyle. Visitors can experience traditional village life and enjoy beautiful mountain landscapes.",
+      "best_season": "March–May and September–November.",
+      "transport": "Four-wheel-drive vehicle or hired group vehicle, subject to current road accessibility. Some routes may require walking.",
+      "transport_cost_min": 800,
+      "transport_cost_max": 1500,
+      "transport_cost_source": "Nu. 800–1,500 per student (shared transport budget).",
+      "entry_fee_note": "No standard village entry ticket. Confirm local arrangements and any applicable sanctuary requirements.",
+      "distance_text": "Approximately 90–110 km, depending on the accessible road endpoint and route.",
+      "drive_time_text": "Approximately 4–6 hours, potentially longer if trekking is required.",
+      "trek_time_text": "Walking may be required; confirm current road access.",
+      "travel_note": "An older Ministry of Works and Human Settlement study describes a route involving a four-hour drive from Trashigang to Khandu-Numo followed by approximately one hour of walking. More recent travel information indicates improved road access, so confirm the actual vehicle endpoint locally before publishing a fixed travel time.",
+      "practical_tip": "Carry warm clothes because of the high altitude and cold weather. Always ask permission before taking photographs of local residents.",
+      "is_trek": false,
+      "photo": "/images/destinations/merak-village.jpg"
+    },
+    {
+      "slug": "sakteng-village",
+      "name": "Sakteng Village",
+      "source_name": "Sakteng Village",
+      "dzongkhag": "Trashigang",
+      "description": "Sakteng is a remote highland village located within Sakteng Wildlife Sanctuary in eastern Bhutan. It is home to the Brokpa community, whose traditional lifestyle is closely connected to livestock farming and pastoral activities. The village is also known for its beautiful mountain scenery, unique cultural traditions and local stories about the mythical Migoi (Yeti).",
+      "best_season": "March–May and September–November.",
+      "transport": "Four-wheel-drive vehicle to the accessible road endpoint, followed by walking or trekking where necessary.",
+      "transport_cost_min": 700,
+      "transport_cost_max": 1300,
+      "transport_cost_source": "Nu. 700–1,300 per student (shared transport budget, excluding trekking support).",
+      "entry_fee_note": "No standard village entry ticket is listed. Confirm sanctuary access and any applicable permit requirements.",
+      "distance_text": "Approximately 85–100 km by the approach route, depending on the road endpoint.",
+      "drive_time_text": "Approximately 4–6 hours or longer, depending on road accessibility and walking requirements.",
+      "trek_time_text": "Walking may be required; confirm current road access.",
+      "travel_note": "The Ministry's settlement study documents vehicle access to Thrakthi followed by approximately three hours of walking to Sakteng. The current route should be checked with the local administration because road access can change.",
+      "practical_tip": "Carry sufficient food, water and warm clothing. Respect the local culture and avoid littering in the sanctuary.",
+      "is_trek": false,
+      "photo": "/images/destinations/sakteng-village.jpg"
+    },
+    {
+      "slug": "dangling-tsho",
+      "name": "Dangling Tsho",
+      "source_name": "Dangling Tsho (Dangling Lake)",
+      "dzongkhag": "Trashigang",
+      "description": "Dangling Tsho is a sacred mountain lake situated above Khaling, surrounded by beautiful fir forests and mountain scenery. It is believed to be the sacred abode of Meme Dangling, a local protective deity. The lake is an important religious destination and attracts visitors interested in trekking, nature and local spiritual traditions.",
+      "best_season": "April–November, subject to local restrictions. The mountain is traditionally closed during Ladam, approximately December–March.",
+      "transport": "Local transport, taxi or private vehicle from Sherubtse College to Khaling, followed by trekking to the lake.",
+      "transport_cost_min": 300,
+      "transport_cost_max": 600,
+      "transport_cost_source": "Nu. 300–600 per student for shared road transport to Khaling. Trekking, guide and camping expenses are additional.",
+      "entry_fee_note": "No separate standard entry ticket is listed. Confirm local access arrangements.",
+      "distance_text": "Approximately 75–80 km by road to Khaling, followed by a long trek to the lake.",
+      "drive_time_text": "Approximately 2–2.5 hours by road to Khaling.",
+      "trek_time_text": "7–8 hours of walking to the lake.",
+      "travel_note": "Dangling Tsho is a trekking destination, not a regular roadside attraction. A complete trekking itinerary can take around four days, according to the published trekking information.",
+      "practical_tip": "Start trekking early, wear proper hiking shoes and carry sufficient water and warm clothing. Do not bring meat, fish, onion or garlic to the sacred lake, and follow local religious customs.",
+      "is_trek": true,
+      "photo": "/images/destinations/dangling-tsho.jpg"
+    },
+    {
+      "slug": "takila",
+      "name": "Takila (Guru Nangsa Zelnen Statue)",
+      "source_name": "Takila (Guru Nangsa Zelnen Statue)",
+      "dzongkhag": "Lhuentse",
+      "description": "Takila is a famous religious destination in Lhuentse, known for its magnificent 154-foot statue of Guru Padmasambhava, also known as Guru Nangsa Zelnen. The statue was constructed under the Druk Odiyana Project and consecrated in 2015. It is surrounded by eight large stupas and 108 smaller chortens, making it an important place for religious visits and spiritual activities.",
+      "best_season": "March–May and September–November. The site can be visited throughout the year, depending on road conditions.",
+      "transport": "Private car, taxi or hired group vehicle from Sherubtse College via Trashigang and Mongar.",
+      "transport_cost_min": 1200,
+      "transport_cost_max": 2000,
+      "transport_cost_source": "Nu. 1,200–2,000 per student (shared transport budget).",
+      "entry_fee_note": "No separate general entry ticket is listed. Confirm any local arrangements before visiting.",
+      "distance_text": "Approximately 190–210 km, depending on the route.",
+      "drive_time_text": "Approximately 6–7.5 hours by road.",
+      "trek_time_text": null,
+      "travel_note": null,
+      "practical_tip": "Dress modestly, remove your shoes before entering temple areas and seek permission before taking photographs inside religious buildings.",
+      "is_trek": false,
+      "photo": "/images/destinations/takila.jpg"
+    }
+  ],
+  "source_trips": [
+    {
+      "seed_key": "source-trip-1",
+      "title": "Eastern Bhutan Cultural and Nature Tour",
+      "destination_slug": "chorten-kora",
+      "start_date": "2027-03-12",
+      "end_date": "2027-03-13",
+      "meeting_time": "06:30",
+      "meeting_point": "Main entrance, Sherubtse College",
+      "estimated_cost": 1800,
+      "max_participants": 20,
+      "description": "Source demonstration itinerary: Chorten Kora and Bumdeling. Dates and costs are proposed examples, not confirmed college trips.",
+      "is_sample": true,
+      "estimated_budget_note": "Detailed cost breakdown not provided in the source material.",
+      "source_date_text": "12–13 March 2027",
+      "itinerary": [
+        {
+          "day_number": 1,
+          "start_time": "06:30",
+          "title": "6:30 AM: Assemble at Sherubtse College.",
+          "description": "6:30 AM: Assemble at Sherubtse College."
+        },
+        {
+          "day_number": 1,
+          "start_time": "07:00",
+          "title": "7:00 AM: Depart for Trashiyangtse.",
+          "description": "7:00 AM: Depart for Trashiyangtse."
+        },
+        {
+          "day_number": 1,
+          "start_time": "10:00",
+          "title": "10:00 AM: Arrive and visit Chorten Kora.",
+          "description": "10:00 AM: Arrive and visit Chorten Kora."
+        },
+        {
+          "day_number": 1,
+          "start_time": "12:30",
+          "title": "12:30 PM: Lunch and local sightseeing.",
+          "description": "12:30 PM: Lunch and local sightseeing."
+        },
+        {
+          "day_number": 1,
+          "start_time": "14:00",
+          "title": "2:00 PM: Travel towards Bumdeling.",
+          "description": "2:00 PM: Travel towards Bumdeling."
+        },
+        {
+          "day_number": 1,
+          "start_time": "16:00",
+          "title": "4:00 PM: Explore the valley and surrounding natural environment.",
+          "description": "4:00 PM: Explore the valley and surrounding natural environment."
+        },
+        {
+          "day_number": 1,
+          "start_time": "18:00",
+          "title": "6:00 PM: Dinner and overnight stay.",
+          "description": "6:00 PM: Dinner and overnight stay."
+        },
+        {
+          "day_number": 2,
+          "start_time": "06:30",
+          "title": "6:30 AM: Breakfast.",
+          "description": "6:30 AM: Breakfast."
+        },
+        {
+          "day_number": 2,
+          "start_time": "07:30",
+          "title": "7:30 AM: Morning nature walk and birdwatching.",
+          "description": "7:30 AM: Morning nature walk and birdwatching."
+        },
+        {
+          "day_number": 2,
+          "start_time": "10:00",
+          "title": "10:00 AM: Explore the surrounding area and take photographs.",
+          "description": "10:00 AM: Explore the surrounding area and take photographs."
+        },
+        {
+          "day_number": 2,
+          "start_time": "12:00",
+          "title": "12:00 PM: Lunch.",
+          "description": "12:00 PM: Lunch."
+        },
+        {
+          "day_number": 2,
+          "start_time": "13:00",
+          "title": "1:00 PM: Return journey to Kanglung.",
+          "description": "1:00 PM: Return journey to Kanglung."
+        },
+        {
+          "day_number": 2,
+          "start_time": null,
+          "title": "4:00–5:00 PM: Expected arrival at Sherubtse College.",
+          "description": "4:00–5:00 PM: Expected arrival at Sherubtse College."
+        }
+      ],
+      "packing_suggestions": [
+        "Student ID card",
+        "Comfortable walking shoes",
+        "Warm jacket",
+        "Water bottle",
+        "Personal toiletries",
+        "Power bank",
+        "Camera or mobile phone",
+        "Personal medicines"
+      ],
+      "announcement": "All participants must bring their student ID cards. Please arrive at the meeting point by 6:30 AM. Late arrivals may miss the departure. Keep the environment clean and avoid disturbing wildlife."
+    },
+    {
+      "seed_key": "source-trip-2",
+      "title": "Merak Highland Cultural Adventure",
+      "destination_slug": "merak-village",
+      "start_date": "2027-04-09",
+      "end_date": "2027-04-11",
+      "meeting_time": "05:30",
+      "meeting_point": "Main entrance, Sherubtse College",
+      "estimated_cost": 3500,
+      "max_participants": 15,
+      "description": "Source demonstration itinerary: Merak Village. Dates and costs are proposed examples, not confirmed college trips.",
+      "is_sample": true,
+      "estimated_budget_note": "Detailed cost breakdown not provided in the source material.",
+      "source_date_text": "9–11 April 2027",
+      "itinerary": [
+        {
+          "day_number": 1,
+          "start_time": "05:30",
+          "title": "5:30 AM: Assemble at Sherubtse College.",
+          "description": "5:30 AM: Assemble at Sherubtse College."
+        },
+        {
+          "day_number": 1,
+          "start_time": "06:00",
+          "title": "6:00 AM: Depart for Merak.",
+          "description": "6:00 AM: Depart for Merak."
+        },
+        {
+          "day_number": 1,
+          "start_time": null,
+          "title": "10:00 AM–12:00 PM: Travel and scheduled breaks.",
+          "description": "10:00 AM–12:00 PM: Travel and scheduled breaks."
+        },
+        {
+          "day_number": 1,
+          "start_time": null,
+          "title": "Afternoon: Arrive in Merak, depending on road access.",
+          "description": "Afternoon: Arrive in Merak, depending on road access."
+        },
+        {
+          "day_number": 1,
+          "start_time": "15:00",
+          "title": "3:00 PM: Explore the village and surrounding landscape.",
+          "description": "3:00 PM: Explore the village and surrounding landscape."
+        },
+        {
+          "day_number": 1,
+          "start_time": "18:00",
+          "title": "6:00 PM: Dinner and overnight stay at a pre-arranged homestay.",
+          "description": "6:00 PM: Dinner and overnight stay at a pre-arranged homestay."
+        },
+        {
+          "day_number": 2,
+          "start_time": "07:00",
+          "title": "7:00 AM: Breakfast.",
+          "description": "7:00 AM: Breakfast."
+        },
+        {
+          "day_number": 2,
+          "start_time": "08:00",
+          "title": "8:00 AM: Explore traditional Brokpa culture and lifestyle.",
+          "description": "8:00 AM: Explore traditional Brokpa culture and lifestyle."
+        },
+        {
+          "day_number": 2,
+          "start_time": "10:00",
+          "title": "10:00 AM: Learn about traditional clothing and yak-herding practices.",
+          "description": "10:00 AM: Learn about traditional clothing and yak-herding practices."
+        },
+        {
+          "day_number": 2,
+          "start_time": "12:30",
+          "title": "12:30 PM: Lunch.",
+          "description": "12:30 PM: Lunch."
+        },
+        {
+          "day_number": 2,
+          "start_time": "14:00",
+          "title": "2:00 PM: Village walk and photography.",
+          "description": "2:00 PM: Village walk and photography."
+        },
+        {
+          "day_number": 2,
+          "start_time": "18:00",
+          "title": "6:00 PM: Dinner and cultural interaction with local residents.",
+          "description": "6:00 PM: Dinner and cultural interaction with local residents."
+        },
+        {
+          "day_number": 3,
+          "start_time": "07:00",
+          "title": "7:00 AM: Breakfast.",
+          "description": "7:00 AM: Breakfast."
+        },
+        {
+          "day_number": 3,
+          "start_time": "08:00",
+          "title": "8:00 AM: Final village exploration.",
+          "description": "8:00 AM: Final village exploration."
+        },
+        {
+          "day_number": 3,
+          "start_time": "10:00",
+          "title": "10:00 AM: Begin return journey.",
+          "description": "10:00 AM: Begin return journey."
+        },
+        {
+          "day_number": 3,
+          "start_time": null,
+          "title": "Afternoon: Travel back to Kanglung.",
+          "description": "Afternoon: Travel back to Kanglung."
+        },
+        {
+          "day_number": 3,
+          "start_time": null,
+          "title": "4:00–6:00 PM: Expected arrival, subject to road conditions.",
+          "description": "4:00–6:00 PM: Expected arrival, subject to road conditions."
+        }
+      ],
+      "packing_suggestions": [
+        "Student ID card",
+        "Warm clothes and jacket",
+        "Comfortable trekking shoes",
+        "Raincoat",
+        "Water bottle",
+        "Personal toiletries",
+        "Power bank",
+        "Small backpack",
+        "Personal medicines"
+      ],
+      "announcement": "Participants must bring warm clothing because Merak is a high-altitude destination. Respect the local Brokpa culture and always seek permission before photographing residents. The trip is subject to road accessibility."
+    },
+    {
+      "seed_key": "source-trip-3",
+      "title": "Sakteng Highland Adventure",
+      "destination_slug": "sakteng-village",
+      "start_date": "2027-04-23",
+      "end_date": "2027-04-25",
+      "meeting_time": "05:00",
+      "meeting_point": "Main entrance, Sherubtse College",
+      "estimated_cost": 4000,
+      "max_participants": 12,
+      "description": "Source demonstration itinerary: Sakteng Village. Dates and costs are proposed examples, not confirmed college trips.",
+      "is_sample": true,
+      "estimated_budget_note": "Detailed cost breakdown not provided in the source material.",
+      "source_date_text": "23–25 April 2027",
+      "itinerary": [
+        {
+          "day_number": 1,
+          "start_time": "05:00",
+          "title": "5:00 AM: Assemble at Sherubtse College.",
+          "description": "5:00 AM: Assemble at Sherubtse College."
+        },
+        {
+          "day_number": 1,
+          "start_time": "05:30",
+          "title": "5:30 AM: Depart for Sakteng.",
+          "description": "5:30 AM: Depart for Sakteng."
+        },
+        {
+          "day_number": 1,
+          "start_time": null,
+          "title": "Morning and afternoon: Travel with scheduled breaks.",
+          "description": "Morning and afternoon: Travel with scheduled breaks."
+        },
+        {
+          "day_number": 1,
+          "start_time": null,
+          "title": "3:00–5:00 PM: Expected arrival, depending on road accessibility and walking requirements.",
+          "description": "3:00–5:00 PM: Expected arrival, depending on road accessibility and walking requirements."
+        },
+        {
+          "day_number": 1,
+          "start_time": null,
+          "title": "Evening: Settle into pre-arranged accommodation and have dinner.",
+          "description": "Evening: Settle into pre-arranged accommodation and have dinner."
+        },
+        {
+          "day_number": 2,
+          "start_time": "07:00",
+          "title": "7:00 AM: Breakfast.",
+          "description": "7:00 AM: Breakfast."
+        },
+        {
+          "day_number": 2,
+          "start_time": "08:00",
+          "title": "8:00 AM: Explore Sakteng village.",
+          "description": "8:00 AM: Explore Sakteng village."
+        },
+        {
+          "day_number": 2,
+          "start_time": "10:00",
+          "title": "10:00 AM: Learn about the traditional Brokpa lifestyle.",
+          "description": "10:00 AM: Learn about the traditional Brokpa lifestyle."
+        },
+        {
+          "day_number": 2,
+          "start_time": "12:30",
+          "title": "12:30 PM: Lunch.",
+          "description": "12:30 PM: Lunch."
+        },
+        {
+          "day_number": 2,
+          "start_time": "14:00",
+          "title": "2:00 PM: Guided nature walk and cultural exploration.",
+          "description": "2:00 PM: Guided nature walk and cultural exploration."
+        },
+        {
+          "day_number": 2,
+          "start_time": "17:00",
+          "title": "5:00 PM: Return to accommodation.",
+          "description": "5:00 PM: Return to accommodation."
+        },
+        {
+          "day_number": 2,
+          "start_time": null,
+          "title": "Evening: Dinner and overnight stay.",
+          "description": "Evening: Dinner and overnight stay."
+        },
+        {
+          "day_number": 3,
+          "start_time": "07:00",
+          "title": "7:00 AM: Breakfast.",
+          "description": "7:00 AM: Breakfast."
+        },
+        {
+          "day_number": 3,
+          "start_time": "08:00",
+          "title": "8:00 AM: Final village visit.",
+          "description": "8:00 AM: Final village visit."
+        },
+        {
+          "day_number": 3,
+          "start_time": "10:00",
+          "title": "10:00 AM: Begin return journey.",
+          "description": "10:00 AM: Begin return journey."
+        },
+        {
+          "day_number": 3,
+          "start_time": null,
+          "title": "Afternoon: Return to Sherubtse College, subject to travel conditions.",
+          "description": "Afternoon: Return to Sherubtse College, subject to travel conditions."
+        }
+      ],
+      "packing_suggestions": [
+        "Student ID card",
+        "Hiking shoes",
+        "Warm jacket",
+        "Raincoat",
+        "Water bottle",
+        "Snacks and energy bars",
+        "Personal medicines",
+        "Torchlight",
+        "Power bank"
+      ],
+      "announcement": "This trip involves remote travel and possible trekking. All participants must be physically prepared, follow the group leader's instructions and carry their student ID cards. Road access and local permissions must be confirmed before departure."
+    },
+    {
+      "seed_key": "source-trip-4",
+      "title": "Dangling Tsho Sacred Lake Trek",
+      "destination_slug": "dangling-tsho",
+      "start_date": "2027-05-07",
+      "end_date": "2027-05-10",
+      "meeting_time": "05:30",
+      "meeting_point": "Main entrance, Sherubtse College",
+      "estimated_cost": 5000,
+      "max_participants": 10,
+      "description": "Source demonstration itinerary: Dangling Tsho. Dates and costs are proposed examples, not confirmed college trips.",
+      "is_sample": true,
+      "estimated_budget_note": "Detailed cost breakdown not provided in the source material.",
+      "source_date_text": "7–10 May 2027",
+      "itinerary": [
+        {
+          "day_number": 1,
+          "start_time": "05:30",
+          "title": "5:30 AM: Assemble at Sherubtse College.",
+          "description": "5:30 AM: Assemble at Sherubtse College."
+        },
+        {
+          "day_number": 1,
+          "start_time": "06:00",
+          "title": "6:00 AM: Depart for Khaling.",
+          "description": "6:00 AM: Depart for Khaling."
+        },
+        {
+          "day_number": 1,
+          "start_time": "08:30",
+          "title": "8:30 AM: Arrive in Khaling, subject to road conditions.",
+          "description": "8:30 AM: Arrive in Khaling, subject to road conditions."
+        },
+        {
+          "day_number": 1,
+          "start_time": "10:00",
+          "title": "10:00 AM: Explore the surroundings and prepare trekking equipment.",
+          "description": "10:00 AM: Explore the surroundings and prepare trekking equipment."
+        },
+        {
+          "day_number": 1,
+          "start_time": null,
+          "title": "Afternoon: Meet the local guide and complete the trekking briefing.",
+          "description": "Afternoon: Meet the local guide and complete the trekking briefing."
+        },
+        {
+          "day_number": 1,
+          "start_time": null,
+          "title": "Evening: Dinner and overnight stay.",
+          "description": "Evening: Dinner and overnight stay."
+        },
+        {
+          "day_number": 2,
+          "start_time": "05:30",
+          "title": "5:30 AM: Breakfast.",
+          "description": "5:30 AM: Breakfast."
+        },
+        {
+          "day_number": 2,
+          "start_time": "06:00",
+          "title": "6:00 AM: Begin the trek with a local guide.",
+          "description": "6:00 AM: Begin the trek with a local guide."
+        },
+        {
+          "day_number": 2,
+          "start_time": null,
+          "title": "Morning and afternoon: Trek through forest trails and mountain landscapes.",
+          "description": "Morning and afternoon: Trek through forest trails and mountain landscapes."
+        },
+        {
+          "day_number": 2,
+          "start_time": null,
+          "title": "Afternoon: Reach the lake, depending on trail conditions and group pace.",
+          "description": "Afternoon: Reach the lake, depending on trail conditions and group pace."
+        },
+        {
+          "day_number": 2,
+          "start_time": null,
+          "title": "Evening: Follow local religious customs and camp at an approved location.",
+          "description": "Evening: Follow local religious customs and camp at an approved location."
+        },
+        {
+          "day_number": 3,
+          "start_time": "06:30",
+          "title": "6:30 AM: Breakfast.",
+          "description": "6:30 AM: Breakfast."
+        },
+        {
+          "day_number": 3,
+          "start_time": "07:30",
+          "title": "7:30 AM: Enjoy the lake surroundings and photography.",
+          "description": "7:30 AM: Enjoy the lake surroundings and photography."
+        },
+        {
+          "day_number": 3,
+          "start_time": "09:00",
+          "title": "9:00 AM: Begin the return trek.",
+          "description": "9:00 AM: Begin the return trek."
+        },
+        {
+          "day_number": 3,
+          "start_time": null,
+          "title": "Afternoon: Arrive at the designated accommodation area.",
+          "description": "Afternoon: Arrive at the designated accommodation area."
+        },
+        {
+          "day_number": 3,
+          "start_time": null,
+          "title": "Evening: Dinner and overnight stay.",
+          "description": "Evening: Dinner and overnight stay."
+        },
+        {
+          "day_number": 4,
+          "start_time": "07:00",
+          "title": "7:00 AM: Breakfast.",
+          "description": "7:00 AM: Breakfast."
+        },
+        {
+          "day_number": 4,
+          "start_time": "08:00",
+          "title": "8:00 AM: Depart from Khaling.",
+          "description": "8:00 AM: Depart from Khaling."
+        },
+        {
+          "day_number": 4,
+          "start_time": null,
+          "title": "Morning: Return journey to Kanglung.",
+          "description": "Morning: Return journey to Kanglung."
+        },
+        {
+          "day_number": 4,
+          "start_time": null,
+          "title": "11:00 AM–12:00 PM: Expected arrival, depending on conditions.",
+          "description": "11:00 AM–12:00 PM: Expected arrival, depending on conditions."
+        }
+      ],
+      "packing_suggestions": [
+        "Student ID card",
+        "Proper trekking shoes",
+        "Warm clothes",
+        "Waterproof jacket",
+        "Water bottle",
+        "Sleeping bag",
+        "Torchlight or headlamp",
+        "Personal medicines",
+        "Energy snacks",
+        "Small first-aid kit"
+      ],
+      "announcement": "This is a physically demanding trekking trip. Participants must bring proper trekking equipment and follow the local guide's instructions. Respect the sacred nature of the lake and do not carry meat, fish, onion or garlic."
+    },
+    {
+      "seed_key": "source-trip-5",
+      "title": "Takila Spiritual and Cultural Journey",
+      "destination_slug": "takila",
+      "start_date": "2027-03-26",
+      "end_date": "2027-03-28",
+      "meeting_time": "05:00",
+      "meeting_point": "Main entrance, Sherubtse College",
+      "estimated_cost": 4500,
+      "max_participants": 20,
+      "description": "Source demonstration itinerary: Takila, Guru Nangsa Zelnen Statue. Dates and costs are proposed examples, not confirmed college trips.",
+      "is_sample": true,
+      "estimated_budget_note": "Detailed cost breakdown not provided in the source material.",
+      "source_date_text": "26–28 March 2027",
+      "itinerary": [
+        {
+          "day_number": 1,
+          "start_time": "05:00",
+          "title": "5:00 AM: Assemble at Sherubtse College.",
+          "description": "5:00 AM: Assemble at Sherubtse College."
+        },
+        {
+          "day_number": 1,
+          "start_time": "05:30",
+          "title": "5:30 AM: Depart for Lhuentse via Mongar.",
+          "description": "5:30 AM: Depart for Lhuentse via Mongar."
+        },
+        {
+          "day_number": 1,
+          "start_time": "09:00",
+          "title": "9:00 AM: Breakfast and rest stop.",
+          "description": "9:00 AM: Breakfast and rest stop."
+        },
+        {
+          "day_number": 1,
+          "start_time": "12:30",
+          "title": "12:30 PM: Lunch during the journey.",
+          "description": "12:30 PM: Lunch during the journey."
+        },
+        {
+          "day_number": 1,
+          "start_time": null,
+          "title": "3:00–4:00 PM: Arrive in Lhuentse, depending on road conditions.",
+          "description": "3:00–4:00 PM: Arrive in Lhuentse, depending on road conditions."
+        },
+        {
+          "day_number": 1,
+          "start_time": null,
+          "title": "Evening: Check into accommodation and have dinner.",
+          "description": "Evening: Check into accommodation and have dinner."
+        },
+        {
+          "day_number": 2,
+          "start_time": "07:00",
+          "title": "7:00 AM: Breakfast.",
+          "description": "7:00 AM: Breakfast."
+        },
+        {
+          "day_number": 2,
+          "start_time": "08:00",
+          "title": "8:00 AM: Travel to Takila.",
+          "description": "8:00 AM: Travel to Takila."
+        },
+        {
+          "day_number": 2,
+          "start_time": "09:00",
+          "title": "9:00 AM: Visit the giant Guru Nangsa Zelnen statue.",
+          "description": "9:00 AM: Visit the giant Guru Nangsa Zelnen statue."
+        },
+        {
+          "day_number": 2,
+          "start_time": "11:00",
+          "title": "11:00 AM: Explore the surrounding stupas and chortens.",
+          "description": "11:00 AM: Explore the surrounding stupas and chortens."
+        },
+        {
+          "day_number": 2,
+          "start_time": "12:30",
+          "title": "12:30 PM: Lunch.",
+          "description": "12:30 PM: Lunch."
+        },
+        {
+          "day_number": 2,
+          "start_time": "14:00",
+          "title": "2:00 PM: Enjoy sightseeing and photography.",
+          "description": "2:00 PM: Enjoy sightseeing and photography."
+        },
+        {
+          "day_number": 2,
+          "start_time": "16:00",
+          "title": "4:00 PM: Return to accommodation.",
+          "description": "4:00 PM: Return to accommodation."
+        },
+        {
+          "day_number": 2,
+          "start_time": null,
+          "title": "Evening: Dinner and overnight stay.",
+          "description": "Evening: Dinner and overnight stay."
+        },
+        {
+          "day_number": 3,
+          "start_time": "07:00",
+          "title": "7:00 AM: Breakfast.",
+          "description": "7:00 AM: Breakfast."
+        },
+        {
+          "day_number": 3,
+          "start_time": "08:00",
+          "title": "8:00 AM: Begin the return journey.",
+          "description": "8:00 AM: Begin the return journey."
+        },
+        {
+          "day_number": 3,
+          "start_time": "12:00",
+          "title": "12:00 PM: Lunch during the journey.",
+          "description": "12:00 PM: Lunch during the journey."
+        },
+        {
+          "day_number": 3,
+          "start_time": null,
+          "title": "Afternoon: Continue towards Sherubtse College.",
+          "description": "Afternoon: Continue towards Sherubtse College."
+        },
+        {
+          "day_number": 3,
+          "start_time": null,
+          "title": "3:00–5:00 PM: Expected arrival, depending on road conditions.",
+          "description": "3:00–5:00 PM: Expected arrival, depending on road conditions."
+        }
+      ],
+      "packing_suggestions": [
+        "Student ID card",
+        "Comfortable walking shoes",
+        "Modest clothing",
+        "Warm jacket",
+        "Water bottle",
+        "Personal toiletries",
+        "Camera or mobile phone",
+        "Power bank"
+      ],
+      "announcement": "All participants must bring their student ID cards and wear respectful clothing when visiting the religious site. Please maintain silence in prayer areas and follow the instructions of the trip coordinator."
+    }
+  ],
+  "demo_students": [
+    {
+      "name": "Karma Wangchuk",
+      "email": "07240001.sherubtse@rub.edu.bt",
+      "student_id": "07240001",
+      "programme": "Data Science and Data Analytics",
+      "demo_original_coordinator": true
+    },
+    {
+      "name": "Pema Choden",
+      "email": "07240002.sherubtse@rub.edu.bt",
+      "student_id": "07240002",
+      "programme": "Economics",
+      "demo_original_coordinator": true
+    },
+    {
+      "name": "Tashi Dorji",
+      "programme": "DSDA",
+      "student_id": "07240003",
+      "email": "07240003.sherubtse@rub.edu.bt",
+      "demo_original_coordinator": false
+    },
+    {
+      "name": "Sonam Lhamo",
+      "programme": "Computer Science",
+      "student_id": "07240004",
+      "email": "07240004.sherubtse@rub.edu.bt",
+      "demo_original_coordinator": false
+    },
+    {
+      "name": "Jigme Norbu",
+      "programme": "Economics",
+      "student_id": "07230005",
+      "email": "07230005.sherubtse@rub.edu.bt",
+      "demo_original_coordinator": false
+    },
+    {
+      "name": "Dechen Wangmo",
+      "programme": "PSS",
+      "student_id": "07240006",
+      "email": "07240006.sherubtse@rub.edu.bt",
+      "demo_original_coordinator": false
+    },
+    {
+      "name": "Tshering Dema",
+      "programme": "English",
+      "student_id": "07230007",
+      "email": "07230007.sherubtse@rub.edu.bt",
+      "demo_original_coordinator": false
+    },
+    {
+      "name": "Ugyen Dorji",
+      "programme": "Geography",
+      "student_id": "07240008",
+      "email": "07240008.sherubtse@rub.edu.bt",
+      "demo_original_coordinator": false
+    },
+    {
+      "name": "Peldon Choki",
+      "programme": "Life Science",
+      "student_id": "07230009",
+      "email": "07230009.sherubtse@rub.edu.bt",
+      "demo_original_coordinator": false
+    },
+    {
+      "name": "Karma Tenzin",
+      "programme": "Physical Science",
+      "student_id": "07250010",
+      "email": "07250010.sherubtse@rub.edu.bt",
+      "demo_original_coordinator": false
+    },
+    {
+      "name": "Chimi Yangzom",
+      "programme": "DSDA",
+      "student_id": "07250011",
+      "email": "07250011.sherubtse@rub.edu.bt",
+      "demo_original_coordinator": false
+    },
+    {
+      "name": "Dorji Wangchuk",
+      "programme": "Computer Science",
+      "student_id": "07250012",
+      "email": "07250012.sherubtse@rub.edu.bt",
+      "demo_original_coordinator": false
+    }
+  ],
+  "faqs": [
+    {
+      "seed_key": "source-faq-1",
+      "question": "How do I join a trip?",
+      "answer": "Create an account on TripPack using your student details. Browse the available trips, select your preferred destination and click the \"Register for Trip\" button. Follow the registration instructions to complete your application.",
+      "sort_order": 1
+    },
+    {
+      "seed_key": "source-faq-2",
+      "question": "When do I have to pay for a trip?",
+      "answer": "Payment instructions and deadlines will be provided by the trip coordinator after registration. Students should follow the official payment instructions and avoid transferring money to unverified accounts.",
+      "sort_order": 2
+    },
+    {
+      "seed_key": "source-faq-3",
+      "question": "What happens if a trip is fully booked?",
+      "answer": "Once the participant limit is reached, the trip will be marked as \"Fully Booked\". Students may contact the trip coordinator to ask about a waiting list or upcoming trips.",
+      "sort_order": 3
+    },
+    {
+      "seed_key": "source-faq-4",
+      "question": "Can I cancel my trip registration?",
+      "answer": "Yes. Students should contact the trip coordinator as early as possible if they cannot participate. Any refund will depend on the cancellation policy and expenses already committed.",
+      "sort_order": 4
+    },
+    {
+      "seed_key": "source-faq-5",
+      "question": "How can I know what to bring for a trip?",
+      "answer": "Each trip page provides a suggested packing list, including clothing, personal items and other necessary equipment. Students should check the list before departure.",
+      "sort_order": 5
+    },
+    {
+      "seed_key": "source-faq-6",
+      "question": "Are transportation and accommodation included in the trip cost?",
+      "answer": "The trip details will specify what is included in the estimated cost. Students should check the itinerary and cost breakdown before registering because some personal expenses may not be covered.",
+      "sort_order": 6
+    },
+    {
+      "seed_key": "source-faq-7",
+      "question": "Who is responsible for organizing the trips?",
+      "answer": "Trips are managed by the designated Trip Coordinator or authorized organizing team. Students can contact the coordinator through the contact details provided on the trip page.",
+      "sort_order": 7
+    },
+    {
+      "seed_key": "source-faq-8",
+      "question": "What should I do during an emergency while travelling?",
+      "answer": "Immediately inform the trip coordinator or group leader. Follow their instructions and contact the appropriate local emergency services when necessary. Always keep emergency contact information accessible.",
+      "sort_order": 8
+    }
+  ],
+  "trip_rules": [
+    {
+      "seed_key": "source-rule-1",
+      "title": "Be punctual",
+      "body": "Students must arrive at the designated meeting point at least 15 minutes before departure. Late arrivals may miss the scheduled transport.",
+      "sort_order": 1
+    },
+    {
+      "seed_key": "source-rule-2",
+      "title": "Carry your student ID",
+      "body": "All participants should carry a valid student ID card and keep the trip coordinator's contact information readily available.",
+      "sort_order": 2
+    },
+    {
+      "seed_key": "source-rule-3",
+      "title": "Follow emergency procedures",
+      "body": "Keep emergency contacts saved on your phone. Inform the trip coordinator immediately about illness, injury or unexpected situations.",
+      "sort_order": 3
+    },
+    {
+      "seed_key": "source-rule-4",
+      "title": "Respect religious and cultural places",
+      "body": "Dress modestly, follow local customs, maintain silence in prayer areas and seek permission before taking photographs of people or restricted religious areas.",
+      "sort_order": 4
+    },
+    {
+      "seed_key": "source-rule-5",
+      "title": "Maintain responsible behaviour",
+      "body": "Stay with the group, follow the coordinator's instructions, avoid risky activities and do not litter. Respect fellow students, local communities and the natural environment.",
+      "sort_order": 5
+    }
+  ],
+  "testimonials": [
+    {
+      "seed_key": "source-testimonial-1",
+      "title": "A Student's Experience",
+      "quote": "Sherubtse TripHub makes it easier to discover interesting places around Eastern Bhutan. I like having trip information, estimated costs and itineraries in one place.",
+      "attribution": "Sherubtse College Student (fictional sample)",
+      "sort_order": 1,
+      "is_sample": true
+    },
+    {
+      "seed_key": "source-testimonial-2",
+      "title": "Convenient Trip Planning",
+      "quote": "Planning group trips with friends can be difficult, but having a platform where we can view upcoming trips and register makes everything more organized.",
+      "attribution": "Sherubtse College Student (fictional sample)",
+      "sort_order": 2,
+      "is_sample": true
+    },
+    {
+      "seed_key": "source-testimonial-3",
+      "title": "Discovering New Destinations",
+      "quote": "I am excited to explore places like Merak and Sakteng. Sherubtse TripHub provides useful information that helps students prepare before travelling.",
+      "attribution": "Sherubtse College Student (fictional sample)",
+      "sort_order": 3,
+      "is_sample": true
+    },
+    {
+      "seed_key": "source-testimonial-4",
+      "title": "A Better Travel Experience",
+      "quote": "The trip schedules, packing lists and announcements make it easier to stay informed. It is a useful idea for encouraging students to explore Bhutan.",
+      "attribution": "Sherubtse College Student (fictional sample)",
+      "sort_order": 4,
+      "is_sample": true
+    }
+  ]
+}

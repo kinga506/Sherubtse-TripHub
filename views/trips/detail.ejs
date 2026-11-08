@@ -1,0 +1,31 @@
+<%- include('../partials/header') %>
+<nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/trips">Upcoming trips</a> / <span aria-current="page"><%= trip.title %></span></nav>
+<header class="page-heading"><p class="eyebrow"><%= trip.destination_name %> · <%= trip.dzongkhag %></p><h1><%= trip.title %></h1><p class="lead"><%= trip.description || 'Trip details will be updated by the assigned Coordinator.' %></p><% if(trip.is_sample){ %><span class="status-badge badge-neutral">Sample trip · simulated approval</span><% } %></header>
+<% if(trip.destination_photo){ %><img class="trip-detail-photo" src="<%= trip.destination_photo %>" alt="<%= trip.destination_name %> destination photograph"><% } %>
+<div class="destination-details-layout">
+ <section class="surface-card"><h2>Trip overview</h2><dl class="detail-list">
+  <div><dt>Destination</dt><dd><a href="/destinations/<%= trip.destination_slug %>"><%= trip.destination_name %></a></dd></div>
+  <div><dt>Dates</dt><dd><%= new Date(trip.start_date).toLocaleDateString('en-GB',{dateStyle:'medium',timeZone:'UTC'}) %> to <%= new Date(trip.end_date).toLocaleDateString('en-GB',{dateStyle:'medium',timeZone:'UTC'}) %></dd></div>
+  <div><dt>Meeting point</dt><dd><%= trip.meeting_point || 'Not listed' %></dd></div>
+  <div><dt>Meeting time</dt><dd><%= trip.meeting_time ? String(trip.meeting_time).slice(0,5) : 'Not listed' %></dd></div>
+  <div><dt>Transport</dt><dd><%= trip.transport_information || 'Confirm with Coordinator' %></dd></div>
+  <div><dt>Estimated cost per student</dt><dd>Nu. <%= Number(trip.estimated_cost).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) %></dd></div>
+  <div><dt>Purpose</dt><dd><%= trip.purpose || 'Not specified' %></dd></div>
+ </dl></section>
+ <aside class="surface-card"><h2>Registration status</h2><p><span class="status-badge <%= trip.registration.key==='open'?'badge-success':'badge-neutral' %>"><%= trip.registration.label %></span></p><dl class="detail-list">
+  <div><dt>Participant limit</dt><dd><%= trip.max_participants %></dd></div>
+  <div><dt>Occupied slots (pending + approved)</dt><dd><%= trip.occupied_seats %></dd></div>
+  <div><dt>Confirmed participants</dt><dd><%= trip.confirmed_participants %></dd></div>
+  <div><dt>Available places</dt><dd><%= trip.registration.available %></dd></div>
+  <div><dt>Registration deadline</dt><dd><%= new Date(trip.registration_deadline).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short',timeZone:'Asia/Thimphu'}) %> (Bhutan time)</dd></div>
+ </dl><% if(currentUser && currentUser.role==='student'){ %>
+ <a class="btn btn-primary" href="/trips/<%= trip.id %>/join">Request to join this trip</a>
+ <p class="small-muted">Requires an individual parent/guardian consent letter. A valid pending request reserves one place.</p>
+ <% } else if(!currentUser){ %><a class="btn btn-primary" href="/auth/login">Log in to request a place</a><% } %></aside>
+</div>
+<section class="section-block surface-card"><h2>Estimated cost breakdown</h2><p><strong>Total estimated cost per student:</strong> Nu. <%= Number(trip.estimated_cost).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) %></p>
+<% if(costItems.length){ %><div class="table-scroll"><table class="comparison-table"><thead><tr><th scope="col">Item</th><th scope="col">Amount</th></tr></thead><tbody><% costItems.forEach(c=>{ %><tr><th scope="row"><%= c.label %></th><td>Nu. <%= Number(c.amount).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) %></td></tr><% }) %></tbody></table></div><% } else { %><p class="small-muted">Detailed cost breakdown not provided in the source material.</p><% } %>
+<% if(trip.estimated_budget_note){ %><p class="small-muted"><%= trip.estimated_budget_note %></p><% } %><p class="small-muted">These are planning estimates only; Sherubtse TripHub does not collect online payments.</p></section>
+<section class="section-block surface-card"><h2>Safety and travel guidance</h2><p><%= trip.safety_information || 'Safety guidance not yet provided. Confirm details with the trip organiser before travelling.' %></p><% if(trip.travel_note){ %><p><%= trip.travel_note %></p><% } %><% if(trip.practical_tip){ %><p><%= trip.practical_tip %></p><% } %><p><strong>Emergency contact:</strong> <%= trip.emergency_contact_name || 'Not listed' %><% if(trip.emergency_contact_phone){ %> · <%= trip.emergency_contact_phone %><% } %></p><p class="small-muted">Trip details are informational. DSA proposal approval does not itself establish final departure clearance or replace college travel paperwork.</p></section>
+<p><a class="btn btn-outline" href="/trips">← Back to upcoming trips</a></p>
+<%- include('../partials/footer') %>

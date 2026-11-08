@@ -1,0 +1,12 @@
+const router=require('express').Router();
+const auth=require('../middleware/authorization');
+const c=require('../controllers/joinReviewController');
+router.get('/workspace/trips/:tripId/requests',auth.requireTripCoordinator,c.requests);
+router.post('/workspace/trips/:tripId/requests/:participantId/consent',auth.requireTripCoordinator,c.consentReview);
+router.post('/workspace/trips/:tripId/requests/:participantId/decision',auth.requireTripCoordinator,c.decision);
+router.get('/workspace/trips/:tripId/requests/:participantId/consent/:docId',auth.requireAuth,c.download);
+router.post('/workspace/my-trips/:tripId/consent/replace',auth.requireStudent,c.replacement);
+router.post('/workspace/trips/:tripId/extension',auth.requireTripCoordinator,c.requestExtension);
+router.get('/workspace/dsa/deadline-extensions',auth.requireDsa,c.queue);
+router.post('/workspace/dsa/deadline-extensions/:extensionId/decision',auth.requireDsa,c.extensionDecision);
+module.exports=router;
