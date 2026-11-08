@@ -12,7 +12,8 @@ function validateReport(input){
  if(String(input.additional_notes||'').length>3000)fail('Closing notes are too long');
  return {incident,notes:text(input.additional_notes,3000)};
 }
-async function feedbackSnapshot(tripId){
+async function feedbackSnapshot(tripId,enableMongo=process.env.ENABLE_MONGODB!=='false'){
+ if(!enableMongo)return {count:0,average:null,summary:'Trip feedback was unavailable when this report was submitted.',entries:[]};
  // One read of MongoDB is frozen into PostgreSQL with the final report.
  const entries=await getMongo().collection('feedback').find({tripId:Number(tripId)},
   {projection:{_id:0,rating:1,comment:1,createdAt:1}}).toArray();
@@ -44,19 +45,19 @@ async function figures(t,tripId){
  const totalExpenses=expenses.reduce((n,r)=>n+Number(r.total),0);
  return {attendance,expenses,contributions,totalExpenses,totalContributions:Number(contributions[0].total)};
 }
-async function preview(tripId,userId){
+async function preview(tripId,userId,enableMongo=process.env.ENABLE_MONGODB!=='false'){
  const state=await detail(tripId);
  const db=getDb();
  const assignment=await db.oneOrNone('SELECT assignment_role FROM trip_coordinators WHERE trip_id=$1 AND user_id=$2 AND status=\'active\'',[tripId,userId]);
  const past=await db.oneOrNone('SELECT 1 FROM trip_coordinators WHERE trip_id=$1 AND user_id=$2',[tripId,userId]);
  const f=await figures(db,tripId);
- const feedback=state.report?null:await feedbackSnapshot(tripId);
+ const feedback=state.report?null:await feedbackSnapshot(tripId,enableMongo);
  return {...state,figures:f,feedback,canSubmit:!state.report&&assignment?.assignment_role==='lead'&&state.trip.operational_status==='awaiting_final_report'&&state.trip.approval_status==='approved',canRead:!!past};
 }
-async function submit(tripId,userId,input){
+async function submit(tripId,userId,input,enableMongo=process.env.ENABLE_MONGODB!=='false'){
  if(!validId(tripId)||!validId(userId))fail('Invalid trip or user ID',400);
  const fields=validateReport(input);
- const feedback=await feedbackSnapshot(tripId);
+ const feedback=await feedbackSnapshot(tripId,enableMongo);
  return getDb().tx(async t=>{
   const trip=await t.oneOrNone('SELECT * FROM trips WHERE id=$1 FOR UPDATE',[tripId]);
   if(!trip)fail('Trip not found',404);

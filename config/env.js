@@ -47,6 +47,14 @@ function getConfig(env = process.env) {
     throw new Error('DB_SSL must be true or false');
   }
 
+  const mongoValue = env.ENABLE_MONGODB === undefined
+    ? 'true'
+    : env.ENABLE_MONGODB;
+
+  if (!['true', 'false'].includes(mongoValue)) {
+    throw new Error('ENABLE_MONGODB must be true or false');
+  }
+
   const storageMode = env.STORAGE_MODE || 'local';
 
   if (!['local', 'r2'].includes(storageMode)) {
@@ -74,6 +82,7 @@ function getConfig(env = process.env) {
   const config = {
     nodeEnv,
     port,
+    enableMongo: mongoValue === 'true',
 
     appUrl: env.APP_URL || `http://localhost:${port}`,
 
@@ -146,10 +155,11 @@ function getConfig(env = process.env) {
       'DB_PASS',
       'SESSION_SECRET',
       'APP_URL',
-      'MONGO_URI',
       'EMAIL_API_KEY',
       'EMAIL_FROM'
     ];
+
+    if (config.enableMongo) productionKeys.push('MONGO_URI');
 
     for (const key of productionKeys) {
       required(key, env);

@@ -10,7 +10,7 @@ Install Node.js **22**, npm, PostgreSQL with pgAdmin, and MongoDB (local Communi
 
 1. Run `npm install` (a registry connection is required). Generate and commit `package-lock.json` after successful dependency resolution.
 2. Copy `.env.example` to `.env` (`Copy-Item .env.example .env` in PowerShell; `cp .env.example .env` in macOS/Linux). **Do not commit `.env`.**
-3. Set `NODE_ENV=development`, `PORT=3000`, `APP_URL=http://localhost:3000`, `DB_HOST`, `DB_PORT`, `DB_NAME=sherubtse_triphub`, `DB_USER`, `DB_PASS`, `DB_SSL=false`, `MONGO_URI`, and a fresh `SESSION_SECRET` of at least 32 characters. Generate one using `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
+3. Set `NODE_ENV=development`, `PORT=3000`, `APP_URL=http://localhost:3000`, `DB_HOST`, `DB_PORT`, `DB_NAME=sherubtse_triphub`, `DB_USER`, `DB_PASS`, `DB_SSL=false`, `ENABLE_MONGODB=true`, `MONGO_URI`, and a fresh `SESSION_SECRET` of at least 32 characters. Generate one using `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
 4. Set `EMAIL_MODE=log` for local terminal-only email links and `STORAGE_MODE=local` to keep documents under the ignored private uploads directory. Set `ALLOWED_EMAIL_SUFFIX=.sherubtse@rub.edu.bt`. Do not rely on `EMAIL_MODE=log` outside local tests.
 5. Set `DEMO_MODE=false` for ordinary local use. Only use `DEMO_MODE=true` deliberately with separate disposable records and test-only seed credentials, never in production.
 
@@ -54,7 +54,7 @@ Student signup is at `/auth/signup`, login at `/auth/login`, password recovery a
 
 **Neon:** provision PostgreSQL; set `DB_HOST`, `DB_PORT=5432`, `DB_NAME`, `DB_USER`, `DB_PASS`, `DB_SSL=true`. Validate TLS and database access before starting the app.
 
-**MongoDB Atlas:** provision a private user/database and network policy; set `MONGO_URI` to the Atlas connection string. The server calls `connectMongo()` on startup; a failed connection can stop startup.
+**MongoDB Atlas (optional):** set `ENABLE_MONGODB=true` and configure `MONGO_URI` to use trip feedback. MongoDB is enabled by default for backward compatibility, and its connection is checked separately at startup. To deploy a temporary PostgreSQL-only Render beta, set `ENABLE_MONGODB=false` and omit `MONGO_URI`; feedback routes return HTTP 503 and final reports record feedback as unavailable. PostgreSQL remains required.
 
 **Resend:** verify the sending domain; configure `EMAIL_MODE=api`, `EMAIL_PROVIDER=resend`, `EMAIL_API_KEY`, and `EMAIL_FROM` using verified sender details. Never use a placeholder sending email.
 

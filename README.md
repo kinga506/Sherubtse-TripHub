@@ -22,6 +22,12 @@ No signup or trip functionality exists yet. The `DB_SSL=true` option uses TLS ce
 - Local storage (`STORAGE_MODE=local`) writes only to ignored `private_uploads/`, outside `public/`.
 - The project intentionally contains **no real keys**. `.env.example` and `.env.test` only hold examples / fake test data.
 
+## Temporary Render beta without MongoDB
+
+MongoDB feedback is optional and remains enabled by default for backward compatibility. To deploy a temporary PostgreSQL-only beta on Render, set `ENABLE_MONGODB=false` and omit `MONGO_URI`. Neon PostgreSQL remains required for application data and sessions. Startup logs that MongoDB is disabled; feedback pages and submissions return HTTP 503 with “Trip feedback is temporarily unavailable.” Final reports continue to work and record that feedback was unavailable at submission time. Existing MongoDB feedback is not deleted and remains available if MongoDB is enabled again later.
+
+For local development with MongoDB feedback, leave `ENABLE_MONGODB=true` (or unset it) and configure `MONGO_URI`. Do not use ephemeral file storage for real student information or consent documents.
+
 ## Structure
 
 `app.js` creates the Express app; `server.js` starts it. `routes/` holds URL routes, `controllers/` will handle request flow, `models/` will hold parameterized PostgreSQL queries, `views/` provides EJS templates, `public/` holds public assets, `config/db.js` initializes pg-promise, and `services/storage/` contains local and R2 adapters. `tests/` holds Jest + Supertest tests. Planning instructions are in `AGENTS.md`; reference gaps in `REFERENCE_NOTES.md`.
@@ -201,7 +207,7 @@ The private `/workspace/trips/:tripId/attendance` page supports date-based atten
 
 ## Step 17 — MongoDB feedback
 
-Run `npm install` to install the native `mongodb` driver, and configure `MONGO_URI` for local MongoDB or MongoDB Atlas. The app starts a single reusable connection and creates a unique `(tripId, studentId)` index before accepting requests. The temporary MongoDB test route was intentionally not retained. Feedback is trip-based, not tied to any individual Coordinator.
+Run `npm install` to install the native `mongodb` driver. MongoDB feedback is enabled by default; configure `MONGO_URI` for local MongoDB or MongoDB Atlas. Set `ENABLE_MONGODB=false` to run the rest of the application without MongoDB; feedback routes return HTTP 503 and final reports note that feedback was unavailable. When enabled, the app starts one reusable connection and creates a unique `(tripId, studentId)` index before accepting requests. The temporary MongoDB test route was intentionally not retained. Feedback is trip-based, not tied to any individual Coordinator.
 
 After an approved trip's end date and with status `awaiting_final_report` or `completed`, approved Students can submit one rating (1–5) and comment at `/workspace/trips/:tripId/feedback`. Assigned and former Coordinators can see only their own trip's feedback summary at `/workspace/trips/:tripId/feedback/summary`. Eligibility is always checked in PostgreSQL before using MongoDB. See `docs/STEP17_FEEDBACK.md`.
 

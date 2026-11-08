@@ -32,6 +32,7 @@ const {parseAdminPhotoUpload}=require('./middleware/adminPhotoUpload');
 
 function createApp(config=getConfig()) {
  const app=express();
+ app.locals.enableMongo=config.enableMongo!==false;
  app.disable('x-powered-by');
  if(config.nodeEnv==='production') app.set('trust proxy',1);
  app.set('view engine','ejs');

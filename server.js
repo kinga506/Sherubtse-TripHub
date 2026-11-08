@@ -33,19 +33,22 @@ async function start() {
     throw error;
   }
 
-  console.log('[STARTUP] Connecting to MongoDB Atlas...');
+  if (config.enableMongo) {
+    console.log('[STARTUP] Connecting to MongoDB Atlas...');
 
-  try {
-    await connectMongo();
+    try {
+      await connectMongo();
+      console.log('[STARTUP] MongoDB connected successfully.');
+    } catch (error) {
+      console.error(
+        '[STARTUP] MongoDB connection failed:',
+        mongoFailure(error)
+      );
 
-    console.log('[STARTUP] MongoDB connected successfully.');
-  } catch (error) {
-    console.error(
-      '[STARTUP] MongoDB connection failed:',
-      mongoFailure(error)
-    );
-
-    throw error;
+      throw error;
+    }
+  } else {
+    console.log('[STARTUP] MongoDB disabled for this deployment.');
   }
 
   console.log('[STARTUP] Initializing Express application...');

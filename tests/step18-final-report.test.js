@@ -25,4 +25,10 @@ describe('Step 18: immutable final-report inputs',()=>{
   getMongo.mockReturnValue({collection:()=>({find:()=>({toArray:async()=>[]})})});
   expect((await feedbackSnapshot(5)).summary).toMatch(/No student feedback/);
  });
+ test('final report can record feedback unavailable without MongoDB',async()=>{
+  const result=await feedbackSnapshot(5,false);
+  expect(result).toMatchObject({count:0,average:null});
+  expect(result.summary).toMatch(/Trip feedback was unavailable/);
+  expect(getMongo).not.toHaveBeenCalled();
+ });
 });

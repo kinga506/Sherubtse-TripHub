@@ -4,9 +4,9 @@ Feedback uses the **native MongoDB driver** in `config/mongo.js`. PostgreSQL rem
 
 ## Setup
 
-1. Install or start MongoDB Community Server locally, or use a private MongoDB Atlas cluster. Run `npm install` to add the native `mongodb` package.
-2. Set `MONGO_URI=mongodb://127.0.0.1:27017/sherubtse_triphub_feedback` in `.env` for local development. In Atlas, store the private `mongodb+srv://...` URI in the environment; never commit credentials.
-3. The application starts **one reusable connection** before listening for HTTP traffic. Startup creates a unique index on `(tripId, studentId)` and a trip/date index. Startup fails if MongoDB is unreachable; this is intentional to avoid silently accepting feedback that cannot persist.
+1. MongoDB feedback is enabled by default. Install or start MongoDB Community Server locally, or use a private MongoDB Atlas cluster. Run `npm install` to add the native `mongodb` package.
+2. Set `ENABLE_MONGODB=true` and `MONGO_URI=mongodb://127.0.0.1:27017/sherubtse_triphub_feedback` in `.env` for local development. In Atlas, store the private `mongodb+srv://...` URI in the environment; never commit credentials.
+3. When enabled, the application starts **one reusable connection** before listening for HTTP traffic. Startup creates a unique index on `(tripId, studentId)` and a trip/date index. Startup fails if MongoDB is enabled but unreachable. To run without MongoDB, set `ENABLE_MONGODB=false` and omit `MONGO_URI`; feedback routes return HTTP 503 with “Trip feedback is temporarily unavailable,” while PostgreSQL features and final reports remain available.
 4. Run `npm test` and `npm run dev`. The temporary `/mongo-test` route was **not retained**: connection success at startup plus application tests are the verification path. `GET /health` is a basic app health route, not proof that MongoDB is healthy later.
 
 ## Manual verification

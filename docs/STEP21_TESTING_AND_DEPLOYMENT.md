@@ -4,11 +4,11 @@ This step adds a GitHub Actions test pipeline, a non-root production Docker imag
 
 ## Run locally
 
-1. Install Node.js 22, PostgreSQL and MongoDB. Create the **isolated test database** `sherubtse_triphub_test`; never point automated test commands at production.
+1. Install Node.js 22 and PostgreSQL. MongoDB is needed only when testing feedback with `ENABLE_MONGODB=true`. Create the **isolated test database** `sherubtse_triphub_test`; never point automated test commands at production.
 2. Copy `.env.example` to `.env` for local runtime configuration and use `.env.test` as a starting reference for test-only settings. Never commit real credentials or use production R2 buckets during tests.
 3. Run `npm install`, `npm run check:release` and `npm test`.
 4. For local database integration tests, initialize `db/schema.sql` and numbered migrations in the order shown in `.github/workflows/test.yml`. Apply the Step 14 source-packing migration after seeding if you want destination-specific packing suggestions populated; CI applies it without seed, so its structural changes still run but no demo destination records are created.
-5. For a container smoke check, run `docker build -t sherubtse-triphub:local .`. Runtime requires configured PostgreSQL, MongoDB, Resend and Cloudflare R2. Docker does **not** bundle those services or any secrets.
+5. For a container smoke check, run `docker build -t sherubtse-triphub:local .`. Runtime requires configured PostgreSQL, Resend and Cloudflare R2; MongoDB is optional and is required only when `ENABLE_MONGODB=true`. Docker does **not** bundle those services or any secrets.
 6. Test full Student/DSA/Superadmin workflows manually using a separate nonproduction database and private test storage. Record observed status codes and screenshots before publishing.
 
 ## Manual regression checklist
@@ -33,7 +33,7 @@ This step adds a GitHub Actions test pipeline, a non-root production Docker imag
 
 ## Deployment settings
 
-Use the already documented variables from `.env.example`, notably `NODE_ENV=production`, `APP_URL=https://...`, `PORT`, `SESSION_SECRET` (32+ characters), `DB_*` (Neon PostgreSQL), `MONGO_URI` (MongoDB Atlas), `EMAIL_MODE=api`, `EMAIL_PROVIDER=resend`, `EMAIL_API_KEY`, `EMAIL_FROM`, `STORAGE_MODE=r2` and `R2_*`. Set these in Render, **never** in the repository. Apply migrations explicitly before first start. Route `/health` is a process-level check, not proof that database, email or object storage are functioning.
+Use the already documented variables from `.env.example`, notably `NODE_ENV=production`, `APP_URL=https://...`, `PORT`, `SESSION_SECRET` (32+ characters), `DB_*` (Neon PostgreSQL), `ENABLE_MONGODB=false` for a PostgreSQL-only beta, `EMAIL_MODE=api`, `EMAIL_PROVIDER=resend`, `EMAIL_API_KEY`, `EMAIL_FROM`, `STORAGE_MODE=r2` and `R2_*`. Only set `MONGO_URI` when `ENABLE_MONGODB=true`. Set secrets in Render, **never** in the repository. Apply migrations explicitly before first start. Route `/health` is a process-level check, not proof that database, email or object storage are functioning.
 
 ## Verification status at generation
 
