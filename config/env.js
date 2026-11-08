@@ -1,13 +1,18 @@
 
 const path = require('node:path');
 
+// Check whether a required configuration value is missing
+// or contains a common placeholder.
 function isPlaceholder(value) {
   if (!value) return true;
 
-  return /REPLACE|PLACEHOLDER|EXAMPLE|YOUR_|CHANGEME|DUMMY|TEST_ONLY/i.test(value) ||
-    /example\.(?:invalid|com)$/i.test(value);
+  return (
+    /REPLACE|PLACEHOLDER|EXAMPLE|YOUR_|CHANGEME|DUMMY|TEST_ONLY/i.test(value) ||
+    /example\.(?:invalid|com)$/i.test(value)
+  );
 }
 
+// Require a real environment variable without exposing its value.
 function required(name, env) {
   const value = String(env[name] || '').trim();
 
@@ -20,6 +25,25 @@ function required(name, env) {
   return value;
 }
 
+// Validate a Google Apps Script deployment URL.
+function validGoogleScriptUrl(value) {
+  try {
+    const url = new URL(value);
+
+    return (
+      url.protocol === 'https:' &&
+      url.hostname === 'script.google.com' &&
+      /^\/macros\/s\/[^/]+\/exec$/.test(url.pathname) &&
+      !url.username &&
+      !url.password &&
+      !url.search &&
+      !url.hash
+    );
+  } catch (error) {
+    return false;
+  }
+}
+
 function getConfig(env = process.env) {
   const nodeEnv = env.NODE_ENV || 'development';
 
@@ -29,15 +53,29 @@ function getConfig(env = process.env) {
     );
   }
 
+  // ---------------------------------------
+  // SERVER PORT
+  // ---------------------------------------
   const port = Number(env.PORT || 3000);
 
-  if (!Number.isSafeInteger(port) || port < 1 || port > 65535) {
+  if (
+    !Number.isSafeInteger(port) ||
+    port < 1 ||
+    port > 65535
+  ) {
     throw new Error('PORT must be a valid port number');
   }
 
+  // ---------------------------------------
+  // POSTGRESQL
+  // ---------------------------------------
   const dbPort = Number(env.DB_PORT || 5432);
 
-  if (!Number.isSafeInteger(dbPort) || dbPort < 1 || dbPort > 65535) {
+  if (
+    !Number.isSafeInteger(dbPort) ||
+    dbPort < 1 ||
+    dbPort > 65535
+  ) {
     throw new Error('DB_PORT must be a valid port number');
   }
 
@@ -47,24 +85,29 @@ function getConfig(env = process.env) {
     throw new Error('DB_SSL must be true or false');
   }
 
-  const mongoValue = env.ENABLE_MONGODB === undefined
-    ? 'true'
-    : env.ENABLE_MONGODB;
+  // ---------------------------------------
+  // OPTIONAL MONGODB
+  // ---------------------------------------
+  const mongoValue =
+    env.ENABLE_MONGODB === undefined
+      ? 'true'
+      : env.ENABLE_MONGODB;
 
   if (!['true', 'false'].includes(mongoValue)) {
-    throw new Error('ENABLE_MONGODB must be true or false');
+    throw new Error(
+      'ENABLE_MONGODB must be true or false'
+    );
   }
 
+  // ---------------------------------------
+  // STORAGE
+  // ---------------------------------------
   const storageMode = env.STORAGE_MODE || 'local';
 
   if (!['local', 'r2'].includes(storageMode)) {
-    throw new Error('STORAGE_MODE must be local or r2');
-  }
-
-  const emailMode = env.EMAIL_MODE || 'log';
-
-  if (!['log', 'smtp', 'api'].includes(emailMode)) {
-    throw new Error('EMAIL_MODE must be log, smtp or api');
+    throw new Error(
+      'STORAGE_MODE must be local or r2'
+    );
   }
 
   const temporaryStorage =
@@ -79,26 +122,62 @@ function getConfig(env = process.env) {
     );
   }
 
+  // ---------------------------------------
+  // EMAIL
+  // ---------------------------------------
+  const emailMode = env.EMAIL_MODE || 'log';
+
+  if (!['log', 'smtp', 'api'].includes(emailMode)) {
+    throw new Error(
+      'EMAIL_MODE must be log, smtp or api'
+    );
+  }
+
+  const emailProvider =
+    env.EMAIL_PROVIDER || 'resend';
+
+  if (
+    !['resend', 'google-apps-script'].includes(emailProvider)
+  ) {
+    throw new Error(
+      'EMAIL_PROVIDER must be resend or google-apps-script'
+    );
+  }
+
+  // ---------------------------------------
+  // APPLICATION CONFIGURATION
+  // ---------------------------------------
   const config = {
     nodeEnv,
     port,
+
     enableMongo: mongoValue === 'true',
 
-    appUrl: env.APP_URL || `http://localhost:${port}`,
+    appUrl:
+      env.APP_URL || `http://localhost:${port}`,
 
     db: {
       host: env.DB_HOST || 'localhost',
       port: dbPort,
-      database: env.DB_NAME || 'sherubtse_triphub',
+      database:
+        env.DB_NAME || 'sherubtse_triphub',
       user: env.DB_USER || 'postgres',
-      // Keep the password byte-for-byte: spaces and punctuation can be valid
-      // password characters, and pg-promise receives it as a separate value.
+
+      // Preserve the complete database password.
+      // Do not trim or modify password characters.
       password: env.DB_PASS || '',
+
       ssl: sslValue === 'true'
     },
 
     emailMode,
-    emailProvider: env.EMAIL_PROVIDER || 'resend',
+    emailProvider,
+
+    // Google Apps Script settings.
+    googleScript: {
+      url: env.GOOGLE_SCRIPT_URL || '',
+      secret: env.GOOGLE_SCRIPT_SECRET || ''
+    },
 
     storageMode,
     temporaryStorage,
@@ -117,30 +196,44 @@ function getConfig(env = process.env) {
     },
 
     allowedEmailSuffix:
-      env.ALLOWED_EMAIL_SUFFIX || '.sherubtse@rub.edu.bt'
+      env.ALLOWED_EMAIL_SUFFIX ||
+      '.sherubtse@rub.edu.bt'
   };
 
+  // ---------------------------------------
+  // PRODUCTION SECURITY VALIDATION
+  // ---------------------------------------
   if (nodeEnv === 'production') {
-
     if (emailMode !== 'api') {
       throw new Error(
         'Production requires EMAIL_MODE=api'
       );
     }
 
-    if (config.emailProvider !== 'resend') {
+    if (
+      !['resend', 'google-apps-script'].includes(emailProvider)
+    ) {
       throw new Error(
-        'Production email provider must be resend'
+        'Unsupported production email provider'
       );
     }
 
-    if (storageMode === 'local' && !temporaryStorage) {
+    // Require private durable storage for real data.
+    // Temporary local storage is allowed only when
+    // explicitly enabled for a controlled demonstration.
+    if (
+      storageMode === 'local' &&
+      !temporaryStorage
+    ) {
       throw new Error(
         'Production requires private R2 storage unless ALLOW_EPHEMERAL_STORAGE=true is explicitly set for a controlled test deployment'
       );
     }
 
-    if (storageMode === 'local' && temporaryStorage) {
+    if (
+      storageMode === 'local' &&
+      temporaryStorage
+    ) {
       console.warn(
         '[DEMO WARNING] Temporary local storage enabled. ' +
         'Uploaded files may be lost on restart or redeployment. ' +
@@ -148,35 +241,67 @@ function getConfig(env = process.env) {
       );
     }
 
+    // Required production variables shared by both email providers.
     const productionKeys = [
       'DB_HOST',
       'DB_NAME',
       'DB_USER',
       'DB_PASS',
       'SESSION_SECRET',
-      'APP_URL',
-      'EMAIL_API_KEY',
-      'EMAIL_FROM'
+      'APP_URL'
     ];
 
-    if (config.enableMongo) productionKeys.push('MONGO_URI');
+    // MongoDB is required only if enabled.
+    if (config.enableMongo) {
+      productionKeys.push('MONGO_URI');
+    }
+
+    // Provider-specific email requirements.
+    if (emailProvider === 'resend') {
+      productionKeys.push(
+        'EMAIL_API_KEY',
+        'EMAIL_FROM'
+      );
+    }
+
+    if (emailProvider === 'google-apps-script') {
+      productionKeys.push(
+        'GOOGLE_SCRIPT_URL',
+        'GOOGLE_SCRIPT_SECRET'
+      );
+    }
 
     for (const key of productionKeys) {
       required(key, env);
     }
 
-    if ((env.SESSION_SECRET || '').length < 32) {
+    // Require a strong session secret.
+    if (
+      (env.SESSION_SECRET || '').length < 32
+    ) {
       throw new Error(
         'SESSION_SECRET must be at least 32 characters'
       );
     }
 
+    // Require HTTPS on Render.
     if (!config.appUrl.startsWith('https://')) {
       throw new Error(
         'Production APP_URL must use HTTPS'
       );
     }
 
+    // Validate the Apps Script endpoint.
+    if (
+      emailProvider === 'google-apps-script' &&
+      !validGoogleScriptUrl(config.googleScript.url)
+    ) {
+      throw new Error(
+        'GOOGLE_SCRIPT_URL must be a valid HTTPS Google Apps Script /exec URL'
+      );
+    }
+
+    // Demo mode must never be enabled in production.
     if (env.DEMO_MODE === 'true') {
       throw new Error(
         'Production DEMO_MODE must be false'
@@ -184,6 +309,9 @@ function getConfig(env = process.env) {
     }
   }
 
+  // ---------------------------------------
+  // CLOUDFLARE R2 VALIDATION
+  // ---------------------------------------
   if (storageMode === 'r2') {
     const r2Keys = [
       'R2_ACCOUNT_ID',
