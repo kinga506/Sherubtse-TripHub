@@ -25,7 +25,11 @@ async function start() {
 
     console.log('[STARTUP] PostgreSQL connected successfully.');
   } catch (error) {
-    console.error('[STARTUP] PostgreSQL connection failed:', postgresFailure(error));
+    console.error(
+      '[STARTUP] PostgreSQL connection failed:',
+      postgresFailure(error)
+    );
+
     throw error;
   }
 
@@ -36,9 +40,15 @@ async function start() {
 
     console.log('[STARTUP] MongoDB connected successfully.');
   } catch (error) {
-    console.error('[STARTUP] MongoDB connection failed:', mongoFailure(error));
+    console.error(
+      '[STARTUP] MongoDB connection failed:',
+      mongoFailure(error)
+    );
+
     throw error;
   }
+
+  console.log('[STARTUP] Initializing Express application...');
 
   const app = createApp(config);
 
@@ -59,9 +69,22 @@ async function start() {
 
 if (require.main === module) {
   start().catch((error) => {
+    // Configuration errors have controlled messages.
+    // Database connection errors are already logged safely above.
+    const message = error && error.message
+      ? error.message
+      : 'Unknown startup error';
+
+    const isConfigurationError =
+      message.includes('must be') ||
+      message.includes('requires') ||
+      message.includes('must use') ||
+      message.includes('must not') ||
+      message.includes('must be configured');
+
     console.error(
       '[STARTUP] Application startup failed:',
-      error.name
+      isConfigurationError ? message : (error.name || 'Error')
     );
 
     process.exitCode = 1;
