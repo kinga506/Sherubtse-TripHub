@@ -1,6 +1,11 @@
 
 const nodemailer = require('nodemailer');
 
+function safeEmailLog(message) {
+  // Only call this with fixed diagnostic text and numeric HTTP status codes.
+  console.warn(`[EMAIL] ${message}`);
+}
+
 // Main email-sending function
 async function sendEmail({ to, subject, text }) {
   const mode = process.env.EMAIL_MODE || 'log';
@@ -13,9 +18,7 @@ async function sendEmail({ to, subject, text }) {
       throw new Error('Log email disabled in production');
     }
 
-    console.info(
-      `[DEV EMAIL] To: ${to}\nSubject: ${subject}\n${text}`
-    );
+    console.info('[EMAIL] Development email simulated in log mode.');
 
     return { mode };
   }
@@ -87,6 +90,9 @@ async function sendEmail({ to, subject, text }) {
       if (
         url.protocol !== 'https:' ||
         url.hostname !== 'script.google.com' ||
+        url.port ||
+        url.username ||
+        url.password ||
         !/^\/macros\/s\/[^/]+\/exec$/.test(url.pathname) ||
         url.search ||
         url.hash
@@ -102,7 +108,8 @@ async function sendEmail({ to, subject, text }) {
         response = await fetch(scriptUrl, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
           },
           body: JSON.stringify({
             secret,
@@ -114,12 +121,18 @@ async function sendEmail({ to, subject, text }) {
           signal: AbortSignal.timeout(15000)
         });
       } catch (error) {
+        safeEmailLog('Google Apps Script request failed before receiving a response.');
         throw new Error(
           'Google Apps Script email service could not be reached'
         );
       }
 
       if (!response.ok) {
+        if ([401, 403].includes(response.status)) {
+          safeEmailLog(`Google Apps Script authentication rejected (HTTP ${response.status}).`);
+        } else {
+          safeEmailLog(`Google Apps Script returned an HTTP error (HTTP ${response.status}).`);
+        }
         throw new Error(
           `Google Apps Script email request failed (HTTP ${response.status})`
         );
@@ -132,12 +145,14 @@ async function sendEmail({ to, subject, text }) {
       try {
         result = await response.json();
       } catch (error) {
+        safeEmailLog('Google Apps Script returned a non-JSON response.');
         throw new Error(
           'Google Apps Script returned an invalid response'
         );
       }
 
       if (!result || result.ok !== true) {
+        safeEmailLog('Google Apps Script did not accept the email request.');
         throw new Error(
           'Google Apps Script rejected the email request'
         );

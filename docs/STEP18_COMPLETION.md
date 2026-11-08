@@ -4,7 +4,7 @@
 1. In pgAdmin apply `db/step18-lifecycle-migration.sql` after the base schema and previous migrations (especially Step 12A).
 2. Ensure PostgreSQL, MongoDB and session credentials are configured. Run `npm install`, `npm test` and `npm run dev`.
 3. Schedule `npm run reconcile:trips` periodically (for example every 15 minutes in an external scheduler). This command is also safe to run repeatedly. Relevant trip-specific HTTP requests reconcile a trip at request time. All date comparisons use Bhutan local calendar dates.
-4. Resend production notifications use `EMAIL_MODE=api`, `EMAIL_PROVIDER=resend`, `EMAIL_FROM` and `EMAIL_API_KEY`. The database outbox preserves unsent cancellation and departure-block notices for retry.
+4. Production notifications use the selected API provider. Google Apps Script uses `EMAIL_MODE=api`, `EMAIL_PROVIDER=google-apps-script`, `GOOGLE_SCRIPT_URL` and `GOOGLE_SCRIPT_SECRET`; Resend remains an alternative. The database outbox preserves unsent cancellation and departure-block notices for retry.
 
 ## Manual verification checklist
 - Approved future trip remains planned. When start date arrives, a current DSA-approved final roster is required before ongoing; missing clearance records `departure_blocked` and queues a DSA notification. Check migration trigger also blocks a direct SQL transition.

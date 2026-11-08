@@ -4,14 +4,14 @@
 
 ## 1. Install prerequisites
 
-Install Node.js **22**, npm, PostgreSQL with pgAdmin, and MongoDB (local Community Server for development or Atlas for a connected test setup). Install Git and optionally Docker Desktop. The project uses Express/EJS, PostgreSQL with pg-promise, MongoDB native driver for feedback, Jest/Supertest, Docker and GitHub Actions. Use a terminal in `sherubtse-triphub/`.
+Install Node.js **22**, npm and PostgreSQL with pgAdmin. MongoDB Community Server or Atlas is optional unless you enable feedback. Install Git and optionally Docker Desktop. The project uses Express/EJS, PostgreSQL with pg-promise, an optional MongoDB native driver for feedback, Jest/Supertest, Docker and GitHub Actions. Use a terminal in `sherubtse-triphub/`.
 
 ## 2. Create a safe development environment
 
 1. Run `npm install` (a registry connection is required). Generate and commit `package-lock.json` after successful dependency resolution.
 2. Copy `.env.example` to `.env` (`Copy-Item .env.example .env` in PowerShell; `cp .env.example .env` in macOS/Linux). **Do not commit `.env`.**
 3. Set `NODE_ENV=development`, `PORT=3000`, `APP_URL=http://localhost:3000`, `DB_HOST`, `DB_PORT`, `DB_NAME=sherubtse_triphub`, `DB_USER`, `DB_PASS`, `DB_SSL=false`, `ENABLE_MONGODB=true`, `MONGO_URI`, and a fresh `SESSION_SECRET` of at least 32 characters. Generate one using `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
-4. Set `EMAIL_MODE=log` for local terminal-only email links and `STORAGE_MODE=local` to keep documents under the ignored private uploads directory. Set `ALLOWED_EMAIL_SUFFIX=.sherubtse@rub.edu.bt`. Do not rely on `EMAIL_MODE=log` outside local tests.
+4. Set `EMAIL_MODE=api`, `EMAIL_PROVIDER=google-apps-script`, `GOOGLE_SCRIPT_URL` and `GOOGLE_SCRIPT_SECRET` to send real local verification and password-reset links. Set `STORAGE_MODE=local` to keep documents under ignored private uploads. Keep `ALLOWED_EMAIL_SUFFIX=.sherubtse@rub.edu.bt`.
 5. Set `DEMO_MODE=false` for ordinary local use. Only use `DEMO_MODE=true` deliberately with separate disposable records and test-only seed credentials, never in production.
 
 ## 3. Database creation and migrations
@@ -44,7 +44,7 @@ npm test
 npm run dev
 ```
 
-Visit `http://localhost:3000`, `http://localhost:3000/health` and `http://localhost:3000/destinations`. While `NODE_ENV=development`, `/dev/db-test` is a temporary database connectivity check. For API testing, use `/api/destinations`, `/api/trips`, and `/api/trips/:id`. The Postman collection is `docs/postman/Sherubtse_TripHub_Public_API.postman_collection.json`. **The health endpoint only checks application response, not Neon/MongoDB/R2/Resend.**
+Visit `http://localhost:3000`, `http://localhost:3000/health` and `http://localhost:3000/destinations`. While `NODE_ENV=development`, `/dev/db-test` is a temporary database connectivity check. For API testing, use `/api/destinations`, `/api/trips`, and `/api/trips/:id`. The Postman collection is `docs/postman/Sherubtse_TripHub_Public_API.postman_collection.json`. **The health endpoint only checks application response, not Neon, optional MongoDB, R2 or email delivery.**
 
 ## 5. Test roles and protected documents
 
@@ -56,7 +56,9 @@ Student signup is at `/auth/signup`, login at `/auth/login`, password recovery a
 
 **MongoDB Atlas (optional):** set `ENABLE_MONGODB=true` and configure `MONGO_URI` to use trip feedback. MongoDB is enabled by default for backward compatibility, and its connection is checked separately at startup. To deploy a temporary PostgreSQL-only Render beta, set `ENABLE_MONGODB=false` and omit `MONGO_URI`; feedback routes return HTTP 503 and final reports record feedback as unavailable. PostgreSQL remains required.
 
-**Resend:** verify the sending domain; configure `EMAIL_MODE=api`, `EMAIL_PROVIDER=resend`, `EMAIL_API_KEY`, and `EMAIL_FROM` using verified sender details. Never use a placeholder sending email.
+**Google Apps Script email:** deploy the mailer as an HTTPS web app, configure the deployed `/exec` URL and a strong shared secret in local `.env` and Render. The script must compare the secret and return `{ "ok": true }` after sending. Rotate any shared secret that appeared in prior configuration text; set the same newly generated secret in Apps Script and each environment. Never log request bodies or links.
+
+**Resend alternative:** verify the sending domain; configure `EMAIL_MODE=api`, `EMAIL_PROVIDER=resend`, `EMAIL_API_KEY`, and `EMAIL_FROM`. Provider credentials are required only for the selected provider.
 
 **Cloudflare R2:** create a private bucket and appropriately scoped API credentials; set `STORAGE_MODE=r2`, `R2_ACCOUNT_ID`, `R2_BUCKET`, `R2_ACCESS_KEY_ID`, and `R2_SECRET_ACCESS_KEY`. Verify that uploads and downloads require authorization; do not expose a public bucket.
 
@@ -103,8 +105,8 @@ docker build -t sherubtse-triphub:local .
 - [ ] MongoDB feedback accepts one eligible review per trip and is visible only to permitted viewers.
 - [ ] After trip end, lead submits final report; records become read-only; all assignment records end; former Coordinators stay active Students and can access permitted history.
 - [ ] Public REST APIs expose no private documents or unpublished trips.
-- [ ] `npm test`, GitHub Actions, Docker build, PostgreSQL/MongoDB connections, R2 uploads/downloads, Resend delivery and Render smoke checks all pass.
+- [ ] `npm test`, GitHub Actions, Docker build, PostgreSQL connection, MongoDB when enabled, R2 uploads/downloads, selected email-provider delivery and Render smoke checks all pass.
 
 ## 10. Known limitations and handover warnings
 
-No successful end-to-end browser tests, complete Jest run, PostgreSQL migrations, MongoDB integration, R2 integration, Resend send, Docker build, or deployed Render URL are evidenced in this environment. The documentation has been cross-checked against source filenames, routes, `package.json` scripts and `.env.example`, **not against successful runtime behavior**. Original destination photo attribution and usage rights remain unverified. The source travel-time instruction needs DSA interpretation; TripHub DSA approval never substitutes for the signed official Student Travel Form or other permissions.
+No successful end-to-end browser tests, complete Jest run, PostgreSQL migrations, MongoDB integration, R2 integration, email delivery, Docker build, or deployed Render URL are evidenced in this environment. The documentation has been cross-checked against source filenames, routes, `package.json` scripts and `.env.example`, **not against successful runtime behavior**. Original destination photo attribution and usage rights remain unverified. The source travel-time instruction needs DSA interpretation; TripHub DSA approval never substitutes for the signed official Student Travel Form or other permissions.

@@ -16,7 +16,7 @@ Open pgAdmin for the existing TripHub database and execute `db/step12-join-revie
 ## Security and limitations
 - No real consent authenticity or official signature is certified by a review button.
 - No persistent queue/retry mechanism for email delivery: notification delivery is best effort and failures are logged. Status and review records remain authoritative.
-- The UI is for the active trip Coordinators only. The email account must be configured for notifications using local `EMAIL_MODE=log` or production Resend.
+- The UI is for the active trip Coordinators only. Configure the selected email provider (`google-apps-script`, Resend, or local log simulation) for notifications.
 - Full production readiness requires npm dependencies, PostgreSQL migration, Jest/Supertest runs, live concurrency tests, and a configured R2 bucket.
 - Formal combined consent package and departure clearance are intentionally **Step 12A**, not implemented in Step 12.
 

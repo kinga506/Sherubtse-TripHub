@@ -12,7 +12,7 @@
 
 ## Not executed / NOT claimed as passing
 
-Jest/Supertest, PostgreSQL schema + migrations on an actual database, live MongoDB operations, browser functional flows, Resend delivery, Cloudflare R2 storage, actual filled two-page official form, Docker build, GitHub Actions, Render deployment and the full manual acceptance checklist.
+Jest/Supertest, PostgreSQL schema + migrations on an actual database, live MongoDB operations, browser functional flows, Google Apps Script or Resend delivery, Cloudflare R2 storage, actual filled two-page official form, Docker build, GitHub Actions, Render deployment and the full manual acceptance checklist.
 
 ## Sign-off requirements
 

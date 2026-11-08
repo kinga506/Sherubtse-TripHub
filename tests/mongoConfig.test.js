@@ -39,8 +39,50 @@ describe('optional MongoDB environment configuration', () => {
       .toThrow(/MONGO_URI must be configured/);
   });
 
+  test('Google provider does not require Resend credentials in production', () => {
+    const env = productionEnv({
+      ENABLE_MONGODB: 'false',
+      EMAIL_PROVIDER: 'google-apps-script',
+      GOOGLE_SCRIPT_URL: 'https://script.google.com/macros/s/fake-deployment/exec',
+      GOOGLE_SCRIPT_SECRET: 'fictional-shared-secret'
+    });
+    delete env.EMAIL_API_KEY;
+    delete env.EMAIL_FROM;
+    expect(getConfig(env).emailProvider).toBe('google-apps-script');
+  });
+
   test('rejects values other than true or false', () => {
     expect(() => getConfig({ NODE_ENV: 'test', ENABLE_MONGODB: 'disabled' }))
       .toThrow(/ENABLE_MONGODB must be true or false/);
+  });
+});
+
+describe('email provider environment configuration', () => {
+  const googleEmailEnv = {
+    NODE_ENV: 'development',
+    EMAIL_MODE: 'api',
+    EMAIL_PROVIDER: 'google-apps-script',
+    GOOGLE_SCRIPT_URL: 'https://script.google.com/macros/s/fake-deployment/exec',
+    GOOGLE_SCRIPT_SECRET: 'fictional-shared-secret'
+  };
+
+  test('Google Apps Script requires only its own credentials', () => {
+    expect(getConfig(googleEmailEnv).emailProvider).toBe('google-apps-script');
+  });
+
+  test('validates the Apps Script deployment URL outside production too', () => {
+    expect(() => getConfig({ ...googleEmailEnv, GOOGLE_SCRIPT_URL: 'http://invalid.test' }))
+      .toThrow(/valid HTTPS Google Apps Script/);
+  });
+
+  test('requires a configured shared secret for the selected Google provider', () => {
+    expect(() => getConfig({ ...googleEmailEnv, GOOGLE_SCRIPT_SECRET: '' }))
+      .toThrow(/GOOGLE_SCRIPT_SECRET must be configured/);
+  });
+
+  test('Resend credentials are required only when Resend is selected', () => {
+    expect(() => getConfig({
+      NODE_ENV: 'development', EMAIL_MODE: 'api', EMAIL_PROVIDER: 'resend'
+    })).toThrow(/EMAIL_API_KEY must be configured/);
   });
 });

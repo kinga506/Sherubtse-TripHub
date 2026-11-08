@@ -8,7 +8,7 @@ This step adds a GitHub Actions test pipeline, a non-root production Docker imag
 2. Copy `.env.example` to `.env` for local runtime configuration and use `.env.test` as a starting reference for test-only settings. Never commit real credentials or use production R2 buckets during tests.
 3. Run `npm install`, `npm run check:release` and `npm test`.
 4. For local database integration tests, initialize `db/schema.sql` and numbered migrations in the order shown in `.github/workflows/test.yml`. Apply the Step 14 source-packing migration after seeding if you want destination-specific packing suggestions populated; CI applies it without seed, so its structural changes still run but no demo destination records are created.
-5. For a container smoke check, run `docker build -t sherubtse-triphub:local .`. Runtime requires configured PostgreSQL, Resend and Cloudflare R2; MongoDB is optional and is required only when `ENABLE_MONGODB=true`. Docker does **not** bundle those services or any secrets.
+5. For a container smoke check, run `docker build -t sherubtse-triphub:local .`. Runtime requires configured PostgreSQL, an email provider, and Cloudflare R2; MongoDB is optional and is required only when `ENABLE_MONGODB=true`. Docker does **not** bundle those services or any secrets.
 6. Test full Student/DSA/Superadmin workflows manually using a separate nonproduction database and private test storage. Record observed status codes and screenshots before publishing.
 
 ## Manual regression checklist
@@ -33,11 +33,11 @@ This step adds a GitHub Actions test pipeline, a non-root production Docker imag
 
 ## Deployment settings
 
-Use the already documented variables from `.env.example`, notably `NODE_ENV=production`, `APP_URL=https://...`, `PORT`, `SESSION_SECRET` (32+ characters), `DB_*` (Neon PostgreSQL), `ENABLE_MONGODB=false` for a PostgreSQL-only beta, `EMAIL_MODE=api`, `EMAIL_PROVIDER=resend`, `EMAIL_API_KEY`, `EMAIL_FROM`, `STORAGE_MODE=r2` and `R2_*`. Only set `MONGO_URI` when `ENABLE_MONGODB=true`. Set secrets in Render, **never** in the repository. Apply migrations explicitly before first start. Route `/health` is a process-level check, not proof that database, email or object storage are functioning.
+Use the already documented variables from `.env.example`, notably `NODE_ENV=production`, `APP_URL=https://...`, `PORT`, `SESSION_SECRET` (32+ characters), `DB_*` (Neon PostgreSQL), `ENABLE_MONGODB=false` for a PostgreSQL-only beta, `EMAIL_MODE=api`, `EMAIL_PROVIDER=google-apps-script`, `GOOGLE_SCRIPT_URL`, `GOOGLE_SCRIPT_SECRET`, `STORAGE_MODE=r2` and `R2_*`. Configure provider-specific values only for the selected provider. Only set `MONGO_URI` when `ENABLE_MONGODB=true`. Set secrets in Render, **never** in the repository. Apply migrations explicitly before first start. Route `/health` is a process-level check, not proof that database, email or object storage are functioning.
 
 ## Verification status at generation
 
 - Source-file presence and JavaScript syntax preflight: checked locally.
-- Jest/Supertest, PostgreSQL migrations, live MongoDB, Docker build, Resend delivery and Cloudflare R2: **not executed successfully in this environment**.
+- Jest/Supertest, PostgreSQL migrations, live MongoDB, Docker build, Google Apps Script/Resend delivery and Cloudflare R2: **not executed successfully in this environment**.
 - GitHub Actions: workflow authored, **not yet run on GitHub**. A green workflow is still required before deployment.
 - No `package-lock.json` was available because dependency installation did not succeed; CI currently uses `npm install`, and Docker falls back to that when no lockfile exists. Generate and commit a lockfile on a machine with npm registry access, then switch CI to `npm ci` for reproducible dependency installation.

@@ -17,7 +17,8 @@ No signup or trip functionality exists yet. The `DB_SSL=true` option uses TLS ce
 
 ## Chosen production services
 
-- **Resend** (`EMAIL_MODE=api`, `EMAIL_PROVIDER=resend`): verify a sender/domain in the Resend dashboard and set `EMAIL_API_KEY` and `EMAIL_FROM` as production environment secrets. Sending is implemented in Step 3, not Step 1. Never use `EMAIL_MODE=log` in production.
+- **Google Apps Script email** (`EMAIL_MODE=api`, `EMAIL_PROVIDER=google-apps-script`): configure the deployed HTTPS `/exec` URL and a shared secret in `GOOGLE_SCRIPT_URL` and `GOOGLE_SCRIPT_SECRET`. The Apps Script endpoint must authenticate the secret and return JSON `{ "ok": true }` only after the email is accepted. Resend remains available by selecting `EMAIL_PROVIDER=resend` and configuring `EMAIL_API_KEY` and `EMAIL_FROM` instead. Never use `EMAIL_MODE=log` in production.
+- See [`docs/GOOGLE_APPS_SCRIPT_EMAIL.md`](docs/GOOGLE_APPS_SCRIPT_EMAIL.md) for the endpoint contract and deployment steps.
 - **Cloudflare R2** (`STORAGE_MODE=r2`): create a **private** R2 bucket and R2 API token with limited bucket permissions. Set `R2_ACCOUNT_ID`, `R2_BUCKET`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` in your host's environment. The adapter supports `put`, `get`, and `delete`; upload authorization, validation, metadata and versioning are future steps. There is **no public upload route**.
 - Local storage (`STORAGE_MODE=local`) writes only to ignored `private_uploads/`, outside `public/`.
 - The project intentionally contains **no real keys**. `.env.example` and `.env.test` only hold examples / fake test data.
@@ -91,17 +92,19 @@ The official `Student-Travel-Form.pdf` has since been supplied; its generation f
 1. Run `db/step3-auth-migration.sql` in pgAdmin if your Step 2 schema already exists. The updated `db/schema.sql` contains the same columns for fresh installations.
 2. Run `npm install`; set `SESSION_SECRET` to a random 32+ character value in `.env` (generate with `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`).
 3. Run `npm run dev` and browse `/auth/signup`, `/auth/login` or `/auth/resend-verification`.
-4. For local email debugging set `EMAIL_MODE=log`: verification URLs are printed **only to the local terminal** (never use in production). For local SMTP mode set `EMAIL_MODE=smtp`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD` and `EMAIL_FROM`. For production set `EMAIL_MODE=api`, `EMAIL_PROVIDER=resend`, `EMAIL_API_KEY` and `EMAIL_FROM` using a domain verified in Resend. Keep production `STORAGE_MODE=r2`.
+4. For real local verification and password-reset messages, set `EMAIL_MODE=api`, `EMAIL_PROVIDER=google-apps-script`, `GOOGLE_SCRIPT_URL`, and `GOOGLE_SCRIPT_SECRET`. The safe `EMAIL_MODE=log` option only records that a development email was simulated; it does not print recipient addresses or links. SMTP and Resend remain selectable alternatives with their own credentials. Keep production `STORAGE_MODE=r2`.
 5. Apply `db/schema.sql` to an empty database, and seed only in explicit demo mode. Accounts with DSA and Superadmin roles are provisioned by the seed/admin process, **never public signup**.
 6. Test with `npm test`. The Student account should start unverified, receive a 1-hour verification link, become verified after clicking it, and only then be able to log in. Resending is guarded by per-IP rate limits and a per-account 2-minute cooldown. Logout is POST-only and CSRF protected.
 
+Existing-account signup intentionally does not send another message, so the signup response does not reveal whether an address is registered. An active unverified Student can request a fresh link through **Resend verification**. Password recovery intentionally sends only to an active, verified eligible account; unverified users should use the verification resend flow. Both recovery and resend show generic confirmations to avoid account enumeration.
+
 **Security boundaries:** All login and signup POST forms require CSRF tokens. Login regenerates the session identifier. `connect-pg-simple` uses PostgreSQL's `session` table; this must exist before web requests. Account `/account` requires a verified, active session. `verification_token` contains a SHA-256 token hash, never the raw email link. Future Step 4 handles password recovery and change-password. Step 5 adds the full role- and trip-specific authorization middleware.
 
-**Verification note:** npm installation timed out in the artifact environment; Jest, PostgreSQL session persistence and live Resend delivery must be checked on a configured local machine before marking the stage complete.
+**Verification note:** Live Google Apps Script delivery must be checked with a configured deployment; automated tests mock all network requests.
 
 ## Step 4 — Password recovery and account security
 
-The `/auth/login` page links to **Forgot password?**. Enter an existing verified, active Student, DSA, or Superadmin account email and submit the form. The confirmation is deliberately identical whether the account exists or not. In local development, `EMAIL_MODE=log` prints a one-hour recovery link to the terminal; production uses the configured Resend API. Never forward password links. Requesting a new link invalidates the previously issued link. The reset form checks a one-use cryptographically random token, asks for a matching new password (12–72 characters), then removes the token and **all** existing PostgreSQL sessions for that account. Expired, malformed and reused links offer a fresh request. If email delivery fails, check secure server logs; do not assume the message was delivered.
+The `/auth/login` page links to **Forgot password?**. Enter an existing verified, active Student, DSA, or Superadmin account email and submit the form. The confirmation is deliberately identical whether the account exists or not. Email delivery uses the selected API provider; Google Apps Script receives the existing one-use reset link. Never forward password links. Requesting a new link invalidates the previously issued link. The reset form checks the cryptographically random token, asks for a matching new password (12–72 characters), then removes the token and **all** existing PostgreSQL sessions for that account. Expired, malformed and reused links offer a fresh request. If email delivery fails, check safe server diagnostics; do not assume the message was delivered.
 
 While logged in, visit **My account → Account Settings → Security → Change Password** (`/auth/change-password`). The current password is required; the new password must differ from it. On success, every session is invalidated and the user must log in again. Student, DSA and Superadmin account roles and any trip-specific assignments stay unchanged.
 
@@ -187,7 +190,7 @@ Approved participants and DSA can view the itinerary and notices. Active assigne
 
 ## Step 13A — Official Student Travel Form
 
-Apply `db/step13a-student-travel-form-migration.sql` after earlier migrations. The original two-page PDF template is stored in `private_templates/Student-Travel-Form.pdf`. Active assigned Trip Coordinators can generate an unsigned form at `/workspace/trips/:tripId/student-travel-form`, using approved participants only. PDF copies use the configured private local or Cloudflare R2 object storage. Generated historical copies are immutable; no signature or institutional approval is fabricated. See `docs/STEP13A_OFFICIAL_TRAVEL_FORM.md`. Resend settings remain unchanged.
+Apply `db/step13a-student-travel-form-migration.sql` after earlier migrations. The original two-page PDF template is stored in `private_templates/Student-Travel-Form.pdf`. Active assigned Trip Coordinators can generate an unsigned form at `/workspace/trips/:tripId/student-travel-form`, using approved participants only. PDF copies use the configured private local or Cloudflare R2 object storage. Generated historical copies are immutable; no signature or institutional approval is fabricated. See `docs/STEP13A_OFFICIAL_TRAVEL_FORM.md`.
 
 
 ## Step 14 — Packing
@@ -214,7 +217,7 @@ After an approved trip's end date and with status `awaiting_final_report` or `co
 **Verification:** JavaScript syntax/direct checks were performed, but live MongoDB/Atlas, PostgreSQL, Jest and browser integration still require testing on a configured machine.
 
 ## Step 18 — Trip completion and archive
-Apply `db/step18-lifecycle-migration.sql`, then see `docs/STEP18_COMPLETION.md` for lifecycle/DSA cancellation tests. Use `npm run reconcile:trips` in a recurring external scheduler; request-time reconciliation also runs on trip-specific pages. The final report is an immutable PostgreSQL snapshot of attendance, financial totals and MongoDB feedback at submission time. Resend is used for durable notification-outbox delivery.
+Apply `db/step18-lifecycle-migration.sql`, then see `docs/STEP18_COMPLETION.md` for lifecycle/DSA cancellation tests. Use `npm run reconcile:trips` in a recurring external scheduler; request-time reconciliation also runs on trip-specific pages. The final report is an immutable PostgreSQL snapshot of attendance, financial totals and available feedback at submission time. The configured email provider sends durable notification-outbox messages.
 
 ## Step 19 — Help and administration
 
@@ -252,7 +255,7 @@ The workflow is **not yet verified green**: the current environment could not ob
 
 Read `docs/SETUP_GUIDE.md` first for the **current** installation/migration sequence, deployment configuration, prerequisites and known blockers. Then use `docs/DEMO_SCRIPT.md` for the demonstration and `docs/CODE_TOUR.md` for a beginner-friendly architecture guide. A printable Word guide is in `docs/Sherubtse_TripHub_Setup_and_Deployment_Guide.docx`. Earlier numbered sections of this README document the project's incremental history; instructions describing features as “not yet built” apply to those historical steps, not the current source tree.
 
-**Not yet verified:** Complete npm installation, Jest/Supertest suite, live PostgreSQL/MongoDB data operations, migration application, official filled PDF output, private Cloudflare R2 round-trips, Resend email delivery, end-to-end browser user journeys, GitHub Actions, Docker image build, and Render deployment. Do not claim these passed. A green CI run alone also does not replace the manual acceptance checklist.
+**Not yet verified:** Complete npm installation, Jest/Supertest suite, live PostgreSQL/MongoDB data operations, migration application, official filled PDF output, private Cloudflare R2 round-trips, Google Apps Script or Resend email delivery, end-to-end browser user journeys, GitHub Actions, Docker image build, and Render deployment. Do not claim these passed. A green CI run alone also does not replace the manual acceptance checklist.
 
 ### Assumptions and placeholders
 
@@ -263,7 +266,7 @@ Read `docs/SETUP_GUIDE.md` first for the **current** installation/migration sequ
 - Original destination photos are included from the user's supplied document, but licensing, photographer attribution and reuse rights were **not verified**; photo credit fields may be empty.
 - Programme names in the source are suggested examples, not an independently verified current college catalogue.
 - The official Student Travel Form includes a travel-time instruction whose interpretation requires DSA confirmation; the app must not treat its own clearance as formal submission/signature/approval of the college form.
-- `.env.example` contains placeholder database, Resend, R2 and seed credentials that must be replaced. Real API keys and passwords are never shipped.
+- `.env.example` contains placeholder database, Google Apps Script, R2 and seed credentials that must be replaced. Real API keys and passwords are never shipped.
 - Actual emergency numbers, travel routes, seasonal access, permit conditions, and college policy must be confirmed with the relevant authorities before public use.
 - Source sample and relative-date demo trips must be visibly labelled as demo, not genuine approved events.
 
@@ -273,7 +276,7 @@ Read `docs/SETUP_GUIDE.md` first for the **current** installation/migration sequ
 - [ ] Apply `db/schema.sql` and the ten migration files in the exact order in `docs/SETUP_GUIDE.md`, using a **nonproduction** database first.
 - [ ] Run `npm run check:release`, `npm test`, and manual end-to-end journeys; correct any failures.
 - [ ] Test all three account roles and a trip-specific lead/assistant assignment with different users.
-- [ ] Verify live Resend delivery, Cloudflare R2 private uploads, MongoDB and Neon connections.
+- [ ] Verify live Google Apps Script (or selected alternative) delivery, Cloudflare R2 private uploads, MongoDB when enabled, and Neon connections.
 - [ ] Visually compare a filled official travel-form PDF against the original two-page reference.
 - [ ] Run GitHub Actions to a green result, build the Docker image, and then deploy to Render with real private credentials.
 - [ ] Obtain college/DSA review of institutional wording and any required permissions before real use.

@@ -200,6 +200,34 @@ function getConfig(env = process.env) {
       '.sherubtse@rub.edu.bt'
   };
 
+  // Validate credentials for the selected delivery mode/provider only.
+  if (emailMode === 'api' && emailProvider === 'resend') {
+    required('EMAIL_API_KEY', env);
+    required('EMAIL_FROM', env);
+  }
+
+  if (emailMode === 'api' && emailProvider === 'google-apps-script') {
+    required('GOOGLE_SCRIPT_URL', env);
+    required('GOOGLE_SCRIPT_SECRET', env);
+
+    if (!validGoogleScriptUrl(config.googleScript.url)) {
+      throw new Error(
+        'GOOGLE_SCRIPT_URL must be a valid HTTPS Google Apps Script /exec URL'
+      );
+    }
+  }
+
+  if (emailMode === 'smtp') {
+    for (const key of ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASSWORD', 'EMAIL_FROM']) {
+      required(key, env);
+    }
+
+    const smtpPort = Number(env.SMTP_PORT || 587);
+    if (!Number.isSafeInteger(smtpPort) || smtpPort < 1 || smtpPort > 65535) {
+      throw new Error('SMTP_PORT must be a valid port number');
+    }
+  }
+
   // ---------------------------------------
   // PRODUCTION SECURITY VALIDATION
   // ---------------------------------------
@@ -256,21 +284,6 @@ function getConfig(env = process.env) {
       productionKeys.push('MONGO_URI');
     }
 
-    // Provider-specific email requirements.
-    if (emailProvider === 'resend') {
-      productionKeys.push(
-        'EMAIL_API_KEY',
-        'EMAIL_FROM'
-      );
-    }
-
-    if (emailProvider === 'google-apps-script') {
-      productionKeys.push(
-        'GOOGLE_SCRIPT_URL',
-        'GOOGLE_SCRIPT_SECRET'
-      );
-    }
-
     for (const key of productionKeys) {
       required(key, env);
     }
@@ -288,16 +301,6 @@ function getConfig(env = process.env) {
     if (!config.appUrl.startsWith('https://')) {
       throw new Error(
         'Production APP_URL must use HTTPS'
-      );
-    }
-
-    // Validate the Apps Script endpoint.
-    if (
-      emailProvider === 'google-apps-script' &&
-      !validGoogleScriptUrl(config.googleScript.url)
-    ) {
-      throw new Error(
-        'GOOGLE_SCRIPT_URL must be a valid HTTPS Google Apps Script /exec URL'
       );
     }
 
