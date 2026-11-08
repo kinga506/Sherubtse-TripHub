@@ -82,6 +82,8 @@ function getConfig(env = process.env) {
       port: dbPort,
       database: env.DB_NAME || 'sherubtse_triphub',
       user: env.DB_USER || 'postgres',
+      // Keep the password byte-for-byte: spaces and punctuation can be valid
+      // password characters, and pg-promise receives it as a separate value.
       password: env.DB_PASS || '',
       ssl: sslValue === 'true'
     },
@@ -144,6 +146,7 @@ function getConfig(env = process.env) {
       'DB_PASS',
       'SESSION_SECRET',
       'APP_URL',
+      'MONGO_URI',
       'EMAIL_API_KEY',
       'EMAIL_FROM'
     ];

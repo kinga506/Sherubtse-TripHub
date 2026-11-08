@@ -16,8 +16,6 @@ async function connectMongo(uri = process.env.MONGO_URI) {
   }
 
   connecting = (async () => {
-    console.log('[MONGODB] Starting database connection...');
-
     const newClient = new MongoClient(uri, {
       serverSelectionTimeoutMS: 15000,
       connectTimeoutMS: 10000
@@ -25,8 +23,6 @@ async function connectMongo(uri = process.env.MONGO_URI) {
 
     try {
       await newClient.connect();
-
-      console.log('[MONGODB] Connected to MongoDB server.');
 
       const db = newClient.db(DATABASE);
 
@@ -45,15 +41,9 @@ async function connectMongo(uri = process.env.MONGO_URI) {
       client = newClient;
       database = db;
 
-      console.log('[MONGODB] Feedback indexes verified.');
-
       return database;
 
     } catch (error) {
-      console.error('[MONGODB] Connection failed.');
-      console.error('[MONGODB] Error type:', error.name);
-      console.error('[MONGODB] Error message:', error.message);
-
       await newClient.close().catch(() => {});
 
       throw error;

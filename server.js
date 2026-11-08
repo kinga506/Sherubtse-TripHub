@@ -4,6 +4,7 @@ require('dotenv').config();
 const { getConfig } = require('./config/env');
 const { testConnection } = require('./config/db');
 const { connectMongo } = require('./config/mongo');
+const { postgresFailure, mongoFailure } = require('./config/startupDiagnostics');
 const createApp = require('./app');
 
 async function start() {
@@ -24,10 +25,7 @@ async function start() {
 
     console.log('[STARTUP] PostgreSQL connected successfully.');
   } catch (error) {
-    console.error(
-      '[STARTUP] PostgreSQL connection failed:',
-      error.message
-    );
+    console.error('[STARTUP] PostgreSQL connection failed:', postgresFailure(error));
     throw error;
   }
 
@@ -38,16 +36,13 @@ async function start() {
 
     console.log('[STARTUP] MongoDB connected successfully.');
   } catch (error) {
-    console.error(
-      '[STARTUP] MongoDB connection failed:',
-      error.message
-    );
+    console.error('[STARTUP] MongoDB connection failed:', mongoFailure(error));
     throw error;
   }
 
-  console.log('[STARTUP] Initializing Express...');
-
   const app = createApp(config);
+
+  console.log('[STARTUP] Express application initialized.');
 
   const server = app.listen(
     config.port,
