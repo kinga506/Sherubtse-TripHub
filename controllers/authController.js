@@ -3,6 +3,7 @@ const bcrypt=require('bcrypt');
 const User=require('../models/User');
 const {sendEmail}=require('../services/mailer');
 const EMAIL_RE=/^[0-9]+\.sherubtse@rub\.edu\.bt$/;
+const SIGNUP_GENERIC_MESSAGE='If the account is eligible, verification instructions will be sent to that Sherubtse email address. Check your inbox (and spam folder); you must verify your email before logging in. If no email arrives, use Resend verification.';
 function normalizeEmail(value) {return String(value||'').trim().toLowerCase();}
 function validStudentEmail(email) {return EMAIL_RE.test(email);}
 function makeToken() { const raw=crypto.randomBytes(32).toString('hex'); return {raw,hash:crypto.createHash('sha256').update(raw).digest('hex')}; }
@@ -17,15 +18,15 @@ async function signup(req,res,next) {
       return res.status(400).render('auth/signup',{title:'Student signup',error:'Check your college email, name and matching passwords (12–72 characters).'});
     const studentId=email.split('.')[0];
     const found=await User.findByEmail(email);
-    if(found) return res.status(200).render('auth/message',{title:'Check your email',message:'If eligible, you will receive verification instructions.'});
+    if(found) return res.status(200).render('auth/message',{title:'Check your email',message:SIGNUP_GENERIC_MESSAGE});
     const {raw,hash}=makeToken();
     const passwordHash=await bcrypt.hash(password,12);
     await User.createStudent({name:name.trim(),email,passwordHash,studentId,tokenHash:hash,expiresAt:new Date(Date.now()+60*60*1000)});
     const url=`${process.env.APP_URL||'http://localhost:3000'}/auth/verify?token=${encodeURIComponent(raw)}`;
     try { await sendEmail({to:email,subject:'Verify your Sherubtse TripHub account',text:`Verify your email within one hour: ${url}\nIf you did not sign up, ignore this email.`}); }
     catch(err) {console.error('Verification email delivery failed:',err.message);}
-    return render(res,'message',{title:'Check your email',message:'If eligible, you will receive verification instructions. If no email arrives, use Resend verification.'});
-  } catch(err) { if(err.code==='23505') return res.status(200).render('auth/message',{title:'Check your email',message:'If eligible, you will receive verification instructions.'}); next(err); }
+    return render(res,'message',{title:'Check your email',message:SIGNUP_GENERIC_MESSAGE});
+  } catch(err) { if(err.code==='23505') return res.status(200).render('auth/message',{title:'Check your email',message:SIGNUP_GENERIC_MESSAGE}); next(err); }
 }
 async function verify(req,res,next) {
   try {

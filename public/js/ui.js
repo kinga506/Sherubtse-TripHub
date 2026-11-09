@@ -41,6 +41,35 @@ document.addEventListener('DOMContentLoaded', () => {
     if (status) status.textContent = 'Signing you in…';
     form.setAttribute('aria-busy', 'true');
   }));
+  document.querySelectorAll('[data-signup-form]').forEach(form => {
+    const password = form.querySelector('[name="password"]');
+    const confirmation = form.querySelector('[name="confirmPassword"]');
+    const length = form.querySelector('[data-password-length]');
+    const match = form.querySelector('[data-password-match]');
+    const updatePasswordFeedback = () => {
+      const count = password.value.length;
+      length.textContent = `${count} ${count === 1 ? 'character' : 'characters'} entered.`;
+      if (!confirmation.value) {
+        match.textContent = 'Re-enter your password to confirm it.';
+        match.removeAttribute('data-match-state');
+      } else if (password.value === confirmation.value) {
+        match.textContent = 'Passwords match.';
+        match.dataset.matchState = 'match';
+      } else {
+        match.textContent = 'Passwords do not match yet.';
+        match.dataset.matchState = 'mismatch';
+      }
+    };
+    password.addEventListener('input', updatePasswordFeedback);
+    confirmation.addEventListener('input', updatePasswordFeedback);
+    form.addEventListener('submit', () => {
+      const submit = form.querySelector('[data-signup-submit]');
+      const status = form.querySelector('[data-signup-loading]');
+      if (submit) { submit.disabled = true; submit.textContent = 'Creating account…'; }
+      if (status) status.textContent = 'Submitting your account details…';
+      form.setAttribute('aria-busy', 'true');
+    });
+  });
   document.querySelectorAll('[data-dialog-open]').forEach(button => button.addEventListener('click', () => {
     const dialog = document.getElementById(button.dataset.dialogOpen);
     if (dialog && typeof dialog.showModal === 'function') dialog.showModal();

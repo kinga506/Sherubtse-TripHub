@@ -397,6 +397,21 @@ label{display:flex;flex-direction:column;gap:.35rem;color:var(--forest-dark);fon
 .login-links{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:.4rem;font-size:.87rem}
 .login-signup{text-align:center;margin:1.35rem 0 0;padding-top:1.1rem;border-top:1px solid var(--line);color:var(--muted)}
 .login-signup a,.login-links a{font-weight:700}
+.signup-card{width:min(100%,520px)}
+.signup-card h1{font-size:clamp(2rem,5vw,2.55rem)}
+.signup-notice{margin:0 0 1.15rem;padding:.8rem .9rem;border:1px solid #d5e5d8;border-left:3px solid var(--forest-mid);border-radius:10px;background:#f4f8f4;color:#405a4d;font-size:.88rem;line-height:1.5}
+.signup-card form>label{display:block;font-weight:700;color:var(--ink);margin:.95rem 0 .38rem}
+.signup-card form>input:not([type=hidden]){display:block;width:100%;min-height:48px;padding:.7rem .85rem;background:#fff;border:1px solid #b8cbbf;border-radius:10px;color:var(--ink)}
+.signup-card form>input:focus-visible{outline:3px solid #a9d0b7;outline-offset:1px;border-color:var(--forest-mid)}
+.signup-help{display:block;margin:.3rem 0 .2rem;line-height:1.45}
+.signup-card .password-field{margin:0}
+.signup-card .login-submit{min-height:50px}
+.signup-card .login-submit:disabled{opacity:.72;cursor:wait}
+.signup-resend{text-align:center;margin:.65rem 0 0;font-size:.85rem}
+.signup-resend a{color:var(--muted)}
+.signup-help[data-match-state="match"]{color:#17613c}
+.signup-help[data-match-state="mismatch"]{color:#812d26}
+@media(max-width:500px){.signup-layout{padding-top:.35rem}.signup-card{padding:1.35rem}}
 .about-hero{padding:clamp(1.6rem,5vw,3.7rem);border:1px solid var(--line);border-radius:26px;background:linear-gradient(135deg,#f0f5ec 0%,#eaf3ed 100%)}
 .about-hero h1{font-size:clamp(2.25rem,5vw,3.8rem);max-width:790px}
 .about-hero .lead{max-width:800px}

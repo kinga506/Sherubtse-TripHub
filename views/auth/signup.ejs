@@ -1,14 +1,33 @@
 <%- include('../partials/header') %>
-<h1>Create Student account</h1>
-<p>Only verified Sherubtse College Student accounts can register here.</p>
-<% if (error) { %><p role="alert"><%= error %></p><% } %>
-<form method="post" action="/auth/signup">
- <input type="hidden" name="_csrf" value="<%= csrfToken %>">
- <label>Full name <input name="name" maxlength="100" required></label>
- <label>Sherubtse email <input name="email" type="email" pattern="[0-9]+\.sherubtse@rub\.edu\.bt" placeholder="07270030.sherubtse@rub.edu.bt" required></label>
- <label>Password (12–72 characters) <input name="password" type="password" minlength="12" maxlength="72" required></label>
- <label>Confirm password <input name="confirmPassword" type="password" minlength="12" maxlength="72" required></label>
- <button type="submit">Create account</button>
-</form>
-<p><a href="/auth/login">Already registered? Log in</a></p>
+<section class="login-layout signup-layout" aria-labelledby="signup-heading">
+ <div class="login-card signup-card">
+  <p class="eyebrow">SHERUBTSE TRIPHUB</p>
+  <h1 id="signup-heading">Start your journey</h1>
+  <p class="login-subtitle">Create your Sherubtse TripHub student account.</p>
+  <p class="signup-notice">Use your Sherubtse College email address. You will receive a verification link before you can log in.</p>
+  <% if (error) { %><p class="login-error" role="alert"><%= error %></p><% } %>
+  <form method="post" action="/auth/signup" data-signup-form>
+   <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+   <label for="signup-name">Full name</label>
+   <input id="signup-name" name="name" type="text" placeholder="Enter your full name" autocomplete="name" maxlength="100" required>
+
+   <label for="signup-email">Sherubtse email</label>
+   <input id="signup-email" name="email" type="email" placeholder="07270030.sherubtse@rub.edu.bt" autocomplete="email" autocapitalize="none" spellcheck="false" pattern="[0-9]+\.sherubtse@rub\.edu\.bt" aria-describedby="signup-email-help" required>
+   <small id="signup-email-help" class="signup-help">Use your student number followed by .sherubtse@rub.edu.bt.</small>
+
+   <label for="signup-password">Password</label>
+   <div class="password-field"><input id="signup-password" name="password" type="password" autocomplete="new-password" minlength="12" maxlength="72" aria-describedby="signup-password-help" required><button type="button" class="password-toggle" data-password-toggle aria-controls="signup-password" aria-pressed="false">Show password</button></div>
+   <small id="signup-password-help" class="signup-help">Use 12–72 characters. <span data-password-length aria-live="polite">0 characters entered.</span></small>
+
+   <label for="signup-confirm-password">Confirm password</label>
+   <div class="password-field"><input id="signup-confirm-password" name="confirmPassword" type="password" autocomplete="new-password" minlength="12" maxlength="72" aria-describedby="signup-confirm-feedback" required><button type="button" class="password-toggle" data-password-toggle aria-controls="signup-confirm-password" aria-pressed="false">Show password</button></div>
+   <small id="signup-confirm-feedback" class="signup-help" data-password-match role="status" aria-live="polite">Re-enter your password to confirm it.</small>
+
+   <button class="btn btn-primary login-submit" type="submit" data-signup-submit>Create Student Account</button>
+   <p class="login-loading" data-signup-loading role="status" aria-live="polite"></p>
+  </form>
+  <p class="login-signup">Already have an account? <a href="/auth/login">Log in</a></p>
+  <p class="signup-resend"><a href="/auth/resend-verification">Need another verification email?</a></p>
+ </div>
+</section>
 <%- include('../partials/footer') %>
