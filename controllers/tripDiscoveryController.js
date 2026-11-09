@@ -2,9 +2,8 @@ const PublicTrip=require('../models/PublicTrip');
 const {enrich}=require('../services/tripDiscovery');
 async function gallery(req,res,next){
  try{
-  const filters=PublicTrip.cleanFilters(req.query);
-  const [rows,dzongkhags]=await Promise.all([PublicTrip.list(filters),PublicTrip.getDzongkhags()]);
-  res.render('trips/index',{title:'Upcoming trips',activeNav:'trips',trips:rows.map(t=>enrich(t)),filters,dzongkhags});
+  const rows=await PublicTrip.list();
+  res.render('trips/index',{title:'College Trips',activeNav:'trips',trips:rows.map(t=>enrich(t))});
  }catch(error){next(error);}
 }
 async function detail(req,res,next){

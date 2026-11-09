@@ -1,6 +1,6 @@
 // Public route/permission tests with the database model mocked.
 jest.mock('../models/Destination', () => ({
-  getAll: jest.fn(),getBySlug: jest.fn(),getPhotos: jest.fn(),getUpcomingTrips: jest.fn()
+  getAll: jest.fn(),getBySlug: jest.fn(),getPhotos: jest.fn(),getPublicTrips: jest.fn()
 }));
 const Destination=require('../models/Destination');
 const controller=require('../controllers/destinationController');
@@ -16,7 +16,7 @@ test('unknown destination returns 404',async()=>{
   Destination.getBySlug.mockResolvedValue(null);const res=response();
   await controller.detail({params:{slug:'not-found'}},res,next);
   expect(res.status).toHaveBeenCalledWith(404);
-  expect(Destination.getUpcomingTrips).not.toHaveBeenCalled();
+  expect(Destination.getPublicTrips).not.toHaveBeenCalled();
 });
 test('malformed slug returns 404 without query',async()=>{
   const res=response();await controller.detail({params:{slug:'../../private'}},res,next);
@@ -25,8 +25,8 @@ test('malformed slug returns 404 without query',async()=>{
 });
 test('detail only fetches trips for destination id',async()=>{
   Destination.getBySlug.mockResolvedValue({id:7,slug:'bumdeling',name:'Bumdeling'});
-  Destination.getPhotos.mockResolvedValue([]);Destination.getUpcomingTrips.mockResolvedValue([]);
+  Destination.getPhotos.mockResolvedValue([]);Destination.getPublicTrips.mockResolvedValue([]);
   const res=response();await controller.detail({params:{slug:'bumdeling'}},res,next);
-  expect(Destination.getUpcomingTrips).toHaveBeenCalledWith(7);
+  expect(Destination.getPublicTrips).toHaveBeenCalledWith(7);
   expect(res.render).toHaveBeenCalledWith('destinations/detail',expect.objectContaining({trips:[],seasonWarning:expect.any(String)}));
 });

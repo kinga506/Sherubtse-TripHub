@@ -51,10 +51,14 @@ const requireApprovedParticipant=withTrip(async(user,trip)=>{
   if(user.role!=='student'||!trip.is_active || trip.approval_status!=='approved') return false;
   return Access.approvedParticipation(trip.id,user.id);
 });
+const requireTripParticipant=withTrip(async(user,trip)=>{
+  if(user.role!=='student')return false;
+  return Access.participationRecord(trip.id,user.id);
+});
 const requireHistoricalTripAccess=withTrip(async(user,trip)=>{
   if(user.role==='dsa'||user.role==='admin') return {oversight:true};
   if(user.role!=='student'||!['completed','cancelled','awaiting_final_report'].includes(trip.operational_status)) return false;
   return Access.historicalAssignment(trip.id,user.id);
 });
 module.exports={requireAuth,requireStudent,requireDsa,requireSuperadmin,requireTripCoordinator,
-  requireLeadTripCoordinator,requireProposalOwner,requireApprovedParticipant,requireHistoricalTripAccess,withTrip};
+  requireLeadTripCoordinator,requireProposalOwner,requireApprovedParticipant,requireTripParticipant,requireHistoricalTripAccess,withTrip};

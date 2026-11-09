@@ -1,5 +1,5 @@
 jest.mock('../models/PublicTrip', () => ({
-  cleanFilters: jest.fn(), list: jest.fn(), getById: jest.fn(), getCostItems: jest.fn()
+  list: jest.fn(), getById: jest.fn(), getCostItems: jest.fn()
 }));
 jest.mock('../models/Destination', () => ({ getAll: jest.fn() }));
 
@@ -16,21 +16,21 @@ const trip = {
   destination_name: 'Chorten Kora', destination_slug: 'chorten-kora', dzongkhag: 'Trashiyangtse',
   estimated_cost: 1800, max_participants: 10, occupied_seats: 7, confirmed_participants: 5,
   registration_open: true, vacancies_held_closed: false, registration_deadline: '2099-02-26',
-  is_sample: true,
+  is_sample: false, public_stage:'upcoming',
   password_hash: 'never-expose', private_attachment_key: 'secret',
   proposed_by_user_id: 19, dsa_remarks: 'private'
 };
 
 beforeEach(() => jest.clearAllMocks());
 
-test('trip listing uses the public filtered model and omits sensitive database fields', async () => {
-  PublicTrip.cleanFilters.mockReturnValue({ q: '', registration: 'all', sort: 'soonest', dzongkhag: '' });
+test('trip listing uses the shared public model and omits sensitive database fields', async () => {
   PublicTrip.list.mockResolvedValue([trip]);
   const res = response();
-  await api.trips({ query: { registration: 'all' } }, res, jest.fn());
+  await api.trips({ query: { registration: 'all',q:'hidden filter' } }, res, jest.fn());
   expect(PublicTrip.list).toHaveBeenCalled();
   const payload = res.json.mock.calls[0][0];
   expect(payload.count).toBe(1);
+  expect(payload).not.toHaveProperty('filters');
   expect(payload.trips[0].registration.open).toBe(true);
   expect(payload.trips[0].pending_and_approved_seats).toBe(7);
   expect(payload.trips[0].approved_participants).toBe(5);
@@ -77,8 +77,8 @@ test('model visibility and registration checks are shared with HTML trip pages',
   const source = fs.readFileSync(require.resolve('../models/PublicTrip'), 'utf8');
   expect(source).toContain("t.approval_status='approved'");
   expect(source).toContain("c.assignment_role='lead'");
-  expect(source).toContain("t.operational_status='planned'");
-  expect(source).toContain('t.registration_open=TRUE');
+  expect(source).toContain("t.operational_status IN ('planned','ongoing')");
+  expect(source).toContain('t.is_publicly_hidden=FALSE');
   const routeSource = fs.readFileSync(require.resolve('../routes/api'), 'utf8');
   expect(routeSource).not.toMatch(/router\.(post|put|patch|delete)\(/);
 });

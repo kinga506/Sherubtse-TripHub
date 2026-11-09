@@ -153,9 +153,9 @@ See `docs/STEP9_REVIEW.md` for test scenarios and permissions. The official Stud
 
 ## Step 10 — Public trip discovery
 
-This step adds `GET /trips` and `GET /trips/:id` with destination search, dzongkhag and registration filters, ordering, trip comparison, estimated-cost items and public trip detail pages. The visible set is limited in PostgreSQL to **approved, active, planned, upcoming trips that have an active lead Coordinator**. Private proposals, supporting documents, full participant names and consent letters are not selected. Both occupied (`pending` + `approved`) and confirmed (`approved`) counts are displayed; these are different numbers. `Slots Full` means occupied capacity includes pending requests, while `Fully Booked` means all occupied requests are approved. Opening registration and submitting join requests are Step 11, and are **not** active here.
+This step adds `GET /trips` and `GET /trips/:id` for eligible public College Trips. The public gallery has no search, filters, sorting, or cross-trip comparison. A shared PostgreSQL predicate limits display to approved, active, non-sample trips with an active lead, an allowed operational status, no coordinator hide, and an end date on or after the current Bhutan calendar day. Upcoming and ongoing labels use the Bhutan calendar day. Private proposals, attachments, participant identities, and consent letters are not selected. Occupied (`pending` + `approved`) and confirmed (`approved`) counts remain separate.
 
-No schema migration is needed for Step 10. To test locally, apply the earlier schema and migrations, configure `.env`, run `npm install`, `npm run seed` in local demo mode if desired, `npm test`, then `npm run dev`. Visit `/trips`, select filters and open a trip. The five original sample proposals remain pending DSA approval, so they must not appear publicly until deliberately reviewed. No real DSA approval is implied by local demonstration fixtures.
+The coordinator visibility feature uses the additive `db/step19-trip-visibility-migration.sql`; apply it to a nonproduction database after Step 18 before running the updated app. To test locally, apply the schema and migrations, run `npm test`, then `npm run dev`. Visit `/trips` and open an eligible trip. Sample trips are excluded even if marked approved.
 
 Automated test source is in `tests/step10-discovery.test.js`. Run real PostgreSQL/HTTP/browser integration tests locally: source-only syntax and pure function checks do **not** establish database access or production readiness.
 
@@ -219,15 +219,15 @@ After an approved trip's end date and with status `awaiting_final_report` or `co
 ## Step 18 — Trip completion and archive
 Apply `db/step18-lifecycle-migration.sql`, then see `docs/STEP18_COMPLETION.md` for lifecycle/DSA cancellation tests. Use `npm run reconcile:trips` in a recurring external scheduler; request-time reconciliation also runs on trip-specific pages. The final report is an immutable PostgreSQL snapshot of attendance, financial totals and available feedback at submission time. The configured email provider sends durable notification-outbox messages.
 
-## Step 19 — Help and administration
+## Step 19 — About, visibility and administration
 
-The former shared public Help page and its `/help`, `/about`, `/faq`, `/safety`, and `/photo-credits` routes have been removed. DSA and Superadmin can still manage FAQs, travel rules, testimonials, and destination photo credits in the administration workspace.
+The former shared public Help page remains removed; `/help`, `/faq`, `/safety`, and `/photo-credits` return 404. `/about` is now a separate About page. DSA and Superadmin can still manage FAQs, travel rules, testimonials, and destination photo credits in the administration workspace. The additive trip-visibility schema change is documented in `docs/STEP19_PUBLIC_VISIBILITY.md`.
 
 Superadmin: `/workspace/superadmin` (overview, accounts, DSA account creation, programmes, destinations, destination photo upload/metadata, FAQ/rule/testimonial editing, and read-only trip assignment oversight). Superadmin **cannot** assign a Coordinator or approve a trip. DSA review history and completed reports are at `/workspace/dsa/history`, while assignment and handover remain at `/workspace/dsa/proposals/:tripId`.
 
 Uploaded public photos use the configured private storage backend, served through `/managed-photos/:photoId` only for active destinations. Only JPEG/PNG images with matching file signatures are accepted. No credentials are embedded in URLs. The existing seeded static destination photos remain unchanged.
 
-Before checking the admin pages, finish applying migrations and seeding the database. `npm test` requires installed dependencies and a configured PostgreSQL test environment. The Step 19 source and isolated tests do **not** substitute for browser, access-control, real R2, or database integration testing.
+Before checking the admin pages, finish applying migrations and seeding the database. Active lead Coordinators can hide or restore currently eligible trips under My Coordinating Trips; DSA can inspect current state and full visibility history under Trip completion. Hiding does not change registration or participant data. `npm test` requires installed dependencies and a configured PostgreSQL test environment. Source tests do **not** substitute for browser, access-control, real R2, or database integration testing.
 
 
 ## Step 20 — Public REST API
@@ -273,7 +273,7 @@ Read `docs/SETUP_GUIDE.md` first for the **current** installation/migration sequ
 ### Final handover checklist
 
 - [ ] Install dependencies and commit a generated `package-lock.json`; replace CI `npm install` with `npm ci` once the lockfile exists.
-- [ ] Apply `db/schema.sql` and the ten migration files in the exact order in `docs/SETUP_GUIDE.md`, using a **nonproduction** database first.
+- [ ] Apply `db/schema.sql` and the eleven migration files in the exact order in `docs/SETUP_GUIDE.md`, using a **nonproduction** database first.
 - [ ] Run `npm run check:release`, `npm test`, and manual end-to-end journeys; correct any failures.
 - [ ] Test all three account roles and a trip-specific lead/assistant assignment with different users.
 - [ ] Verify live Google Apps Script (or selected alternative) delivery, Cloudflare R2 private uploads, MongoDB when enabled, and Neon connections.

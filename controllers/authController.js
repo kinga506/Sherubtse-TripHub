@@ -37,13 +37,13 @@ async function verify(req,res,next) {
     return render(res,'message',{title:'Email verified',message:'Email verified. You can now log in.'});
   } catch(err){next(err);}
 }
-const showLogin=(req,res)=>render(res,'login',{title:'Login',error:null});
+const showLogin=(req,res)=>render(res,'login',{title:'Log in',error:null});
 async function login(req,res,next) {
   try {
     const email=normalizeEmail(req.body.email); const password=String(req.body.password||'');
     const user=await User.findByEmail(email);
     const valid=user && await bcrypt.compare(password,user.password_hash);
-    if (!valid || !user.is_verified || !user.is_active) return res.status(401).render('auth/login',{title:'Login',error:'Invalid credentials or account not verified/active.'});
+    if (!valid || !user.is_verified || !user.is_active) return res.status(401).render('auth/login',{title:'Log in',error:'Invalid credentials or account not verified/active.'});
     req.session.regenerate(err=>{
       if(err) return next(err);
       req.session.userId=user.id;

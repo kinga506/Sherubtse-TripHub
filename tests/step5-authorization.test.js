@@ -14,6 +14,7 @@ beforeEach(()=>{
  Access.activeAssignment.mockResolvedValue({assignment_role:'assistant'});
  Access.historicalAssignment.mockResolvedValue({assignment_role:'lead'});
  Access.approvedParticipation.mockResolvedValue({id:7});
+  Access.participationRecord.mockResolvedValue({id:7,status:'approved'});
 });
 test.each([['student',guard.requireStudent,student],['dsa',guard.requireDsa,dsa],['superadmin',guard.requireSuperadmin,admin]])('%s role grants only matching users',async(_,middleware,user)=>{
  expect((await run(middleware,req(user))).next).toHaveBeenCalled();
@@ -65,6 +66,13 @@ test('approved participant check never trusts submitted user id',async()=>{
  expect(Access.approvedParticipation).toHaveBeenCalledWith(5,10);
  Access.approvedParticipation.mockResolvedValue(null);
  expect((await run(guard.requireApprovedParticipant,req())).response.status).toHaveBeenCalledWith(403);
+});
+test('private trip view is available only to a student with their own request',async()=>{
+ const request=req();request.body={userId:55};
+ expect((await run(guard.requireTripParticipant,request)).next).toHaveBeenCalled();
+ expect(Access.participationRecord).toHaveBeenCalledWith(5,10);
+ Access.participationRecord.mockResolvedValueOnce(null);
+ expect((await run(guard.requireTripParticipant,req())).response.status).toHaveBeenCalledWith(403);
 });
 test('historical access requires prior assignment, or institutional oversight',async()=>{
  Access.tripById.mockResolvedValue({...trip,operational_status:'completed'});

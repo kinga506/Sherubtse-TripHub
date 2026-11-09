@@ -20,7 +20,8 @@
     <button type="button" class="nav-toggle" aria-controls="site-navigation" aria-expanded="false" data-nav-toggle aria-label="Open navigation"><span aria-hidden="true">☰</span><span class="sr-only">Menu</span></button>
     <nav class="site-nav" id="site-navigation" aria-label="Main navigation" data-mobile-nav>
       <a href="/" <% if(typeof activeNav !== 'undefined' && activeNav === 'home'){ %>aria-current="page"<% } %>>Home</a>
-      <a href="/trips" <% if(typeof activeNav !== 'undefined' && activeNav === 'trips'){ %>aria-current="page"<% } %>>Upcoming trips</a>
+      <a href="/about" <% if(typeof activeNav !== 'undefined' && activeNav === 'about'){ %>aria-current="page"<% } %>>About</a>
+      <a href="/trips" <% if(typeof activeNav !== 'undefined' && activeNav === 'trips'){ %>aria-current="page"<% } %>>College Trips</a>
       <a href="/destinations" <% if(typeof activeNav !== 'undefined' && activeNav === 'destinations'){ %>aria-current="page"<% } %>>Destinations</a>
       <% if (currentUser) { %>
         <% if(currentUser.role === 'student') { %>

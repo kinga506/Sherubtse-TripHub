@@ -2,7 +2,7 @@ jest.mock('../config/db',()=>({getDb:jest.fn()}));
 const {getDb}=require('../config/db');
 const R=require('../models/Registration');
 const {registrationStatus}=require('../services/tripDiscovery');
-const futureTrip={id:11,title:'Test Trip',start_date:'2099-08-01',registration_deadline:'2099-07-01T08:00:00Z',max_participants:2,registration_open:true,vacancies_held_closed:false,approval_status:'approved',is_active:true,operational_status:'planned',estimated_cost:'100',is_sample:true};
+const futureTrip={id:11,title:'Test Trip',start_date:'2099-08-01',end_date:'2099-08-10',registration_deadline:'2099-07-01T08:00:00Z',max_participants:2,registration_open:true,vacancies_held_closed:false,approval_status:'approved',is_active:true,operational_status:'planned',estimated_cost:'100',is_sample:false,is_publicly_hidden:false};
 const document={name:'consent.pdf',mime:'application/pdf',size:220};
 function dbWithTask(task){getDb.mockReturnValue({tx:async fn=>fn(task)});}
 beforeEach(()=>jest.clearAllMocks());
@@ -10,6 +10,17 @@ test('eligibility enforces approval, deadline and trip start date',()=>{
  expect(()=>R.eligible(futureTrip,new Date('2099-06-01'))).not.toThrow();
  expect(()=>R.eligible({...futureTrip,approval_status:'pending_dsa'},new Date('2099-06-01'))).toThrow();
  expect(()=>R.eligible({...futureTrip,registration_deadline:'2000-01-01'},new Date('2099-06-01'))).toThrow();
+});
+test('hidden trips cannot accept direct public join actions',()=>{
+ expect(()=>R.eligible({...futureTrip,is_publicly_hidden:true},new Date('2099-06-01'),{requireVisible:true})).toThrow('Trip is hidden from public participation');
+ expect(()=>R.eligible({...futureTrip,is_sample:true},new Date('2099-06-01'))).toThrow('Sample trips cannot accept registration');
+});
+test('direct join rechecks hidden visibility after locking the trip',async()=>{
+ const hidden={...futureTrip,is_publicly_hidden:true};
+ const task={oneOrNone:jest.fn().mockResolvedValue(hidden),one:jest.fn(),none:jest.fn()};dbWithTask(task);
+ await expect(R.join(11,4,'Joining',document,'a'.repeat(32))).rejects.toMatchObject({status:404});
+ expect(task.oneOrNone.mock.calls[0][0]).toContain('FOR UPDATE');
+ expect(task.one).not.toHaveBeenCalled();expect(task.none).not.toHaveBeenCalled();
 });
 test('missing consent prevents a reserved slot',async()=>{
  await expect(R.join(11,4,'Joining',null,null)).rejects.toThrow(/consent/i);

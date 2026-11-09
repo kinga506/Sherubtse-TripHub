@@ -1,12 +1,24 @@
 <%- include('../partials/header') %>
-<h1>Log in</h1>
-<% if (error) { %><p role="alert"><%= error %></p><% } %>
-<form method="post" action="/auth/login">
- <input type="hidden" name="_csrf" value="<%= csrfToken %>">
- <label>Email <input type="email" name="email" autocomplete="username" required></label>
- <label>Password <input type="password" name="password" autocomplete="current-password" required></label>
- <button type="submit">Log in</button>
-</form>
-<p><a href="/auth/resend-verification">Resend verification email</a></p>
-<p><a href="/auth/forgot-password">Forgot password?</a></p>
+<section class="login-layout" aria-labelledby="login-heading">
+ <div class="login-card">
+  <p class="eyebrow">SHERUBTSE TRIPHUB</p>
+  <h1 id="login-heading">Welcome back</h1>
+  <p class="login-subtitle">Log in to continue your Sherubtse TripHub journey.</p>
+  <% if (error) { %><p class="login-error" role="alert"><%= error %></p><% } %>
+  <form method="post" action="/auth/login" data-login-form>
+   <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+   <label for="login-email">Email</label>
+   <input id="login-email" type="email" name="email" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+   <label for="login-password">Password</label>
+   <div class="password-field"><input id="login-password" type="password" name="password" autocomplete="current-password" required><button type="button" class="password-toggle" data-password-toggle aria-controls="login-password" aria-pressed="false">Show password</button></div>
+   <button class="btn btn-primary login-submit" type="submit" data-login-submit>Log in</button>
+   <p class="login-loading" data-login-loading role="status" aria-live="polite"></p>
+  </form>
+  <nav class="login-links" aria-label="Account assistance">
+   <a href="/auth/forgot-password">Forgot password?</a>
+   <a href="/auth/resend-verification">Resend verification email</a>
+  </nav>
+  <p class="login-signup">New to TripHub? <a href="/auth/signup">Student signup</a></p>
+ </div>
+</section>
 <%- include('../partials/footer') %>

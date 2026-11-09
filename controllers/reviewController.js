@@ -91,5 +91,4 @@ async function revisionSubmit(req,res,next){try{
  await Proposal.save(req.currentUser.id,Number(req.params.tripId),validated,{materialRevision:true});
  res.redirect('/workspace/coordinating-trips');
 }catch(e){issue(res,e,next);}}
-async function coordinating(req,res,next){try{res.render('coordinators/list',{title:'My Coordinating Trips',trips:await Access.coordinatingTripIds(req.currentUser.id)});}catch(e){next(e);}}
-module.exports={attachmentsPage,upload,remove,download,submit,dsaQueue,dsaReview,decision,handover,requestHandover,coordinating,revisionForm,revisionSubmit};
+module.exports={attachmentsPage,upload,remove,download,submit,dsaQueue,dsaReview,decision,handover,requestHandover,revisionForm,revisionSubmit};

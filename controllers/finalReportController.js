@@ -1,6 +1,6 @@
 const Report=require('../models/TripFinalReport');
 const {reconcileOne}=require('../services/tripLifecycle');
-const {getDb}=require('../config/db');
+const PublicTrip=require('../models/PublicTrip');
 function failure(err,res,next){if(err.status&&err.status<500)return res.status(err.status).send(err.message);next(err);}
 async function page(req,res,next){try{
  const id=req.params.tripId;
@@ -13,9 +13,8 @@ async function submit(req,res,next){try{await reconcileOne(req.params.tripId);aw
  res.redirect(`/workspace/trips/${req.params.tripId}/final-report`);
 }catch(err){failure(err,res,next);}}
 async function dsaQueue(req,res,next){try{
- const db=getDb();const trips=await db.any(`SELECT t.id,t.title,t.operational_status,t.end_date,t.cancelled_at,t.cancellation_reason,
- r.submitted_at,r.id AS report_id FROM trips t LEFT JOIN trip_final_reports r ON r.trip_id=t.id
- WHERE t.approval_status='approved' ORDER BY t.end_date DESC,t.id DESC LIMIT 150`);
+ const rows=await PublicTrip.dsaVisibilityOverview();
+ const trips=rows.map(trip=>({...trip,...PublicTrip.visibilityInfo({...trip,has_active_lead:Boolean(trip.lead_user_id)})}));
  res.set('Cache-Control','private, no-store');res.render('dsa/trip-lifecycle',{title:'Trip completion oversight',trips});
 }catch(err){next(err);}}
 async function cancel(req,res,next){try{

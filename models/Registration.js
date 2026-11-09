@@ -1,10 +1,14 @@
 const {getDb}=require('../config/db');
 
 function problem(message,status=422){return Object.assign(new Error(message),{status});}
-function eligible(trip,now=new Date()){
+function eligible(trip,now=new Date(),{requireVisible=false}={}){
  if(!trip||trip.approval_status!=='approved'||!trip.is_active||!['planned','ongoing'].includes(trip.operational_status))throw problem('Trip is not eligible for registration',409);
  const todayBhutan=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Thimphu',year:'numeric',month:'2-digit',day:'2-digit'}).format(now);
  const tripStart=new Date(trip.start_date).toISOString().slice(0,10);
+ const tripEnd=new Date(trip.end_date).toISOString().slice(0,10);
+ if(trip.is_sample)throw problem('Sample trips cannot accept registration',409);
+ if(tripEnd<todayBhutan)throw problem('Trip has ended',409);
+ if(requireVisible&&trip.is_publicly_hidden)throw problem('Trip is hidden from public participation',404);
  if(tripStart<=todayBhutan)throw problem('Trip has already started',409);
  if(new Date(trip.registration_deadline).getTime()<now.getTime())throw problem('Registration deadline has passed',409);
 }
@@ -51,7 +55,7 @@ async function join(tripId,userId,reason,document,storageKey){
  if(!String(reason||'').trim()||String(reason).length>1000)throw problem('Enter a joining reason (up to 1000 characters)');
  if(!document||!storageKey)throw problem('A valid parent/guardian consent letter is required');
  return getDb().tx(async t=>{
-  const trip=await lockedTrip(t,tripId);eligible(trip);
+  const trip=await lockedTrip(t,tripId);eligible(trip,new Date(),{requireVisible:true});
   if(!trip.registration_open||trip.vacancies_held_closed)throw problem('Registration is closed; a Coordinator must reopen any held vacancy',409);
   const lead=await t.oneOrNone(`SELECT 1 FROM trip_coordinators WHERE trip_id=$1 AND status='active' AND assignment_role='lead'`,[tripId]);
   if(!lead)throw problem('Trip has no active lead Coordinator',409);

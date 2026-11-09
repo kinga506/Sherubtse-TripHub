@@ -19,7 +19,7 @@ async function detail(req,res,next) {
     if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) return res.status(404).render('not-found',{title:'Destination not found'});
     const destination=await Destination.getBySlug(slug);
     if(!destination) return res.status(404).render('not-found',{title:'Destination not found'});
-    const [photos,trips]=await Promise.all([Destination.getPhotos(destination.id),Destination.getUpcomingTrips(destination.id)]);
+    const [photos,trips]=await Promise.all([Destination.getPhotos(destination.id),Destination.getPublicTrips(destination.id)]);
     res.render('destinations/detail',{title:destination.name,activeNav:'destinations',destination,photos,trips:trips.map(t=>enrich(t)),seasonWarning:seasonNote(destination)});
   }catch(error){next(error);}
 }

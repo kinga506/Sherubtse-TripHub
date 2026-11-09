@@ -1,8 +1,12 @@
 <%- include('../partials/header') %>
-<header class="page-heading"><p class="eyebrow">DSA authority</p><h1>Trip completion and cancellation</h1><p class="lead">Monitor completed reports, blocked or unfinished trips, and cancel approved trips with a recorded reason.</p></header>
+<header class="page-heading"><p class="eyebrow">DSA authority</p><h1>Trip and visibility oversight</h1><p class="lead">Monitor public discovery status, visibility changes, completed reports, blocked trips, and cancellations.</p></header>
 <section class="surface-card section-block"><h2>Approved trip lifecycle</h2>
 <% if(!trips.length){ %><p>No DSA-approved trips found.</p><% } %>
-<% trips.forEach(trip=>{ %><article class="section-block"><h3><%= trip.title %></h3><p><strong><%= trip.operational_status.replaceAll('_',' ') %></strong> · End date: <%= new Date(trip.end_date).toISOString().slice(0,10) %></p>
+<% trips.forEach(trip=>{ %><article class="section-block dsa-visibility-record"><h3><%= trip.title %></h3><p><strong><%= trip.operational_status.replaceAll('_',' ') %></strong> · End date: <%= new Date(trip.end_date).toISOString().slice(0,10) %></p>
+<p><strong>Public visibility:</strong> <span class="status-badge <%= trip.public_visibility_state==='public'?'badge-success':trip.public_visibility_state==='hidden'?'badge-neutral':'badge-info' %>"><%= trip.public_visibility_label %></span></p>
+<% if(trip.lead_name){ %><p><strong>Active lead Coordinator:</strong> <%= trip.lead_name %></p><% } %>
+<% if(trip.public_visibility_state==='hidden'&&trip.visibility_history.length){ const latest=trip.visibility_history[0]; %><p><strong>Last visibility change:</strong> <%= latest.actor_name || 'Unknown user' %> · <%= new Date(latest.created_at).toLocaleString('en-GB',{timeZone:'Asia/Thimphu'}) %> (Bhutan time)<% if(latest.reason){ %><br><strong>Reason:</strong> <%= latest.reason %><% } %></p><% } %>
+<% if(trip.visibility_history.length){ %><details class="visibility-history"><summary>Visibility history (<%= trip.visibility_history.length %>)</summary><ol><% trip.visibility_history.forEach(event=>{ %><li><strong><%= event.action==='hide'?'Hidden':'Shown' %></strong> by <%= event.actor_name || 'Unknown user' %> · <%= new Date(event.created_at).toLocaleString('en-GB',{timeZone:'Asia/Thimphu'}) %> (Bhutan time)<% if(event.reason){ %><br>Reason: <%= event.reason %><% } %></li><% }) %></ol></details><% } %>
 <a href="/workspace/trips/<%= trip.id %>/final-report">View final report and history</a>
 <% if(trip.report_id){ %><p>Final report submitted: <%= new Date(trip.submitted_at).toLocaleString('en-GB') %></p><% } %>
 <% if(!['completed','cancelled'].includes(trip.operational_status)){ %>

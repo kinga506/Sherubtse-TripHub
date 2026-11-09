@@ -10,6 +10,10 @@
   </p>
 </header>
 
+<% if (visibilityNotice) { %>
+  <p class="visibility-toast-source" data-toast-on-load role="status"><%= visibilityNotice==='hidden'?'Trip hidden from College Trips. Registration and participant records were not changed.':'Trip shown on College Trips.' %></p>
+<% } %>
+
 <% if (!trips.length) { %>
   <section class="surface-card section-block">
     <h2>No Coordinating Trips</h2>
@@ -28,13 +32,32 @@
 <section class="surface-card section-block">
 
   <div class="page-heading">
-    <p class="eyebrow">Lead Coordinator</p>
+    <p class="eyebrow"><%= trip.assignment_role==='lead'?'Lead':'Assistant' %> Trip Coordinator</p>
     <h2><%= trip.title %></h2>
     <p>
       You are responsible for coordinating this trip
       under DSA supervision.
     </p>
   </div>
+
+  <section class="public-visibility-panel" aria-labelledby="visibility-title-<%= trip.id %>">
+    <div>
+      <p class="eyebrow">PUBLIC VISIBILITY</p>
+      <h3 id="visibility-title-<%= trip.id %>">Public visibility</h3>
+      <p><span class="status-badge <%= trip.public_visibility_state==='public'?'badge-success':trip.public_visibility_state==='hidden'?'badge-neutral':'badge-info' %>"><%= trip.public_visibility_label %></span></p>
+      <p class="small-muted">This controls discovery on the College Trips page only. It does not cancel the trip, close registration, or change participants, consent records, namelist clearance, or Coordinator assignments.</p>
+    </div>
+    <% if (trip.assignment_role==='lead' && trip.public_eligible) { %>
+      <button class="btn <%= trip.public_visibility_state==='hidden'?'btn-primary':'btn-outline' %>" type="button"
+        data-public-visibility-trigger data-trip-id="<%= trip.id %>"
+        data-next-action="<%= trip.public_visibility_state==='hidden'?'show':'hide' %>"
+        data-registration-open="<%= trip.registration_open?'true':'false' %>">
+        <%= trip.public_visibility_state==='hidden'?'Show in College Trips':'Hide from College Trips' %>
+      </button>
+    <% } else if (trip.assignment_role!=='lead') { %>
+      <p class="small-muted">Only the active lead Trip Coordinator can change public visibility.</p>
+    <% } %>
+  </section>
 
   <div class="feature-grid">
 
@@ -196,5 +219,22 @@
 </section>
 
 <% }); %>
+
+<dialog class="triphub-modal visibility-modal" id="public-visibility-modal" aria-labelledby="public-visibility-modal-title" aria-describedby="public-visibility-modal-message">
+  <form method="post" id="public-visibility-form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="action" id="public-visibility-action">
+    <p class="eyebrow">CONFIRM VISIBILITY CHANGE</p>
+    <h2 id="public-visibility-modal-title">Change public visibility?</h2>
+    <p id="public-visibility-modal-message"></p>
+    <p class="visibility-registration-warning" id="public-visibility-registration-warning" hidden>If registration remains open, new students will no longer discover this trip through the public gallery. Registration will remain open.</p>
+    <label for="public-visibility-reason">Optional reason</label>
+    <textarea id="public-visibility-reason" name="reason" maxlength="500" rows="3"></textarea>
+    <div class="triphub-modal-actions">
+      <button type="button" class="btn btn-outline" data-public-visibility-cancel>Cancel</button>
+      <button type="submit" class="btn btn-primary" id="public-visibility-confirm">Confirm</button>
+    </div>
+  </form>
+</dialog>
 
 <%- include('../partials/footer') %>

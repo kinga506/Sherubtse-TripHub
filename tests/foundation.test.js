@@ -13,6 +13,25 @@ describe('Step 1 foundation', () => {
     expect(response.statusCode).toBe(404);
     expect(response.text).toContain('Not found');
   });
+  test('About page renders project information and role responsibilities', async () => {
+    const response = await request(createApp({ nodeEnv: 'test' })).get('/about');
+    expect(response.statusCode).toBe(200);
+    expect(response.text).toContain('About Sherubtse TripHub');
+    expect(response.text).toContain('student-developed project');
+    expect(response.text).toContain('Trip Coordinators');
+    expect(response.text).toContain('DSA approves the final namelist');
+  });
+  test('login page includes accessible password toggle and account links', async () => {
+    const response = await request(createApp({ nodeEnv: 'test' })).get('/auth/login');
+    expect(response.statusCode).toBe(200);
+    expect(response.text).toContain('Welcome back');
+    expect(response.text).toContain('data-password-toggle');
+    expect(response.text).toContain('aria-pressed="false"');
+    expect(response.text).toContain('name="_csrf"');
+    expect(response.text).toContain('/auth/forgot-password');
+    expect(response.text).toContain('/auth/resend-verification');
+    expect(response.text).toContain('/auth/signup');
+  });
   test('health responds without querying the database', async () => {
     const response = await request(createApp({ nodeEnv: 'test' })).get('/health');
     expect(response.statusCode).toBe(200);

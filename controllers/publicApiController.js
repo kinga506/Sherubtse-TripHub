@@ -18,6 +18,7 @@ function publicTrip(row) {
     },
     start_date: row.start_date,
     end_date: row.end_date,
+    public_stage: row.public_stage,
     meeting_point: row.meeting_point,
     meeting_time: row.meeting_time,
     transport_information: row.transport_information,
@@ -34,7 +35,6 @@ function publicTrip(row) {
     available_seats: status.available,
     registration_deadline: row.registration_deadline,
     registration: { status: status.key, label: status.label, open: status.key === 'open' },
-    is_sample: Boolean(row.is_sample)
   };
 }
 
@@ -60,9 +60,8 @@ function publicDestination(row) {
 
 async function trips(req, res, next) {
   try {
-    const filters = PublicTrip.cleanFilters(req.query);
-    const rows = await PublicTrip.list(filters);
-    return res.json({ trips: rows.map(publicTrip), count: rows.length, filters });
+    const rows = await PublicTrip.list();
+    return res.json({ trips: rows.map(publicTrip), count: rows.length });
   } catch (error) { return next(error); }
 }
 

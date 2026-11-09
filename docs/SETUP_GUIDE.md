@@ -29,9 +29,10 @@ db/step12a-final-namelist-migration.sql
 db/step13a-student-travel-form-migration.sql
 db/step14-packing-migration.sql
 db/step18-lifecycle-migration.sql
+db/step19-trip-visibility-migration.sql
 ```
 
-**Important:** The project's schema evolved across steps. Some fresh-install columns are included in `schema.sql`, and some migrations may repeat safe alterations; check each SQL file and run the full sequence first against a disposable database. The above ordering matches `.github/workflows/test.yml` but it has **not passed an actual database run** here.
+**Important:** The project's schema evolved across steps. Some fresh-install columns are included in `schema.sql`, and some migrations may repeat safe alterations; check each SQL file and run the full sequence first against a disposable database. The Step 19 migration is additive: it adds `trips.is_publicly_hidden` and `trip_public_visibility_events` without changing or deleting trip or participant records. Apply it after Step 18 before deploying the visibility feature. The above ordering matches `.github/workflows/test.yml` but it has **not passed an actual database run** here.
 
 To load sample content for a safe local demo, set `DEMO_MODE=true` and fill `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD`, `SEED_DSA_EMAIL`, `SEED_DSA_PASSWORD`, `DEMO_PASSWORD` in your private `.env`, then run `npm run seed`. Use nonproduction credentials and clearly label all simulated trip approvals. Return `DEMO_MODE=false` after seeding.
 

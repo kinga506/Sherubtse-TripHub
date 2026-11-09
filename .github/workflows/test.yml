@@ -74,7 +74,8 @@ jobs:
             db/step12a-final-namelist-migration.sql \
             db/step13a-student-travel-form-migration.sql \
             db/step14-packing-migration.sql \
-            db/step18-lifecycle-migration.sql; do
+            db/step18-lifecycle-migration.sql \
+            db/step19-trip-visibility-migration.sql; do
             psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d sherubtse_triphub_test -f "$sql"
           done
       - name: Run Jest and Supertest

@@ -1,6 +1,6 @@
 <%- include('../partials/header') %>
-<nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/trips">Upcoming trips</a> / <span aria-current="page"><%= trip.title %></span></nav>
-<header class="page-heading"><p class="eyebrow"><%= trip.destination_name %> · <%= trip.dzongkhag %></p><h1><%= trip.title %></h1><p class="lead"><%= trip.description || 'Trip details will be updated by the assigned Coordinator.' %></p><% if(trip.is_sample){ %><span class="status-badge badge-neutral">Sample trip · simulated approval</span><% } %></header>
+<nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/trips">College Trips</a> / <span aria-current="page"><%= trip.title %></span></nav>
+<header class="page-heading"><p class="eyebrow"><%= trip.destination_name %> · <%= trip.dzongkhag %></p><h1><%= trip.title %></h1><p class="lead"><%= trip.description || 'Trip details will be updated by the assigned Coordinator.' %></p><span class="status-badge <%= trip.public_stage==='ongoing'?'badge-success':'badge-info' %>"><%= trip.public_stage==='ongoing'?'Ongoing':'Upcoming' %></span></header>
 <% if(trip.destination_photo){ %><img class="trip-detail-photo" src="<%= trip.destination_photo %>" alt="<%= trip.destination_name %> destination photograph"><% } %>
 <div class="destination-details-layout">
  <section class="surface-card"><h2>Trip overview</h2><dl class="detail-list">
@@ -27,5 +27,5 @@
 <% if(costItems.length){ %><div class="table-scroll"><table class="comparison-table"><thead><tr><th scope="col">Item</th><th scope="col">Amount</th></tr></thead><tbody><% costItems.forEach(c=>{ %><tr><th scope="row"><%= c.label %></th><td>Nu. <%= Number(c.amount).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) %></td></tr><% }) %></tbody></table></div><% } else { %><p class="small-muted">Detailed cost breakdown not provided in the source material.</p><% } %>
 <% if(trip.estimated_budget_note){ %><p class="small-muted"><%= trip.estimated_budget_note %></p><% } %><p class="small-muted">These are planning estimates only; Sherubtse TripHub does not collect online payments.</p></section>
 <section class="section-block surface-card"><h2>Safety and travel guidance</h2><p><%= trip.safety_information || 'Safety guidance not yet provided. Confirm details with the trip organiser before travelling.' %></p><% if(trip.travel_note){ %><p><%= trip.travel_note %></p><% } %><% if(trip.practical_tip){ %><p><%= trip.practical_tip %></p><% } %><p><strong>Emergency contact:</strong> <%= trip.emergency_contact_name || 'Not listed' %><% if(trip.emergency_contact_phone){ %> · <%= trip.emergency_contact_phone %><% } %></p><p class="small-muted">Trip details are informational. DSA proposal approval does not itself establish final departure clearance or replace college travel paperwork.</p></section>
-<p><a class="btn btn-outline" href="/trips">← Back to upcoming trips</a></p>
+<p><a class="btn btn-outline" href="/trips">← Back to College Trips</a></p>
 <%- include('../partials/footer') %>

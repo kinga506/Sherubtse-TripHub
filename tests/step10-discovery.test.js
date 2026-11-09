@@ -1,4 +1,4 @@
-jest.mock('../models/PublicTrip',()=>({cleanFilters:jest.fn(),list:jest.fn(),getDzongkhags:jest.fn(),getById:jest.fn(),getCostItems:jest.fn()}));
+jest.mock('../models/PublicTrip',()=>({list:jest.fn(),getById:jest.fn(),getCostItems:jest.fn()}));
 const Trip=require('../models/PublicTrip');
 const controller=require('../controllers/tripDiscoveryController');
 const {registrationStatus}=require('../services/tripDiscovery');
@@ -16,12 +16,20 @@ test('closed, unopened, deadline and manual-reopen states are distinguished',()=
  expect(registrationStatus({...base,vacancies_held_closed:true},now).key).toBe('closed');
  expect(registrationStatus({...base,registration_deadline:'2027-01-01'},now).key).toBe('closed');
 });
-test('gallery passes normalized filters and displays only model-returned trips',async()=>{
- Trip.cleanFilters.mockReturnValue({q:'merak',dzongkhag:'',registration:'all',sort:'soonest'});
- Trip.list.mockResolvedValue([{...base,id:1,title:'Merak'}]);Trip.getDzongkhags.mockResolvedValue([]);
+test('College Trips gallery ignores former search/filter parameters',async()=>{
+ Trip.list.mockResolvedValue([{...base,id:1,title:'Merak',public_stage:'upcoming'}]);
  const res=reply();await controller.gallery({query:{q:'merak'}},res,jest.fn());
- expect(Trip.list).toHaveBeenCalledWith(expect.objectContaining({q:'merak'}));
- expect(res.render).toHaveBeenCalledWith('trips/index',expect.objectContaining({trips:[expect.objectContaining({registration:expect.any(Object)})]}));
+ expect(Trip.list).toHaveBeenCalledWith();
+ expect(res.render).toHaveBeenCalledWith('trips/index',expect.objectContaining({title:'College Trips',trips:[expect.objectContaining({registration:expect.any(Object),public_stage:'upcoming'})]}));
+});
+test('College Trips view has no search, filters, sorting controls, or comparison table',()=>{
+ const view=require('fs').readFileSync(require.resolve('../views/trips/index.ejs'),'utf8');
+ expect(view).toContain('<h1>College Trips</h1>');
+ expect(view).toContain('No college trips available');
+ expect(view).not.toMatch(/type=["']search/i);
+ expect(view).not.toMatch(/<form\b/i);
+ expect(view).not.toMatch(/<table\b/i);
+ expect(view).not.toMatch(/sort by|filter by|compare trips/i);
 });
 test('detail rejects bad identifiers before querying and missing public trips return 404',async()=>{
  const res=reply();await controller.detail({params:{id:'../1'}},res,jest.fn());expect(Trip.getById).not.toHaveBeenCalled();
@@ -29,8 +37,10 @@ test('detail rejects bad identifiers before querying and missing public trips re
  Trip.getById.mockResolvedValue(null);const res2=reply();await controller.detail({params:{id:'123'}},res2,jest.fn());
  expect(res2.status).toHaveBeenCalledWith(404);expect(Trip.getCostItems).not.toHaveBeenCalled();
 });
-test('public SQL enforces approved status and active lead assignment',()=>{
+test('public SQL enforces approval, active lead, non-sample, visibility and Bhutan end date',()=>{
  const source=require('fs').readFileSync(require.resolve('../models/PublicTrip'),'utf8');
  expect(source).toContain("t.approval_status='approved'");expect(source).toContain("c.assignment_role='lead'");
- expect(source).toContain('t.is_active=TRUE');
+ expect(source).toContain('t.is_active=TRUE');expect(source).toContain('t.is_sample=FALSE');
+ expect(source).toContain('t.is_publicly_hidden=FALSE');expect(source).toContain("AT TIME ZONE 'Asia/Thimphu'");
+ expect(source).toContain("t.operational_status IN ('planned','ongoing')");
 });

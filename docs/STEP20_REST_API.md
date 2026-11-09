@@ -4,15 +4,15 @@ The public read-only endpoints return JSON and reuse the existing `PublicTrip` a
 
 | Method | Route | Purpose |
 | --- | --- | --- |
-| GET | `/api/trips` | Up to 100 published upcoming trips, with search and filters |
-| GET | `/api/trips/:id` | One published upcoming trip and its estimated cost items |
+| GET | `/api/trips` | Up to 100 currently eligible College Trips |
+| GET | `/api/trips/:id` | One eligible College Trip and its estimated cost items |
 | GET | `/api/destinations` | Active destinations and their public photographs |
 
-Trip filters: `q` (title or destination), `dzongkhag`, `registration` (`all`, `open`, `closed`), and `sort` (`soonest`, `cost_low`, `cost_high`). Invalid choices fall back to safe defaults.
+The public trip API has no search or filtering parameters. Trip results include `public_stage` (`upcoming` or `ongoing`).
 
 ## Privacy and permissions
 
-- Trip listings use the same `PublicTrip` visibility predicate as `/trips`: DSA-approved, active, planned/upcoming trips with an active lead Coordinator.
+- Trip listings use the same `PublicTrip` visibility predicate as `/trips`: DSA-approved, active, non-sample, not manually hidden, within end date, in a public operational state, and assigned an active lead Coordinator.
 - No draft, pending-DSA, rejected, changes-requested, completed, or cancelled trip is exposed by these endpoints.
 - `registration.open` is true only if the approved trip has been explicitly opened by an assigned Coordinator, has free capacity, is not held closed, and has an unexpired deadline.
 - Pending and approved requests BOTH occupy seats. `approved_participants` counts only approved requests.

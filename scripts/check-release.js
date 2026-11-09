@@ -5,7 +5,7 @@ const {execFileSync} = require('node:child_process');
 const root = path.resolve(__dirname, '..');
 const required = [
  'app.js','server.js','package.json','Dockerfile','.dockerignore',
- '.github/workflows/test.yml','db/schema.sql','db/seed-data.json',
+ '.github/workflows/test.yml','db/schema.sql','db/step19-trip-visibility-migration.sql','db/seed-data.json',
  'config/db.js','config/mongo.js','config/storage.js',
  'routes/api.js','models/Registration.js', 'models/TripFinalReport.js',
  'public/images/destinations'

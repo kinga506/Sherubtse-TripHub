@@ -1,4 +1,5 @@
 const {getDb} = require('../config/db');
+const {PUBLIC_WHERE,BHUTAN_TODAY} = require('./PublicTrip');
 
 // Public destination data is sourced from the seeded, editable database records.
 async function getAll() {
@@ -19,17 +20,16 @@ async function getPhotos(destinationId) {
   return getDb().any(`SELECT CASE WHEN file_path ~ '^[a-f0-9]{32}$' THEN '/managed-photos/'||id ELSE file_path END AS file_path,alt_text,photo_credit FROM destination_photos
     WHERE destination_id=$1 ORDER BY sort_order,id`,[destinationId]);
 }
-async function getUpcomingTrips(destinationId) {
+async function getPublicTrips(destinationId) {
   return getDb().any(`SELECT t.id,t.title,t.description,t.start_date,t.end_date,t.estimated_cost,
     t.registration_open,t.vacancies_held_closed,t.registration_deadline,t.is_sample,t.max_participants,
+    CASE WHEN t.start_date > ${BHUTAN_TODAY} THEN 'upcoming' ELSE 'ongoing' END AS public_stage,
     COUNT(p.id) FILTER (WHERE p.status IN ('pending','approved'))::int AS occupied_seats,
     COUNT(p.id) FILTER (WHERE p.status='approved')::int AS confirmed_participants
     FROM trips t
+    JOIN destinations d ON d.id=t.destination_id
     LEFT JOIN participants p ON p.trip_id=t.id
-    WHERE t.destination_id=$1 AND t.approval_status='approved' AND t.is_active=TRUE
-      AND t.operational_status='planned' AND t.start_date >= CURRENT_DATE
-      AND EXISTS (SELECT 1 FROM trip_coordinators c WHERE c.trip_id=t.id
-        AND c.status='active' AND c.assignment_role='lead')
+    WHERE t.destination_id=$1 AND ${PUBLIC_WHERE}
     GROUP BY t.id ORDER BY t.start_date,t.id`,[destinationId]);
 }
-module.exports={getAll,getBySlug,getPhotos,getUpcomingTrips};
+module.exports={getAll,getBySlug,getPhotos,getPublicTrips};

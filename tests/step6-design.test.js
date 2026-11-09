@@ -11,6 +11,21 @@ test('shared layout includes accessible navigation and mobile toggle', () => {
   expect(header).toContain('href="/workspace/student#organise-trip"');
   expect(header).toContain('hasCoordinatingTrips');
   expect(header).toContain('name="_csrf"');
+  expect(header).toContain('href="/about"');
+  expect(header).toContain('College Trips');
+  expect(header).not.toContain('href="/help"');
+});
+
+test('About page and homepage describe the current product without stage notices', () => {
+  const about = read('views/about.ejs');
+  const index = read('views/index.ejs');
+  expect(about).toContain('Our purpose'.toUpperCase());
+  expect(about).toContain('student-developed project');
+  expect(about).toContain('Superadmin');
+  expect(index).toContain('THE TRIPHUB EXPERIENCE');
+  expect(index).toContain('One platform. Every step of the journey.');
+  expect(index).not.toContain('Later steps');
+  expect(index).not.toContain('Step 11');
 });
 
 test('original brand tagline and institutional disclaimer preserved', () => {
