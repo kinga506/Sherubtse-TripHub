@@ -1,0 +1,23 @@
+<%- include('../partials/header') %>
+<nav class="breadcrumb" aria-label="Breadcrumb"><a href="/workspace/my-trips">My Trips</a> / <span aria-current="page"><%= trip.title %></span></nav>
+<header class="page-heading"><p class="eyebrow">PRIVATE PARTICIPANT VIEW</p><h1><%= trip.title %></h1><p class="lead"><%= trip.destination_name %> · <%= new Date(trip.start_date).toLocaleDateString('en-GB',{dateStyle:'medium',timeZone:'UTC'}) %> – <%= new Date(trip.end_date).toLocaleDateString('en-GB',{dateStyle:'medium',timeZone:'UTC'}) %></p><span class="status-badge badge-neutral">Request: <%= trip.participation_status %></span></header>
+<section class="destination-details-layout">
+ <article class="surface-card"><h2>Trip information</h2><p><%= trip.description || 'No description is available.' %></p><dl class="detail-list">
+  <div><dt>Purpose</dt><dd><%= trip.purpose || 'Not listed' %></dd></div>
+  <div><dt>Meeting point</dt><dd><%= trip.meeting_point || 'Not listed' %></dd></div>
+  <div><dt>Meeting time</dt><dd><%= trip.meeting_time ? String(trip.meeting_time).slice(0,5) : 'Not listed' %></dd></div>
+  <div><dt>Transport</dt><dd><%= trip.transport_information || 'Not listed' %></dd></div>
+  <div><dt>Estimated cost per student</dt><dd>Nu. <%= Number(trip.estimated_cost).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) %></dd></div>
+  <div><dt>Safety information</dt><dd><%= trip.safety_information || 'Confirm safety details with the Coordinator.' %></dd></div>
+  <div><dt>Emergency contact</dt><dd><%= trip.emergency_contact_name || 'Not listed' %><% if(trip.emergency_contact_phone){ %> · <%= trip.emergency_contact_phone %><% } %></dd></div>
+ </dl></article>
+ <aside class="surface-card"><h2>Your request</h2><p><strong>Status:</strong> <%= trip.participation_status %></p><% if(trip.participation_reason){ %><p><strong>Your reason:</strong> <%= trip.participation_reason %></p><% } %><% if(trip.decision_note){ %><p><strong>Coordinator note:</strong> <%= trip.decision_note %></p><% } %><p class="small-muted">This private view remains available to you even if the trip is hidden from public discovery.</p></aside>
+</section>
+<% if(trip.participation_status==='approved'){ %>
+ <section class="section-block surface-card"><h2>Itinerary</h2>
+  <% if(!itinerary.length){ %><p>The itinerary has not been published yet.</p><% } else { %><ol class="participant-itinerary"><% itinerary.forEach(item=>{ %><li><strong>Day <%= item.day_number %><% if(item.start_time){ %> · <%= String(item.start_time).slice(0,5) %><% } %>: <%= item.title %></strong><% if(item.description){ %><p><%= item.description %></p><% } %></li><% }) %></ol><% } %>
+  <p><a class="btn btn-outline" href="/workspace/trips/<%= trip.id %>/updates">Itinerary and announcements</a></p>
+ </section>
+<% } %>
+<p><a class="btn btn-outline" href="/workspace/my-trips">← Back to My Trips</a></p>
+<%- include('../partials/footer') %>

@@ -50,9 +50,11 @@ function visibilityInfo(trip,today=bhutanDate()) {
  else if(eligible) {state='public';label=stage==='upcoming'?'Public — Upcoming':'Public — Ongoing';}
  return {public_visibility_state:state,public_visibility_label:label,public_eligible:eligible,public_stage:eligible?stage:null};
 }
-async function list() {
+async function list(limit=100) {
+ const rowLimit=Number.isInteger(limit)&&limit>0?Math.min(limit,100):100;
  return getDb().any(`SELECT ${TRIP_COLUMNS} FROM trips t JOIN destinations d ON d.id=t.destination_id
-   WHERE ${PUBLIC_WHERE} ORDER BY t.start_date ASC,t.id ASC LIMIT 100`);
+   WHERE ${PUBLIC_WHERE} ORDER BY CASE WHEN t.start_date > ${BHUTAN_TODAY} THEN 0 ELSE 1 END,
+   t.start_date ASC,t.id ASC LIMIT $1`,[rowLimit]);
 }
 async function getById(id) {
  return getDb().oneOrNone(`SELECT ${TRIP_COLUMNS} FROM trips t JOIN destinations d ON d.id=t.destination_id

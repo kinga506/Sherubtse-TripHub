@@ -22,16 +22,35 @@ test('About page and homepage describe the current product without stage notices
   expect(about).toContain('Our purpose'.toUpperCase());
   expect(about).toContain('student-developed project');
   expect(about).toContain('Superadmin');
-  expect(index).toContain('THE TRIPHUB EXPERIENCE');
-  expect(index).toContain('One platform. Every step of the journey.');
+  expect(index).toContain('Your next college journey');
+  expect(index).toContain('Discover destinations, plan meaningful trips and stay connected with the Sherubtse community.');
+  expect(index).toContain('How TripHub Works');
+  expect(index).toContain('From your first idea to your next college journey.');
+  expect(index).toContain('Get Approved');
+  expect(index).toContain('Join &amp; Prepare');
+  expect(index).toContain('href="/auth/signup">Create Student Account');
+  expect(index).toContain('href="/destinations">Explore Destinations');
+  expect(index).toContain('Ready to be part of the journey?');
+  expect(index).toContain('Create your student account to begin planning and participating in college trips.');
+  expect(index).toContain('>Get Started <');
+  expect(index).toContain('<% if(!currentUser){ %>');
   expect(index).not.toContain('Later steps');
   expect(index).not.toContain('Step 11');
+});
+
+test('homepage requests a short preview from the centralized public trip model', () => {
+  const route = read('routes/index.js');
+  const publicTrips = read('models/PublicTrip.js');
+  expect(route).toContain('PublicTrip.list(3)');
+  expect(publicTrips).toContain('WHERE ${PUBLIC_WHERE}');
+  expect(publicTrips).toContain('LIMIT $1');
+  expect(publicTrips).toContain('t.is_publicly_hidden=FALSE');
 });
 
 test('original brand tagline and institutional disclaimer preserved', () => {
   const index = read('views/index.ejs');
   const footer = read('views/partials/footer.ejs');
-  expect(index).toContain('Explore. <span>Experience.</span> Connect.');
+  expect(index).toContain('Sherubtse College · Kanglung, Bhutan');
   expect(footer).toContain('Explore. Experience. Connect.');
   expect(footer).toMatch(/does not imply official college endorsement/);
 });
