@@ -4,6 +4,7 @@ const Access=require('../models/Access');
 const reg=require('../controllers/registrationController');
 const visibility=require('../controllers/publicVisibilityController');
 const participantTrip=require('../controllers/participantTripController');
+const StudentDashboard=require('../models/StudentDashboard');
 
 router.get('/coordinating-trips',auth.requireStudent,visibility.coordinating);
 router.post('/trips/:tripId/public-visibility',auth.requireLeadTripCoordinator,visibility.change);
@@ -11,8 +12,10 @@ router.get('/my-trips',auth.requireStudent,reg.myTrips);
 router.get('/trips/:tripId/registration',auth.requireTripCoordinator,reg.coordinatorPage);
 router.post('/trips/:tripId/registration',auth.requireTripCoordinator,reg.coordinatorAction);
 router.get('/student',auth.requireStudent,async(req,res,next)=>{
-  try {const assigned=await Access.coordinatingTripIds(req.currentUser.id);
-    res.render('workspace',{title:'Student dashboard',heading:'Student dashboard',detail:'Your Student account remains active when Coordinator assignments end.',assigned});
+  try {
+    const overview=await StudentDashboard.overview(req.currentUser.id);
+    const firstName=String(req.currentUser.name||'').trim().split(/\s+/)[0]||'';
+    res.render('workspace',{title:'Student workspace',overview,firstName});
   } catch(error){next(error);}
 });
 router.get('/dsa',auth.requireDsa,(req,res)=>res.redirect('/workspace/dsa/proposals'));

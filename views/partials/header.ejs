@@ -25,13 +25,16 @@
       <a href="/destinations" <% if(typeof activeNav !== 'undefined' && activeNav === 'destinations'){ %>aria-current="page"<% } %>>Destinations</a>
       <% if (currentUser) { %>
         <% if(currentUser.role === 'student') { %>
-          <a href="/workspace/student" <% if(typeof activeNav !== 'undefined' && activeNav === 'student'){ %>aria-current="page"<% } %>>Dashboard</a>
-          <a href="/workspace/student#organise-trip">Organise a Trip</a>
-          <a href="/workspace/my-trips">My Trips</a>
-          <% if(typeof hasCoordinatingTrips !== 'undefined' && hasCoordinatingTrips){ %><a href="/workspace/coordinating-trips">My Coordinating Trips</a><% } %>
-        <% } else if(currentUser.role === 'dsa') { %><a href="/workspace/dsa">DSA workspace</a><a href="/workspace/dsa/deadline-extensions">Deadline requests</a><a href="/workspace/dsa/final-namelists">Final namelists</a><a href="/workspace/dsa/trip-lifecycle">Trip completion</a><a href="/workspace/dsa/history">Review history</a>
+          <details class="nav-group" <% if(reqPath && reqPath.startsWith('/workspace')){ %>open<% } %>><summary>Student Workspace</summary><div class="nav-group-menu">
+            <a href="/workspace/student" <% if(reqPath==='/workspace/student'){ %>aria-current="page"<% } %>>Dashboard</a>
+            <a href="/workspace/proposals/new" <% if(reqPath==='/workspace/proposals/new'){ %>aria-current="page"<% } %>>Organise a Trip</a>
+            <a href="/workspace/proposals" <% if(reqPath==='/workspace/proposals'){ %>aria-current="page"<% } %>>My Proposals</a>
+            <a href="/workspace/my-trips" <% if(reqPath==='/workspace/my-trips'){ %>aria-current="page"<% } %>>My Trips</a>
+            <% if(typeof hasCoordinatingTrips !== 'undefined' && hasCoordinatingTrips){ %><a href="/workspace/coordinating-trips" <% if(reqPath==='/workspace/coordinating-trips'){ %>aria-current="page"<% } %>>My Coordinating Trips</a><% } %>
+          </div></details>
+        <% } else if(currentUser.role === 'dsa') { %><details class="nav-group"><summary>DSA Workspace</summary><div class="nav-group-menu"><a href="/workspace/dsa">DSA workspace</a><a href="/workspace/dsa/proposals">Proposal reviews</a><a href="/workspace/dsa/deadline-extensions">Deadline extension requests</a><a href="/workspace/dsa/final-namelists">Final namelist approvals</a><a href="/workspace/dsa/trip-lifecycle">Trip lifecycle</a><a href="/workspace/dsa/history">Review history</a></div></details>
         <% } else if(currentUser.role === 'admin') { %><a href="/workspace/superadmin">Superadmin</a><% } %>
-        <a href="/account" class="nav-account">My account</a>
+        <a href="/account" class="nav-account">My Account</a>
         <form method="post" action="/auth/logout" class="nav-logout"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button type="submit" class="nav-link-button">Log out</button></form>
       <% } else { %>
         <a href="/auth/login">Log in</a><a class="nav-signup" href="/auth/signup">Student signup</a>

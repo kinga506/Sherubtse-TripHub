@@ -2,6 +2,7 @@ const crypto=require('node:crypto');
 const bcrypt=require('bcrypt');
 const User=require('../models/User');
 const {sendEmail}=require('../services/mailer');
+const {dashboardPath}=require('../services/roleDashboard');
 const EMAIL_RE=/^[0-9]+\.sherubtse@rub\.edu\.bt$/;
 const SIGNUP_GENERIC_MESSAGE='If the account is eligible, verification instructions will be sent to that Sherubtse email address. Check your inbox (and spam folder); you must verify your email before logging in. If no email arrives, use Resend verification.';
 function normalizeEmail(value) {return String(value||'').trim().toLowerCase();}
@@ -38,7 +39,10 @@ async function verify(req,res,next) {
     return render(res,'message',{title:'Email verified',message:'Email verified. You can now log in.'});
   } catch(err){next(err);}
 }
-const showLogin=(req,res)=>render(res,'login',{title:'Log in',error:null});
+const showLogin=(req,res)=>{
+  if(req.currentUser) return res.redirect(dashboardPath(req.currentUser.role));
+  return render(res,'login',{title:'Log in',error:null});
+};
 async function login(req,res,next) {
   try {
     const email=normalizeEmail(req.body.email); const password=String(req.body.password||'');
@@ -48,7 +52,7 @@ async function login(req,res,next) {
     req.session.regenerate(err=>{
       if(err) return next(err);
       req.session.userId=user.id;
-      req.session.save(err=>err?next(err):res.redirect('/account'));
+      req.session.save(err=>err?next(err):res.redirect(dashboardPath(user.role)));
     });
   } catch(err){next(err);}
 }
@@ -74,5 +78,5 @@ async function resend(req,res,next) {
   } catch(error){next(error);}
 }
 function showResend(req,res) {return render(res,'resend',{title:'Resend verification'});}
-function account(req,res) {return render(res,'account',{title:'My account',user:req.currentUser});}
+function account(req,res) {return render(res,'account',{title:'My account',user:req.currentUser,dashboardPath:dashboardPath(req.currentUser.role)});}
 module.exports={EMAIL_RE,validStudentEmail,normalizeEmail,showSignup,signup,verify,showLogin,login,logout,resend,showResend,account};

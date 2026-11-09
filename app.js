@@ -50,6 +50,7 @@ function createApp(config=getConfig()) {
  app.use(parseAdminPhotoUpload);
  app.use(ensureCsrf);
  app.use(loadUser);
+ app.use((req,res,next)=>{res.locals.reqPath=req.path;next();});
  app.use(requestTimeReconcile);
  app.use('/api',apiRoutes);
  app.use('/auth',authRoutes);

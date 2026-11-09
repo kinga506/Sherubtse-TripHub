@@ -1,9 +1,28 @@
 <%- include('../partials/header') %>
-<h1>My account</h1>
-<p><strong>Name:</strong> <%= user.name %></p>
-<p><strong>Email:</strong> <%= user.email %></p>
-<p><strong>Account role:</strong> <%= user.role === 'admin' ? 'Superadmin' : user.role === 'dsa' ? 'DSA' : 'Student' %></p>
-<p><a href="/workspace/<%= user.role === 'admin' ? 'superadmin' : user.role %>">Open my dashboard</a></p>
-<h2>Account Settings</h2><p><a href="/auth/change-password">Security → Change Password</a></p><p>Trip-specific dashboards and further profile management will arrive in later steps.</p>
-<form method="post" action="/auth/logout"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button type="submit">Log out</button></form>
+<% const roleLabel = user.role === 'admin' ? 'Superadmin' : user.role === 'dsa' ? 'DSA' : user.role === 'student' ? 'Student' : 'Account'; %>
+<div class="account-page">
+  <header class="account-heading"><div><p class="eyebrow">PROFILE & SECURITY</p><h1>My Account</h1><p class="lead">Manage your profile and account security.</p></div><a class="btn btn-outline" href="<%= dashboardPath %>">Back to Dashboard</a></header>
+  <section class="account-identity surface-card" aria-label="Account overview">
+    <span class="profile-avatar" aria-hidden="true"><%= String(user.name||user.email||'?').trim().charAt(0).toUpperCase() %></span>
+    <div class="account-identity-copy"><h2><%= user.name || 'Account holder' %></h2><p><%= user.email %></p></div>
+    <div class="account-identity-status"><span class="status-badge <%= user.is_verified ? 'badge-success' : 'badge-warning' %>"><%= user.is_verified ? 'Email verified' : 'Email not verified' %></span><span class="status-badge badge-neutral"><%= roleLabel %></span></div>
+  </section>
+  <div class="account-card-grid">
+    <section class="account-card surface-card" aria-labelledby="profile-information-heading">
+      <p class="eyebrow">YOUR DETAILS</p><h2 id="profile-information-heading">Profile Information</h2>
+      <dl class="account-details">
+        <div><dt>Full name</dt><dd><%= user.name || 'Not provided' %></dd></div>
+        <div><dt>Institutional email</dt><dd><%= user.email %></dd></div>
+        <div><dt>Account role</dt><dd><%= roleLabel %></dd></div>
+        <% if(user.role === 'student' && user.student_id){ %><div><dt>Student ID</dt><dd><%= user.student_id %></dd></div><% } %>
+        <div><dt>Email status</dt><dd><%= user.is_verified ? 'Verified' : 'Not verified' %></dd></div>
+      </dl>
+    </section>
+    <section class="account-card account-security-card surface-card" aria-labelledby="account-security-heading">
+      <p class="eyebrow">ACCOUNT SECURITY</p><h2 id="account-security-heading">Keep your account secure</h2>
+      <div class="security-action"><span class="security-icon" aria-hidden="true">⌑</span><div><h3>Change Password</h3><p>Update your password to keep your account secure.</p><a class="btn btn-primary" href="/auth/change-password">Change Password</a></div></div>
+      <p class="account-security-note">Your account access is protected by your verified institutional email.</p>
+    </section>
+  </div>
+</div>
 <%- include('../partials/footer') %>

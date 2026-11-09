@@ -8,7 +8,9 @@ test('shared layout includes accessible navigation and mobile toggle', () => {
   expect(header).toContain('data-nav-toggle');
   expect(header).toContain('aria-expanded="false"');
   expect(header).toContain('Skip to main content');
-  expect(header).toContain('href="/workspace/student#organise-trip"');
+  expect(header).toContain('href="/workspace/proposals/new"');
+  expect(header).toContain('Student Workspace');
+  expect(header).toContain('DSA Workspace');
   expect(header).toContain('hasCoordinatingTrips');
   expect(header).toContain('name="_csrf"');
   expect(header).toContain('href="/about"');

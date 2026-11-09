@@ -10,8 +10,19 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
     nav.addEventListener('click', event => { if (event.target.closest('a')) setOpen(false); });
-    document.addEventListener('keydown', event => { if (event.key === 'Escape') setOpen(false); });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        setOpen(false);
+        const group = document.querySelector('.nav-group[open]');
+        if (group) { group.open = false; group.querySelector('summary').focus(); }
+      }
+    });
   }
+  document.addEventListener('click', event => {
+    document.querySelectorAll('.nav-group[open]').forEach(group => {
+      if (!group.contains(event.target)) group.open = false;
+    });
+  });
   const toastRegion = document.getElementById('toast-region');
   function showToast(message, focus=true) {
     if (!toastRegion) return;
