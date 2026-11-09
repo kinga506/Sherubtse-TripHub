@@ -54,7 +54,52 @@
       "travel_note": null,
       "practical_tip": "Walk clockwise around the stupa, dress modestly and avoid disturbing people during prayers.",
       "is_trek": false,
-      "photo": "/images/destinations/chorten-kora.jpg"
+      "photo": "/images/destinations/chorten-kora.jpg",
+      "guide_content": {
+        "overview": "Chorten Kora is a large white Buddhist stupa beside the Kholong Chhu in Trashiyangtse, in Bhutan's eastern region. Its prominent form and setting beside the river make it a landmark within the district and a place of pilgrimage. The stupa is associated with Lama Ngawang Loday and an eighteenth-century history; the Department of Tourism's heritage brochure dates its construction to 1740. The name and local observances centre on kora, the devotional practice of walking around a sacred site. Visitors may encounter worshippers making circumambulations, offering prayers, or spending time at the stupa. The annual Chorten Kora observance follows the Bhutanese calendar, so its Gregorian dates vary. It is a meaningful stop for students interested in Buddhist architecture, religious practice, and eastern Bhutan's living heritage. Plan time to observe quietly rather than treating the site as a photo stop.",
+        "significance": "The Department of Tourism describes Chorten Kora as a major Buddhist stupa built by Lama Ngawang Loday in 1740 and associates its design with Boudhanath in Nepal. The resemblance is part of the site's historical account; it should not be read as a claim that the two structures are identical. Pilgrimage remains central to the place: kora is performed around the stupa, and the annual gathering brings devotees from Bhutan and nearby communities across the border. Stories connected with the founding and the Dakpa Kora are preserved as religious tradition. They should be presented respectfully as accounts held by communities, not as independently verifiable events. The stupa's sacred role continues alongside its architectural and historical importance.",
+        "highlights": [
+          {
+            "title": "The white stupa",
+            "detail": "Observe its overall form, layered structure, and gilded pinnacle from the public courtyard."
+          },
+          {
+            "title": "Kora practice",
+            "detail": "Watch or join the circumambulation respectfully, moving in the customary direction and giving worshippers space."
+          },
+          {
+            "title": "Annual observance",
+            "detail": "The Chorten Kora festival follows the Bhutanese calendar; check the current year's dates with official local sources."
+          },
+          {
+            "title": "River setting",
+            "detail": "Notice the stupa's setting beside the Kholong Chhu and the surrounding Trashiyangtse landscape."
+          }
+        ],
+        "bestTime": "The source guide lists February–April, particularly around the annual observance, and September–November as preferred periods. Festival dates change with the Bhutanese calendar, and conditions vary. Confirm dates, weather, and road access before setting out.",
+        "gettingThere": "The supplied TripPack estimate from Sherubtse College in Kanglung is approximately 75–80 km and 2–2.5 hours by road via Trashigang. Treat both figures as estimates rather than live directions. Travel by a planned group vehicle, taxi, or private car; confirm the actual route and road condition locally before departure. No trekking time is listed for the stupa visit.",
+        "studentTips": [
+          "Wear modest clothing suitable for a religious site.",
+          "Walk clockwise around the stupa and do not interrupt prayers or offerings.",
+          "Ask before photographing worshippers or restricted interiors.",
+          "Carry water and allow extra time during festival periods."
+        ],
+        "safety": "Stay within visitor areas, take care near the river, and follow directions from local authorities and religious custodians. Keep voices low, do not touch offerings or ritual objects, and carry out all rubbish. Festival crowds can change access and travel time. This guide is informational and does not replace local advice or Sherubtse College travel approval.",
+        "sources": [
+          {
+            "label": "Department of Tourism, Gomphu Kora guide (includes Chorten Kora history)",
+            "url": "https://www.tourism.gov.bt/uploads/attachment_files/tcb_FNExUEbu_Gom%20Kora%20Brochure.pdf"
+          },
+          {
+            "label": "Association of Bhutanese Tour Operators, tentative festival calendar",
+            "url": "https://abto.org.bt/festivals"
+          },
+          {
+            "label": "TripPack source guide (approximate local travel estimates)",
+            "reference": "TripPack.docx — Chorten Kora source entry"
+          }
+        ]
+      }
     },
     {
       "slug": "bumdeling",
@@ -74,7 +119,56 @@
       "travel_note": null,
       "practical_tip": "Visit during winter when the black-necked cranes are present. Carry binoculars if available and avoid disturbing the birds.",
       "is_trek": false,
-      "photo": "/images/destinations/bumdeling.jpg"
+      "photo": "/images/destinations/bumdeling.jpg",
+      "guide_content": {
+        "overview": "Bumdeling Wildlife Sanctuary is a protected landscape in Trashiyangtse known for wetlands, forests, and a varied eastern Bhutan environment. Its valley includes habitat used by migratory black-necked cranes during the winter season, making it an important place for conservation and careful wildlife observation. The Bhutan Department of Tourism also highlights the sanctuary's biodiversity, including the Ludlow's Bhutan Glory butterfly and several bird groups recorded in Trashiyangtse. Visitors may come for birdwatching, nature study, and photography, but wildlife is not guaranteed to be visible on a particular visit. Conditions and access can differ between locations within the sanctuary. Students should identify the specific site they intend to visit and check current arrangements with local authorities or sanctuary staff before travelling. A quiet, patient visit is more rewarding and causes less disturbance than approaching wildlife for a photograph.",
+        "significance": "Bumdeling is part of Bhutan's protected-area network and is included in the Department of Tourism's ecotourism work. The sanctuary supports habitats important to wildlife and to communities whose livelihoods are connected with the surrounding landscape. The black-necked crane is globally threatened; Bhutan's Department of Tourism describes Bumdeling as one of its eastern wintering areas, with birds arriving in autumn and returning north in late winter or early spring. The same official source notes the sanctuary's association with the endangered Ludlow's Bhutan Glory butterfly and bird diversity in Trashiyangtse. These facts make the area valuable for conservation learning as well as nature tourism. Visiting responsibly means observing from a distance, respecting protected-area rules, and leaving wetlands and wildlife undisturbed.",
+        "highlights": [
+          {
+            "title": "Seasonal crane watching",
+            "detail": "Black-necked cranes use Bumdeling as a wintering area; sightings depend on season and site conditions."
+          },
+          {
+            "title": "Wetland landscape",
+            "detail": "Learn about the valley's wetlands and why intact habitat matters to migratory birds."
+          },
+          {
+            "title": "Bird observation",
+            "detail": "Bring binoculars if available, remain quiet, and observe from a distance without playback calls."
+          },
+          {
+            "title": "Butterfly and bird diversity",
+            "detail": "Trashiyangtse is noted for the Ludlow's Bhutan Glory butterfly and regional bird life."
+          }
+        ],
+        "bestTime": "The source guide suggests November–February for a chance to observe wintering cranes. The Department of Tourism reports that cranes arrive in autumn and return north between February and March; the timing varies by year. Bird presence is not guaranteed. Confirm access and current sightings locally.",
+        "gettingThere": "The supplied TripPack estimate is approximately 85–95 km from Sherubtse College to the Bumdeling Valley viewing area and 2.5–3 hours by road via Trashigang and Trashiyangtse. These figures are approximate and are not turn-by-turn directions. Confirm which sanctuary location is open to visitors, the current road condition, and whether any protected-area permission is needed. No trekking duration is listed for the viewing-area estimate.",
+        "studentTips": [
+          "Carry binoculars if you have them; they allow distant viewing without approaching birds.",
+          "Dress for the season and bring water and weather protection.",
+          "Keep noise low and stay with the group in unfamiliar areas.",
+          "Ask before photographing residents or entering community spaces."
+        ],
+        "safety": "Follow the instructions of sanctuary staff and local authorities, and confirm any access or permit requirements before travel. Keep to areas identified for visitors, avoid approaching or feeding wildlife, and do not use flash or playback sounds around birds. Wetland edges can be uneven or soft; watch your footing and remain with your group. Carry out all waste. This guide does not replace local guidance or institutional travel approval.",
+        "sources": [
+          {
+            "label": "Bhutan Department of Tourism, Eco Tourism",
+            "url": "https://bhutan.travel/experiences-eco-tourism"
+          },
+          {
+            "label": "Bhutan Department of Tourism, Wildlife and Nature",
+            "url": "https://bhutan.travel/experiences-landing-pages-2/experiences-wildlife-and-nature"
+          },
+          {
+            "label": "Trashiyangtse Dzongkhag Administration, town gallery (Bumdeling Ramsar site)",
+            "url": "https://trashiyangtse.gov.bt/town-gallery/"
+          },
+          {
+            "label": "TripPack source guide (approximate local travel estimates)",
+            "reference": "TripPack.docx — Bumdeling Wildlife Sanctuary source entry"
+          }
+        ]
+      }
     },
     {
       "slug": "merak-village",
@@ -94,7 +188,56 @@
       "travel_note": "An older Ministry of Works and Human Settlement study describes a route involving a four-hour drive from Trashigang to Khandu-Numo followed by approximately one hour of walking. More recent travel information indicates improved road access, so confirm the actual vehicle endpoint locally before publishing a fixed travel time.",
       "practical_tip": "Carry warm clothes because of the high altitude and cold weather. Always ask permission before taking photographs of local residents.",
       "is_trek": false,
-      "photo": "/images/destinations/merak-village.jpg"
+      "photo": "/images/destinations/merak-village.jpg",
+      "guide_content": {
+        "overview": "Merak is a highland gewog in the eastern part of Trashigang Dzongkhag and one of the places associated with the Brokpa community. The village landscape sits among mountain slopes and forest, and local life is strongly connected to livestock and seasonal grazing. Trashigang Dzongkhag Administration describes Merak households as depending largely on livestock products, including butter, cheese, wool, and yak products. The source material places the main village at approximately 3,500 metres above sea level; this is an approximate elevation, not a measurement for every point in the gewog. Visitors may learn about local livelihoods and the landscape, but a village is a living community rather than a staged attraction. Plan ahead, ask permission before taking photographs, and follow local guidance about where visitors may go.",
+        "significance": "Merak is part of the Merak–Sakteng highlands and a homeland of Brokpa residents, whose language, clothing, and pastoral practices are part of Bhutan's cultural diversity. The Trashigang Dzongkhag Administration describes livestock products as central to local livelihoods and documents agriculture in lower parts of the gewog. A peer-reviewed linguistic study records Merak's high-altitude setting and discusses sacred places and community traditions; these accounts are situated cultural knowledge and should be treated respectfully. The community's relationship with land and animals is contemporary, not simply a relic of the past. Students visiting can learn by listening, asking appropriate questions, and supporting local customs rather than assuming that every household shares the same practice or wants visitors.",
+        "highlights": [
+          {
+            "title": "Highland scenery",
+            "detail": "Experience the mountain setting and changing landscapes on the approach to Merak."
+          },
+          {
+            "title": "Brokpa heritage",
+            "detail": "Learn about local language, clothing, and traditions through respectful conversation when welcomed."
+          },
+          {
+            "title": "Pastoral livelihoods",
+            "detail": "The district administration identifies livestock and livestock products as important to the local economy."
+          },
+          {
+            "title": "Community landscape",
+            "detail": "Observe how settlement, grazing, and mountain terrain shape daily life without entering private land."
+          }
+        ],
+        "bestTime": "The supplied source guide suggests March–May and September–November. Highland weather and road access can change quickly, so these are planning windows rather than guarantees of safe travel. Confirm current conditions and any local requirements with the relevant administration before departure.",
+        "gettingThere": "The supplied source estimates approximately 90–110 km from Sherubtse College, with a 4–6 hour drive depending on the route and accessible endpoint. A four-wheel-drive vehicle may be required, and walking could be necessary. These estimates are uncertain because road access changes; confirm the exact endpoint and remaining walk with local authorities before planning an itinerary. Carry a contingency for delays and do not rely on old route descriptions as current directions.",
+        "studentTips": [
+          "Pack warm layers and rain protection for changing highland weather.",
+          "Allow time to adjust to altitude and avoid strenuous activity if unwell.",
+          "Ask permission before photographing people, homes, animals, or religious sites.",
+          "Buy or accept local food and products only through respectful, agreed arrangements."
+        ],
+        "safety": "High elevation, weather, and changing road access can affect travel. Confirm the route, vehicle endpoint, and local requirements before leaving; travel with an experienced group leader and carry water, food, warm clothing, and needed medication. Stay with the group and do not approach livestock or enter homes, fields, or sacred sites without invitation. This guide does not replace local advice or Sherubtse College travel approval.",
+        "sources": [
+          {
+            "label": "Trashigang Dzongkhag Administration, Merak Gewog",
+            "url": "https://trashigang.gov.bt/gewogs/merak/"
+          },
+          {
+            "label": "National Museum of Bhutan, Brokpa clothing collection",
+            "url": "https://nationalmuseum.gov.bt/collections/third-floor/"
+          },
+          {
+            "label": "A Grammar of Brokpa, James Cook University research repository",
+            "url": "https://www.dzongkha.gov.bt/uploads/files/articles/Wangdi_A_Grammar_of_Brokpa_PhD_Thesis_JCU_5adbaf24e3973b095a70df240dfe83fa.pdf"
+          },
+          {
+            "label": "TripPack source guide (approximate local travel estimates)",
+            "reference": "TripPack.docx — Merak Village source entry"
+          }
+        ]
+      }
     },
     {
       "slug": "sakteng-village",
@@ -114,7 +257,56 @@
       "travel_note": "The Ministry's settlement study documents vehicle access to Thrakthi followed by approximately three hours of walking to Sakteng. The current route should be checked with the local administration because road access can change.",
       "practical_tip": "Carry sufficient food, water and warm clothing. Respect the local culture and avoid littering in the sanctuary.",
       "is_trek": false,
-      "photo": "/images/destinations/sakteng-village.jpg"
+      "photo": "/images/destinations/sakteng-village.jpg",
+      "guide_content": {
+        "overview": "Sakteng is a highland village in Trashigang Dzongkhag, within the wider Sakteng Wildlife Sanctuary landscape. The surrounding area includes forest, mountain terrain, and a valley settlement. Trashigang Dzongkhag Administration describes Sakteng as a semi-nomadic community and notes that much of the gewog lies within the sanctuary. Livestock and livestock products are important to local livelihoods; the district profile lists butter, cheese, yak meat, and wool among these products. The village is also associated with Brokpa culture and local stories about the Migoi. Visitors should understand that these are community traditions and not evidence of a scientifically documented animal. Access can involve a long drive and walking, depending on current roads. Ask local authorities about the route and any visitor requirements before planning a trip.",
+        "significance": "Sakteng has both cultural and ecological significance. Much of the gewog is within Sakteng Wildlife Sanctuary, a protected area included in the Department of Tourism's ecotourism programme. The district administration documents local livelihoods based on livestock and identifies the sanctuary's rugged mountain environment and blue poppies. Sakteng is also home to Brokpa residents, whose practices and stories belong to a living community. Local accounts of Migoi are part of regional tradition; distinguish this cultural meaning from scientific claims about wildlife. Responsible visits should respect community privacy and sanctuary protections together. Students can learn about how people, animals, forests, and pastoral livelihoods share a highland landscape, while following current guidance from the gewog and sanctuary authorities.",
+        "highlights": [
+          {
+            "title": "Sanctuary landscape",
+            "detail": "Explore the highland setting of Sakteng Wildlife Sanctuary with local guidance."
+          },
+          {
+            "title": "Brokpa community",
+            "detail": "Learn about local culture respectfully and only where residents welcome visitors."
+          },
+          {
+            "title": "Pastoral livelihoods",
+            "detail": "The district administration records livestock and livestock products as important to the gewog."
+          },
+          {
+            "title": "Local stories",
+            "detail": "Hear Migoi traditions as cultural stories, without presenting them as verified wildlife sightings."
+          }
+        ],
+        "bestTime": "The source guide suggests March–May and September–November, but this does not guarantee good weather or open access. The route may be affected by rain, road conditions, or local requirements. Confirm the current season's access and any protected-area arrangements with local authorities before departure.",
+        "gettingThere": "The supplied TripPack estimate is approximately 85–100 km by the approach route, with a 4–6 hour drive or longer, depending on the road endpoint. Walking or trekking may still be needed. The source guide cites an older route description that included a walk after reaching Thrakthi; do not use that as current navigation. Ask the local administration to confirm the accessible endpoint, walking distance, and any required support before setting the schedule.",
+        "studentTips": [
+          "Bring adequate food, water, warm layers, and rain protection for a remote highland visit.",
+          "Wear sturdy footwear if local guidance confirms walking is required.",
+          "Ask before taking photographs or entering homes and community spaces.",
+          "Stay on agreed routes and carry out all rubbish."
+        ],
+        "safety": "Plan for a remote journey with uncertain road access and possible walking. Confirm route, weather, protected-area requirements, and local guidance before departure; keep the group together and allow extra time. Do not disturb wildlife, pick plants, or leave waste. Respect residents' privacy and local customs, and treat sacred or cultural places as community spaces. This guide does not replace official local advice or Sherubtse College travel approval.",
+        "sources": [
+          {
+            "label": "Trashigang Dzongkhag Administration, Sakteng Gewog",
+            "url": "https://trashigang.gov.bt/gewogs/sakteng-2/"
+          },
+          {
+            "label": "Bhutan Department of Tourism, Eco Tourism",
+            "url": "https://bhutan.travel/experiences-eco-tourism"
+          },
+          {
+            "label": "National Museum of Bhutan, Brokpa clothing collection",
+            "url": "https://nationalmuseum.gov.bt/collections/third-floor/"
+          },
+          {
+            "label": "TripPack source guide (approximate local travel estimates)",
+            "reference": "TripPack.docx — Sakteng Village source entry"
+          }
+        ]
+      }
     },
     {
       "slug": "dangling-tsho",
@@ -122,7 +314,7 @@
       "source_name": "Dangling Tsho (Dangling Lake)",
       "dzongkhag": "Trashigang",
       "description": "Dangling Tsho is a sacred mountain lake situated above Khaling, surrounded by beautiful fir forests and mountain scenery. It is believed to be the sacred abode of Meme Dangling, a local protective deity. The lake is an important religious destination and attracts visitors interested in trekking, nature and local spiritual traditions.",
-      "best_season": "April–November, subject to local restrictions. The mountain is traditionally closed during Ladam, approximately December–March.",
+      "best_season": "The source guide lists April–November, subject to local restrictions. Confirm the current local access period; the precise dates of any Ladam closure are not independently confirmed here.",
       "transport": "Local transport, taxi or private vehicle from Sherubtse College to Khaling, followed by trekking to the lake.",
       "transport_cost_min": 300,
       "transport_cost_max": 600,
@@ -134,7 +326,52 @@
       "travel_note": "Dangling Tsho is a trekking destination, not a regular roadside attraction. A complete trekking itinerary can take around four days, according to the published trekking information.",
       "practical_tip": "Start trekking early, wear proper hiking shoes and carry sufficient water and warm clothing. Do not bring meat, fish, onion or garlic to the sacred lake, and follow local religious customs.",
       "is_trek": true,
-      "photo": "/images/destinations/dangling-tsho.jpg"
+      "photo": "/images/destinations/dangling-tsho.jpg",
+      "guide_content": {
+        "overview": "Dangling Tsho is a sacred lake in the mountains above Khaling, Trashigang. It is reached on foot rather than by road, so a visit requires a planned trek and current local guidance. The Khaling Structure Plan identifies Dangling Tsho as an important religious and cultural site and records the local belief that Meme Dangling, a protective deity, resides there. People visit seeking blessings. The lake is surrounded by forest and mountain landscape, offering a setting for nature study as well as reflection on local spiritual traditions. Access and customary restrictions matter: this is not simply an open recreational lake. Students should confirm whether a visit is permitted, when it is appropriate to go, and what local customs apply before arranging transport or a trekking schedule.",
+        "significance": "Dangling Tsho is significant in Khaling's religious landscape. The Ministry's Khaling Structure Plan records that residents revere the lake as the abode of Meme Dangling and visit to seek blessings; it also describes community concern for protecting the lake and its surroundings. These beliefs are part of local spiritual life and should be described as such, rather than reduced to a tourist attraction. The lake's forest setting and walking approach also make conservation and low-impact travel important. A restriction known as Ladam is mentioned in local travel sources, but the exact calendar period has not been independently confirmed in official material reviewed for this guide. Always ask local authorities or community custodians whether access is currently allowed.",
+        "highlights": [
+          {
+            "title": "Sacred lake",
+            "detail": "Learn about the local association with Meme Dangling from respectful, locally guided interpretation."
+          },
+          {
+            "title": "Mountain and forest setting",
+            "detail": "Observe the landscape carefully and leave plants, water, and wildlife undisturbed."
+          },
+          {
+            "title": "Trekking approach",
+            "detail": "The lake is not roadside; confirm the route, duration, and guide arrangements locally."
+          },
+          {
+            "title": "Responsible pilgrimage",
+            "detail": "Follow current community customs and any seasonal restrictions before entering the area."
+          }
+        ],
+        "bestTime": "The source guide lists April–November, subject to local restrictions, and describes a traditional Ladam closure. The precise closure dates and current access rules could not be confirmed from the official material reviewed. Ask Khaling authorities or community custodians before travel; do not assume that a listed month is open.",
+        "gettingThere": "The supplied source estimates 75–80 km and 2–2.5 hours by road from Sherubtse College to Khaling, followed by a long walk to the lake. It lists 7–8 hours for the walking leg and around four days for a complete itinerary; these are planning estimates from source material, not verified current route times. Confirm the trail, guide, camping arrangements, weather, and return schedule locally. The transport budget estimate covers shared road travel only, not trekking support.",
+        "studentTips": [
+          "Use sturdy trekking footwear and carry warm, waterproof layers.",
+          "Bring enough water and food for the confirmed route and return plan.",
+          "Start only at a time agreed with local guides and keep within daylight and group limits.",
+          "Follow local religious food and conduct customs; confirm them before packing."
+        ],
+        "safety": "This is a remote trek, not a casual roadside visit. Arrange local guidance, confirm current permissions and any Ladam restriction, check weather, and use a realistic group itinerary with daylight and return contingencies. Carry first-aid supplies, water, food, warm clothing, and a way to contact the group lead. Do not litter or contaminate the lake. Follow community instructions and do not enter if access is closed. This guide does not replace local advice or Sherubtse College travel approval.",
+        "sources": [
+          {
+            "label": "Ministry of Works and Human Settlement, Khaling Structure Plan and Local Area Plan",
+            "url": "https://www.mowhs.gov.bt/wp-content/uploads/2019/09/FINAL%20KHALING%20REPORT-August%2015%2C%202019.pdf"
+          },
+          {
+            "label": "TripPack source guide (trek and shared transport estimates; confirm locally)",
+            "reference": "TripPack.docx — Dangling Tsho source entry"
+          },
+          {
+            "label": "Local trek information (secondary source; access details need local confirmation)",
+            "url": "https://littlebhutan.com/attractions/trashigang/dangling-tsho-trek/"
+          }
+        ]
+      }
     },
     {
       "slug": "takila",
@@ -154,7 +391,48 @@
       "travel_note": null,
       "practical_tip": "Dress modestly, remove your shoes before entering temple areas and seek permission before taking photographs inside religious buildings.",
       "is_trek": false,
-      "photo": "/images/destinations/takila.jpg"
+      "photo": "/images/destinations/takila.jpg",
+      "guide_content": {
+        "overview": "Takila is a religious site in Maenbi Gewog, Lhuentse, known for the Guru Nangsa Zelnen statue of Guru Padmasambhava. The Lhuentse Dzongkhag Administration describes the statue as 154 feet tall and records that construction began in 2008 under the Druk Odiyana Project, with consecration in 2015. Eight large and 108 smaller stupas surround the statue, creating a distinctive devotional complex on the hillside. Visitors may come to view the statue, walk among the stupas, and learn about the site's religious role. Takila is a place of worship as well as a destination, so students should dress modestly, follow posted directions, and give space to prayer and ritual. The road journey from Kanglung is long; confirm the route and conditions before planning a day visit.",
+        "significance": "Guru Nangsa Zelnen is associated with Guru Padmasambhava, a central figure in Himalayan Buddhist traditions. The Lhuentse Dzongkhag Administration identifies the statue as a major local religious landmark, noting its construction through the Druk Odiyana Project and its consecration in 2015. The surrounding stupas add to the site's devotional and architectural character. The administration also describes an envisioned role for the complex as a religious place of learning and community significance. Visitors should avoid treating sacred imagery or ritual spaces as ordinary displays: observe quietly, follow instructions from caretakers, and ask before photographing inside buildings or during ceremonies. The site's importance is grounded in ongoing religious practice as well as its scale and setting.",
+        "highlights": [
+          {
+            "title": "Guru Nangsa Zelnen statue",
+            "detail": "The Lhuentse Dzongkhag Administration lists the statue at 154 feet and gives its construction and consecration history."
+          },
+          {
+            "title": "Surrounding stupas",
+            "detail": "The administration records eight large and 108 smaller stupas around the statue."
+          },
+          {
+            "title": "Hillside setting",
+            "detail": "Take in the site's setting and views while remaining within visitor areas."
+          },
+          {
+            "title": "Religious learning",
+            "detail": "Observe respectfully and seek locally approved information about the site's meaning."
+          }
+        ],
+        "bestTime": "The source guide suggests March–May and September–November, while noting that road conditions affect access throughout the year. These are broad planning windows, not a promise of suitable weather or open roads. Check current conditions with local authorities before travelling.",
+        "gettingThere": "The supplied source estimates approximately 190–210 km from Sherubtse College via Trashigang and Mongar, with a 6–7.5 hour drive. Treat this as a preliminary route estimate, not a current travel-time guarantee. A group vehicle or private vehicle is the practical option described in the source. Confirm the chosen road, stops, weather, and return plan locally; no trekking duration is listed for the site visit.",
+        "studentTips": [
+          "Wear modest clothing and remove footwear where requested by caretakers.",
+          "Speak quietly near prayer areas and do not touch ritual objects or offerings.",
+          "Ask permission before taking photographs inside religious buildings or of worshippers.",
+          "Plan for a long road journey with food, water, and weather-appropriate layers."
+        ],
+        "safety": "Follow site signs and directions from caretakers, use stairs and paths carefully, and stay with the group. Confirm road conditions before departure and avoid a rushed return after a long drive. Respect worshippers' privacy, do not enter restricted spaces, and take all waste with you. The destination information does not replace local authority guidance or institutional travel approval.",
+        "sources": [
+          {
+            "label": "Lhuentse Dzongkhag Administration, Takila Guru Statue",
+            "url": "https://lhuentse.gov.bt/takila-guru-statue/"
+          },
+          {
+            "label": "TripPack source guide (approximate local travel estimates)",
+            "reference": "TripPack.docx — Takila (Guru Nangsa Zelnen Statue) source entry"
+          }
+        ]
+      }
     }
   ],
   "source_trips": [

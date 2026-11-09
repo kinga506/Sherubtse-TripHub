@@ -94,9 +94,10 @@ async function main() {
   const leadId=userIds[originalCoordinators[0].email], assistantId=userIds[originalCoordinators[1].email];
   const destIds={};
   for (const d of seed.destinations) {
-   await t.none(`INSERT INTO destinations(name,slug,dzongkhag,description,best_season,transport,transport_cost_min,transport_cost_max,entry_fee_note,distance_text,drive_time_text,trek_time_text,travel_note,practical_tip,is_trek)
-    VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15) ON CONFLICT(slug) DO NOTHING`,
-    [d.name,d.slug,d.dzongkhag,d.description,d.best_season,d.transport,d.transport_cost_min,d.transport_cost_max,d.entry_fee_note,d.distance_text,d.drive_time_text,d.trek_time_text,d.travel_note,d.practical_tip,d.is_trek]);
+   await t.none(`INSERT INTO destinations(name,slug,dzongkhag,description,best_season,transport,transport_cost_min,transport_cost_max,entry_fee_note,distance_text,drive_time_text,trek_time_text,travel_note,practical_tip,is_trek,guide_content)
+    VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16::jsonb)
+    ON CONFLICT(slug) DO UPDATE SET guide_content=COALESCE(destinations.guide_content,EXCLUDED.guide_content)`,
+    [d.name,d.slug,d.dzongkhag,d.description,d.best_season,d.transport,d.transport_cost_min,d.transport_cost_max,d.entry_fee_note,d.distance_text,d.drive_time_text,d.trek_time_text,d.travel_note,d.practical_tip,d.is_trek,JSON.stringify(d.guide_content)]);
    const id=await idBy(t,'destinations','slug',d.slug);destIds[d.slug]=id;
    const filename=path.basename(d.photo);const fullPath=path.join(__dirname,'../public/images/destinations',filename);
    if (!fs.existsSync(fullPath)) throw new Error(`Missing extracted photo: ${fullPath}. Run npm run extract:photos`);

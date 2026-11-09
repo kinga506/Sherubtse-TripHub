@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS destinations (
  description TEXT NOT NULL, best_season TEXT, transport TEXT, transport_cost_min NUMERIC(12,2) CHECK(transport_cost_min >= 0),
  transport_cost_max NUMERIC(12,2) CHECK(transport_cost_max >= 0), entry_fee_note TEXT,
  distance_text TEXT, drive_time_text TEXT, trek_time_text TEXT, travel_note TEXT, practical_tip TEXT,
- is_trek BOOLEAN NOT NULL DEFAULT FALSE, is_active BOOLEAN NOT NULL DEFAULT TRUE,
+ is_trek BOOLEAN NOT NULL DEFAULT FALSE, guide_content JSONB, is_active BOOLEAN NOT NULL DEFAULT TRUE,
  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
  CHECK(transport_cost_max IS NULL OR transport_cost_min IS NULL OR transport_cost_max >= transport_cost_min)
 );

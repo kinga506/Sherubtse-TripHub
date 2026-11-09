@@ -2,9 +2,9 @@ const Destination = require('../models/Destination');
 const {enrich}=require('../services/tripDiscovery');
 
 function seasonNote(destination) {
-  if (destination.slug === 'dangling-tsho') return 'Local tradition restricts visits during Ladam (approximately December–March). Confirm access before planning.';
-  if (destination.slug === 'bumdeling') return 'Black-necked crane viewing is seasonal, mainly November–February. Do not disturb wildlife.';
-  if (destination.slug === 'merak-village' || destination.slug === 'sakteng-village') return 'Highland access depends on road and weather conditions; confirm local requirements.';
+  if (destination.slug === 'dangling-tsho') return 'Local restrictions, including Ladam, may affect access. The exact current dates could not be confirmed; check with local authorities before planning.';
+  if (destination.slug === 'bumdeling') return 'Black-necked crane presence is seasonal, generally during the winter period. Sightings are not guaranteed; check local access and conditions.';
+  if (destination.slug === 'merak-village' || destination.slug === 'sakteng-village') return 'Highland access depends on road, weather, and local requirements. Confirm the current route and visitor arrangements before travel.';
   return null;
 }
 async function gallery(req,res,next) {
