@@ -21,7 +21,6 @@
     <nav class="site-nav" id="site-navigation" aria-label="Main navigation" data-mobile-nav>
       <a href="/" <% if(typeof activeNav !== 'undefined' && activeNav === 'home'){ %>aria-current="page"<% } %>>Home</a>
       <a href="/trips" <% if(typeof activeNav !== 'undefined' && activeNav === 'trips'){ %>aria-current="page"<% } %>>Upcoming trips</a>
-      <a href="/help">Help</a>
       <a href="/destinations" <% if(typeof activeNav !== 'undefined' && activeNav === 'destinations'){ %>aria-current="page"<% } %>>Destinations</a>
       <% if (currentUser) { %>
         <% if(currentUser.role === 'student') { %>

@@ -17,13 +17,13 @@ describe('Step 18: immutable final-report inputs',()=>{
    {rating:4,comment:'Great experience',createdAt:new Date('2026-01-01')},
    {rating:5,comment:'Well organised',createdAt:new Date('2026-01-02')}
   ]})})});
-  const snap=await feedbackSnapshot(5);
+  const snap=await feedbackSnapshot(5,true);
   expect(snap.count).toBe(2);expect(snap.average).toBe(4.5);
   expect(snap.summary).toMatch(/2 review/);
  });
  test('explicitly reports zero feedback',async()=>{
   getMongo.mockReturnValue({collection:()=>({find:()=>({toArray:async()=>[]})})});
-  expect((await feedbackSnapshot(5)).summary).toMatch(/No student feedback/);
+  expect((await feedbackSnapshot(5,true)).summary).toMatch(/No student feedback/);
  });
  test('final report can record feedback unavailable without MongoDB',async()=>{
   const result=await feedbackSnapshot(5,false);

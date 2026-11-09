@@ -3,11 +3,6 @@ const {validId}=require('./Access');
 const CONTENT={faqs:{fields:['question','answer','sort_order','is_active']},trip_rules:{fields:['title','body','sort_order','is_active']},testimonials:{fields:['title','quote','attribution','sort_order','is_active']}};
 const fail=(message,status=422)=>Object.assign(new Error(message),{status});
 const trimmed=(v,max=2000)=>{const s=String(v??'').trim();if(s.length>max)throw fail('Value too long');return s;};
-async function publicInfo(){const db=getDb();const [faqs,rules,testimonials,photos]=await Promise.all([
- db.any('SELECT id,question,answer FROM faqs WHERE is_active=true ORDER BY sort_order,id'),
- db.any('SELECT id,title,body FROM trip_rules WHERE is_active=true ORDER BY sort_order,id'),
- db.any('SELECT id,title,quote,attribution,is_sample FROM testimonials WHERE is_active=true ORDER BY sort_order,id'),
- db.any("SELECT d.name,p.alt_text,p.photo_credit,CASE WHEN p.file_path ~ '^[a-f0-9]{32}$' THEN '/managed-photos/'||p.id ELSE p.file_path END AS file_path FROM destination_photos p JOIN destinations d ON d.id=p.destination_id WHERE d.is_active=true ORDER BY d.name,p.sort_order,p.id")]);return {faqs,rules,testimonials,photos};}
 async function dashboard(){const db=getDb();const [users,tripStats,assignments]=await Promise.all([
  db.one(`SELECT COUNT(*)::int AS total, COUNT(*) FILTER(WHERE role='student')::int AS students, COUNT(*) FILTER(WHERE role='dsa')::int AS dsa FROM users`),
  db.any('SELECT approval_status,operational_status,COUNT(*)::int AS count FROM trips GROUP BY approval_status,operational_status ORDER BY approval_status,operational_status'),
@@ -61,4 +56,4 @@ async function dsaHistory(){const db=getDb();return Promise.all([
  db.any(`SELECT h.id,h.action,h.remarks,h.created_at,t.title,t.id AS trip_id,reviewer.name AS reviewer FROM trip_approval_history h JOIN trips t ON t.id=h.trip_id LEFT JOIN users reviewer ON reviewer.id=h.reviewed_by ORDER BY h.created_at DESC,h.id DESC LIMIT 150`),
  db.any(`SELECT r.id,r.trip_id,t.title,r.submission_number,r.review_status,r.reviewed_at,r.review_remarks FROM final_participant_submissions r JOIN trips t ON t.id=r.trip_id ORDER BY r.submitted_at DESC,r.id DESC LIMIT 100`),
  db.any(`SELECT t.id,t.title,t.completed_at,r.submitted_at,r.total_actual_expenses,r.total_student_contributions,r.incident_report FROM trips t JOIN trip_final_reports r ON r.trip_id=t.id WHERE t.operational_status='completed' ORDER BY t.completed_at DESC LIMIT 100`)]).then(([reviews,finalLists,completed])=>({reviews,finalLists,completed}));}
-module.exports={publicInfo,dashboard,list,update,create,dsaHistory,createDestination,addPhoto,photoById,CONTENT,fail};
+module.exports={dashboard,list,update,create,dsaHistory,createDestination,addPhoto,photoById,CONTENT,fail};

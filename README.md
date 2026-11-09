@@ -221,7 +221,7 @@ Apply `db/step18-lifecycle-migration.sql`, then see `docs/STEP18_COMPLETION.md` 
 
 ## Step 19 — Help and administration
 
-Public pages: `/help`, `/about`, `/faq`, `/safety`, `/photo-credits`. The wording and safety numbers are sourced from the supplied TripPack reference; check official emergency numbers before publishing. The testimonials remain marked as fictional samples.
+The former shared public Help page and its `/help`, `/about`, `/faq`, `/safety`, and `/photo-credits` routes have been removed. DSA and Superadmin can still manage FAQs, travel rules, testimonials, and destination photo credits in the administration workspace.
 
 Superadmin: `/workspace/superadmin` (overview, accounts, DSA account creation, programmes, destinations, destination photo upload/metadata, FAQ/rule/testimonial editing, and read-only trip assignment oversight). Superadmin **cannot** assign a Coordinator or approve a trip. DSA review history and completed reports are at `/workspace/dsa/history`, while assignment and handover remain at `/workspace/dsa/proposals/:tripId`.
 

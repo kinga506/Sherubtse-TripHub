@@ -2,7 +2,7 @@
 
 This step uses the existing schema (`faqs`, `trip_rules`, `testimonials`, `destinations`, `destination_photos`, `programmes`, `users`, and history tables); no migration is needed.
 
-1. Start the server and open `/help` without login. Review all eight FAQ entries, five rules, emergency numbers, four clearly labelled sample testimonials, and photo credits. Verify the public page displays no private proposal documents.
+1. The former shared public Help, FAQ, safety, about, and photo-credit page has been removed. Requests to `/help` use the standard 404 page.
 2. Log in as a normal Student. `/workspace/superadmin` and its POST actions must return 403. A DSA account must likewise be forbidden from Superadmin changes.
 3. Log in as Superadmin. Open `/workspace/superadmin`. Review counts and read-only Coordinator assignments. Update FAQ text, add a programme, deactivate a destination, and verify public destination filters reflect the change. Reactivate the destination.
 4. Upload an 8 MB-or-smaller JPEG/PNG photo to an existing destination ID. Confirm it renders in the destination gallery. Try an invalid binary disguised as JPG; expect 422. Confirm uploads persist after restart in a configured persistent storage backend.

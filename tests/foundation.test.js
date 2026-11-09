@@ -8,6 +8,11 @@ describe('Step 1 foundation', () => {
     expect(response.statusCode).toBe(200);
     expect(response.text).toContain('Sherubtse TripHub');
   });
+  test('removed Help route uses the existing 404 page', async () => {
+    const response = await request(createApp({ nodeEnv: 'test' })).get('/help');
+    expect(response.statusCode).toBe(404);
+    expect(response.text).toContain('Not found');
+  });
   test('health responds without querying the database', async () => {
     const response = await request(createApp({ nodeEnv: 'test' })).get('/health');
     expect(response.statusCode).toBe(200);

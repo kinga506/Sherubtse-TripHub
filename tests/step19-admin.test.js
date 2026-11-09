@@ -20,7 +20,3 @@ test('cannot deactivate own Superadmin account',async()=>{
  mockDb.tx.mockImplementation(async fn=>fn({oneOrNone:async()=>({id:5,role:'admin'})}));
  await expect(M.update('users','5',{is_active:'false'},5)).rejects.toThrow('own account');
 });
-test('public information only queries active content',async()=>{
- mockDb.any.mockResolvedValue([]);const result=await M.publicInfo();expect(result.faqs).toEqual([]);
- expect(mockDb.any.mock.calls.every(([sql])=>sql.includes('is_active=true'))).toBe(true);
-});

@@ -4,7 +4,6 @@ const bcrypt=require('bcrypt');
 const {getStorage}=require('../config/storage');
 const asyncPage=fn=>(req,res,next)=>Promise.resolve(fn(req,res)).catch(next);
 const error=(e,res,next)=>e.status?res.status(e.status).send(e.message):next(e);
-const help=asyncPage(async(req,res)=>res.render('help/index',{title:'Help and information',activeNav:'help',...await M.publicInfo()}));
 const overview=asyncPage(async(req,res)=>res.render('admin/dashboard',{title:'Superadmin dashboard',...await M.dashboard()}));
 const manage=asyncPage(async(req,res)=>{const section=req.params.section;res.render('admin/manage',{title:'Manage '+section,section,rows:await M.list(section)});});
 const save=async(req,res,next)=>{try{await M.update(req.params.section,req.params.id,req.body,req.currentUser.id);return res.redirect('/workspace/superadmin/manage/'+req.params.section);}catch(e){return error(e,res,next);}};
@@ -36,4 +35,4 @@ const servePhoto=async(req,res,next)=>{try{
  res.set('Content-Type',png?'image/png':'image/jpeg').set('X-Content-Type-Options','nosniff').set('Cache-Control','public,max-age=3600').send(data);
  }catch(e){next(e);}};
 const history=asyncPage(async(req,res)=>res.render('dsa/history',{title:'DSA review and completion history',...await M.dsaHistory()}));
-module.exports={help,overview,manage,save,create,createDsa,destinationCreate,photoUpload,servePhoto,history};
+module.exports={overview,manage,save,create,createDsa,destinationCreate,photoUpload,servePhoto,history};
