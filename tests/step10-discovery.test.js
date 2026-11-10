@@ -20,11 +20,11 @@ test('College Trips gallery ignores former search/filter parameters',async()=>{
  Trip.list.mockResolvedValue([{...base,id:1,title:'Merak',public_stage:'upcoming'}]);
  const res=reply();await controller.gallery({query:{q:'merak'}},res,jest.fn());
  expect(Trip.list).toHaveBeenCalledWith();
- expect(res.render).toHaveBeenCalledWith('trips/index',expect.objectContaining({title:'College Trips',trips:[expect.objectContaining({registration:expect.any(Object),public_stage:'upcoming'})]}));
+ expect(res.render).toHaveBeenCalledWith('trips/index',expect.objectContaining({title:'Explore College Trips',trips:[expect.objectContaining({registration:expect.any(Object),public_stage:'upcoming'})]}));
 });
 test('College Trips view has no search, filters, sorting controls, or comparison table',()=>{
  const view=require('fs').readFileSync(require.resolve('../views/trips/index.ejs'),'utf8');
- expect(view).toContain('<h1>College Trips</h1>');
+ expect(view).toContain('<h1>Explore College Trips</h1>');
  expect(view).toContain('No college trips available');
  expect(view).not.toMatch(/type=["']search/i);
  expect(view).not.toMatch(/<form\b/i);

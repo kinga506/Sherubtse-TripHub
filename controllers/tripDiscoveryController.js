@@ -3,7 +3,7 @@ const {enrich}=require('../services/tripDiscovery');
 async function gallery(req,res,next){
  try{
   const rows=await PublicTrip.list();
-  res.render('trips/index',{title:'College Trips',activeNav:'trips',trips:rows.map(t=>enrich(t))});
+  res.render('trips/index',{title:'Explore College Trips',activeNav:'trips',trips:rows.map(t=>enrich(t))});
  }catch(error){next(error);}
 }
 async function detail(req,res,next){

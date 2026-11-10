@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
  student_id TEXT UNIQUE, programme_id BIGINT REFERENCES programmes(id) ON DELETE RESTRICT,
  academic_year SMALLINT CHECK(academic_year BETWEEN 1 AND 8), residence_hall TEXT, phone TEXT, avatar TEXT,
  is_verified BOOLEAN NOT NULL DEFAULT FALSE, verification_token TEXT, reset_token TEXT,
+ pending_email TEXT, pending_email_token TEXT, pending_email_expires TIMESTAMPTZ,
  reset_token_expires TIMESTAMPTZ, is_active BOOLEAN NOT NULL DEFAULT TRUE,
  is_demo BOOLEAN NOT NULL DEFAULT FALSE, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
  CHECK (role <> 'student' OR email ~ '^[0-9]+\.sherubtse@rub\.edu\.bt$')
@@ -150,6 +151,7 @@ CREATE TABLE IF NOT EXISTS trip_final_reports (
 CREATE TABLE IF NOT EXISTS faqs (id BIGSERIAL PRIMARY KEY, seed_key TEXT UNIQUE, question TEXT NOT NULL, answer TEXT NOT NULL, sort_order INT NOT NULL DEFAULT 0, is_active BOOLEAN NOT NULL DEFAULT TRUE);
 CREATE TABLE IF NOT EXISTS trip_rules (id BIGSERIAL PRIMARY KEY, seed_key TEXT UNIQUE, title TEXT NOT NULL, body TEXT NOT NULL, sort_order INT NOT NULL DEFAULT 0, is_active BOOLEAN NOT NULL DEFAULT TRUE);
 CREATE TABLE IF NOT EXISTS testimonials (id BIGSERIAL PRIMARY KEY, seed_key TEXT UNIQUE, title TEXT NOT NULL, quote TEXT NOT NULL, attribution TEXT, is_sample BOOLEAN NOT NULL DEFAULT TRUE, sort_order INT NOT NULL DEFAULT 0, is_active BOOLEAN NOT NULL DEFAULT TRUE);
+CREATE TABLE IF NOT EXISTS admin_audit_logs (id BIGSERIAL PRIMARY KEY, actor_id BIGINT REFERENCES users(id) ON DELETE RESTRICT, action TEXT NOT NULL CHECK(length(action) BETWEEN 1 AND 80), target_type TEXT NOT NULL CHECK(length(target_type) BETWEEN 1 AND 60), target_id TEXT, context JSONB, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW());
 CREATE TABLE IF NOT EXISTS session (sid VARCHAR NOT NULL PRIMARY KEY, sess JSON NOT NULL, expire TIMESTAMP(6) NOT NULL);
 CREATE INDEX IF NOT EXISTS idx_session_expire ON session(expire);
 CREATE INDEX IF NOT EXISTS idx_trip_dates ON trips(start_date,end_date);
@@ -158,6 +160,11 @@ CREATE INDEX IF NOT EXISTS idx_trip_assignments ON trip_coordinators(user_id,sta
 CREATE INDEX IF NOT EXISTS idx_trip_attachments ON trip_attachments(trip_id,submission_id);
 CREATE INDEX IF NOT EXISTS idx_trip_approval ON trip_approval_history(trip_id,created_at);
 CREATE INDEX IF NOT EXISTS idx_final_roster ON final_participant_submissions(trip_id,submission_number DESC);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_pending_email_unique ON users(LOWER(pending_email)) WHERE pending_email IS NOT NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_pending_email_token_unique ON users(pending_email_token) WHERE pending_email_token IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_users_email_lower ON users(LOWER(email));
+CREATE INDEX IF NOT EXISTS idx_admin_audit_created ON admin_audit_logs(created_at DESC,id DESC);
+CREATE INDEX IF NOT EXISTS idx_admin_audit_action ON admin_audit_logs(action,created_at DESC);
 -- Database-level guardrails for multi-table role/state invariants. Transaction-level capacity and clearance checks still required.
 CREATE OR REPLACE FUNCTION enforce_coordinator_integrity() RETURNS trigger LANGUAGE plpgsql AS $$
 DECLARE r TEXT; active_user BOOLEAN; verified BOOLEAN; dsa_role TEXT; trip_state TEXT;
@@ -179,8 +186,28 @@ BEGIN
 END; $$;
 DROP TRIGGER IF EXISTS trg_student_proposer ON trips;
 CREATE TRIGGER trg_student_proposer BEFORE INSERT OR UPDATE OF proposed_by_user_id ON trips FOR EACH ROW EXECUTE FUNCTION enforce_student_proposer();
+CREATE OR REPLACE FUNCTION enforce_unique_email_reservations() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+ PERFORM pg_advisory_xact_lock(71342,2);
+ IF NEW.pending_email IS NOT NULL AND LOWER(NEW.pending_email)=LOWER(NEW.email) THEN
+  RAISE EXCEPTION 'Pending email must differ from the current email' USING ERRCODE='23505';
+ END IF;
+ IF EXISTS (SELECT 1 FROM users existing WHERE existing.id IS DISTINCT FROM NEW.id AND
+  (LOWER(existing.email)=LOWER(NEW.email) OR
+   (NEW.pending_email IS NOT NULL AND LOWER(existing.email)=LOWER(NEW.pending_email)) OR
+   (NEW.pending_email IS NOT NULL AND existing.pending_email IS NOT NULL AND LOWER(existing.pending_email)=LOWER(NEW.pending_email)) OR
+   (existing.pending_email IS NOT NULL AND LOWER(existing.pending_email)=LOWER(NEW.email)))) THEN
+  RAISE EXCEPTION 'Email address is already in use or pending verification' USING ERRCODE='23505';
+ END IF;
+ RETURN NEW;
+END; $$;
+DROP TRIGGER IF EXISTS trg_users_unique_email_reservations ON users;
+CREATE TRIGGER trg_users_unique_email_reservations BEFORE INSERT OR UPDATE OF email,pending_email ON users FOR EACH ROW EXECUTE FUNCTION enforce_unique_email_reservations();
 -- Prevent historical audit records from being overwritten or removed by application operations.
 CREATE OR REPLACE FUNCTION reject_audit_mutation() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'Audit history is append only'; END; $$;
+CREATE OR REPLACE FUNCTION reject_admin_audit_mutation() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'Administrative audit history is append only'; END; $$;
+DROP TRIGGER IF EXISTS trg_admin_audit_immutable ON admin_audit_logs;
+CREATE TRIGGER trg_admin_audit_immutable BEFORE UPDATE OR DELETE ON admin_audit_logs FOR EACH ROW EXECUTE FUNCTION reject_admin_audit_mutation();
 DROP TRIGGER IF EXISTS trg_approval_history_immutable ON trip_approval_history;
 CREATE TRIGGER trg_approval_history_immutable BEFORE UPDATE OR DELETE ON trip_approval_history FOR EACH ROW EXECUTE FUNCTION reject_audit_mutation();
 DROP TRIGGER IF EXISTS trg_final_review_immutable ON final_participant_review_history;

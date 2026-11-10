@@ -33,6 +33,8 @@ async function start() {
     throw error;
   }
 
+  let runtimeConfig = config;
+
   if (config.enableMongo) {
     console.log('[STARTUP] Connecting to MongoDB Atlas...');
 
@@ -41,11 +43,13 @@ async function start() {
       console.log('[STARTUP] MongoDB connected successfully.');
     } catch (error) {
       console.error(
-        '[STARTUP] MongoDB connection failed:',
+        '[STARTUP] MongoDB unavailable; trip feedback is disabled for this process:',
         mongoFailure(error)
       );
-
-      throw error;
+      console.error(
+        '[STARTUP] Restore Atlas connectivity and restart, or set ENABLE_MONGODB=false to skip MongoDB.'
+      );
+      runtimeConfig = { ...config, enableMongo: false };
     }
   } else {
     console.log('[STARTUP] MongoDB disabled for this deployment.');
@@ -53,7 +57,7 @@ async function start() {
 
   console.log('[STARTUP] Initializing Express application...');
 
-  const app = createApp(config);
+  const app = createApp(runtimeConfig);
 
   console.log('[STARTUP] Express application initialized.');
 

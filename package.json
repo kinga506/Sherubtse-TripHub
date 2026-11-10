@@ -13,6 +13,7 @@
     "check:env": "node scripts/check-env.js",
     "seed": "node scripts/seed.js",
     "init:destinations": "node scripts/init-destinations.js",
+    "bootstrap:superadmin": "node scripts/bootstrap-initial-superadmin.js",
     "migrate:destination-guides": "node scripts/migrate-destination-guides.js",
     "extract:photos": "python scripts/extract-photos.py",
     "reconcile:trips": "node scripts/reconcile-trips.js",

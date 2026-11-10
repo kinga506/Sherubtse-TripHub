@@ -55,6 +55,16 @@ Student signup is at `/auth/signup`, login at `/auth/login`, password recovery a
 
 **Neon:** provision PostgreSQL; set `DB_HOST`, `DB_PORT=5432`, `DB_NAME`, `DB_USER`, `DB_PASS`, `DB_SSL=true`. Validate TLS and database access before starting the app.
 
+### One-time initial Superadmin bootstrap
+
+If the target Neon database has no active Superadmin, run this manually from a trusted local terminal after configuring the local `.env` database connection for that Neon database:
+
+```bash
+npm run bootstrap:superadmin
+```
+
+The command prints the configured Neon hostname and requires the exact confirmation phrase shown by the command. It then prompts for the name and email, and accepts the password through hidden terminal input (the password is not read from or written to an environment variable). Use the exact Neon host displayed to verify that the local connection points to the intended production database before confirming. The command refuses to proceed if another active Superadmin exists or if any account already uses the entered email. It creates one `admin` account with `is_verified` and `is_active` set, and never runs at application startup or deployment. Do not run `npm run seed` against production.
+
 **MongoDB Atlas (optional):** set `ENABLE_MONGODB=true` and configure `MONGO_URI` to use trip feedback. MongoDB is enabled by default for backward compatibility, and its connection is checked separately at startup. To deploy a temporary PostgreSQL-only Render beta, set `ENABLE_MONGODB=false` and omit `MONGO_URI`; feedback routes return HTTP 503 and final reports record feedback as unavailable. PostgreSQL remains required.
 
 **Google Apps Script email:** deploy the mailer as an HTTPS web app, configure the deployed `/exec` URL and a strong shared secret in local `.env` and Render. The script must compare the secret and return `{ "ok": true }` after sending. Rotate any shared secret that appeared in prior configuration text; set the same newly generated secret in Apps Script and each environment. Never log request bodies or links.
@@ -110,4 +120,10 @@ docker build -t sherubtse-triphub:local .
 
 ## 10. Known limitations and handover warnings
 
-No successful end-to-end browser tests, complete Jest run, PostgreSQL migrations, MongoDB integration, R2 integration, email delivery, Docker build, or deployed Render URL are evidenced in this environment. The documentation has been cross-checked against source filenames, routes, `package.json` scripts and `.env.example`, **not against successful runtime behavior**. Original destination photo attribution and usage rights remain unverified. The source travel-time instruction needs DSA interpretation; TripHub DSA approval never substitutes for the signed official Student Travel Form or other permissions.
+### Superadmin V2 database preparation
+
+For an existing database, manually review and apply `db/step23-superadmin-audit-migration.sql`, followed by `db/step24-superadmin-email-change-migration.sql`, using the intended local or staging database connection. These scripts are additive and are not run automatically by the app. Do not apply them to Neon until you have reviewed and approved that production action. Run each file's verification SQL after application. Fresh installations also receive the audit table and email-change columns, indexes, and email-reservation trigger from `db/schema.sql`.
+
+DSA provisioning sends a one-hour, single-use verification link through the configured mail service. After verification the recipient uses the existing password recovery flow to set a password. Development log email mode intentionally does not expose activation links; use a local SMTP test mailbox to exercise delivery.
+
+The Jest suite and dependency-free release preflight pass, but end-to-end browser checks, applying PostgreSQL migrations, MongoDB integration, R2 integration, live email delivery, Docker build, and a deployed Render smoke test have not been performed in this task. Original destination photo attribution and usage rights remain unverified. The source travel-time instruction needs DSA interpretation; TripHub DSA approval never substitutes for the signed official Student Travel Form or other permissions.

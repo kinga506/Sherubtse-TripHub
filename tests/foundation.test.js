@@ -8,10 +8,9 @@ describe('Step 1 foundation', () => {
     expect(response.statusCode).toBe(200);
     expect(response.text).toContain('Sherubtse TripHub');
   });
-  test('removed Help route uses the existing 404 page', async () => {
-    const response = await request(createApp({ nodeEnv: 'test' })).get('/help');
-    expect(response.statusCode).toBe(404);
-    expect(response.text).toContain('Not found');
+  test('public Help and FAQs page is registered', () => {
+    const routes = require('../routes/siteAdmin');
+    expect(routes.stack.some(layer => layer.route?.path === '/help')).toBe(true);
   });
   test('About page renders project information and role responsibilities', async () => {
     const response = await request(createApp({ nodeEnv: 'test' })).get('/about');
