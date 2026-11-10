@@ -1,5 +1,29 @@
 // Small accessible interface behaviors; no API calls or trip data changes.
 document.addEventListener('DOMContentLoaded', () => {
+  let pendingAdminForm = null;
+  const adminDialog = document.createElement('dialog');
+  adminDialog.className = 'visibility-modal';
+  adminDialog.setAttribute('aria-labelledby', 'admin-confirm-title');
+  const adminTitle = document.createElement('h2'); adminTitle.id = 'admin-confirm-title'; adminTitle.textContent = 'Confirm account action';
+  const adminCopy = document.createElement('p'); adminCopy.dataset.adminConfirmCopy = '';
+  const adminActions = document.createElement('div'); adminActions.className = 'triphub-modal-actions';
+  const adminCancel = document.createElement('button'); adminCancel.type = 'button'; adminCancel.className = 'btn'; adminCancel.dataset.adminCancel = ''; adminCancel.textContent = 'Cancel';
+  const adminAccept = document.createElement('button'); adminAccept.type = 'button'; adminAccept.className = 'btn btn-primary'; adminAccept.dataset.adminAccept = ''; adminAccept.textContent = 'Continue';
+  adminActions.append(adminCancel, adminAccept); adminDialog.append(adminTitle, adminCopy, adminActions);
+  document.body.appendChild(adminDialog);
+  document.querySelectorAll('[data-admin-confirm]').forEach(form => form.addEventListener('submit', event => {
+    if (form.dataset.confirmed === 'true') { form.dataset.confirmed = 'false'; return; }
+    event.preventDefault(); pendingAdminForm = form;
+    adminDialog.querySelector('#admin-confirm-title').textContent = form.dataset.adminConfirmTitle || 'Confirm account action';
+    adminDialog.querySelector('[data-admin-confirm-copy]').textContent = form.dataset.adminConfirm;
+    adminDialog.showModal(); adminDialog.querySelector('[data-admin-cancel]').focus();
+  }));
+  adminDialog.querySelector('[data-admin-cancel]').addEventListener('click', () => { pendingAdminForm = null; adminDialog.close(); });
+  adminDialog.querySelector('[data-admin-accept]').addEventListener('click', () => {
+    if (!pendingAdminForm) return;
+    const form = pendingAdminForm; pendingAdminForm = null; adminDialog.close();
+    form.dataset.confirmed = 'true'; form.requestSubmit();
+  });
   const toggle = document.querySelector('[data-nav-toggle]');
   const nav = document.querySelector('[data-mobile-nav]');
   if (toggle && nav) {

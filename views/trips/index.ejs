@@ -1,6 +1,6 @@
 <%- include('../partials/header') %>
 <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> / <span aria-current="page">College Trips</span></nav>
-<header class="page-heading"><p class="eyebrow">Approved college journeys</p><h1>College Trips</h1><p class="lead">Explore approved trips that are open for public discovery. Trips may appear before registration opens, and ongoing trips remain listed through their end date.</p></header>
+<header class="page-heading"><p class="eyebrow">Approved college journeys</p><h1>Explore College Trips</h1><p class="lead">Explore approved trips that are open for public discovery. Trips may appear before registration opens, and ongoing trips remain listed through their end date.</p></header>
 <% if(trips.length){ %>
  <p class="small-muted" role="status"><%= trips.length %> eligible college <%= trips.length===1?'trip':'trips' %>. Estimated costs are per student, in Bhutanese Ngultrum.</p>
  <div class="trip-discovery-grid"><% trips.forEach(trip=>{ %>

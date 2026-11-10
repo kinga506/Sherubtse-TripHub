@@ -19,10 +19,10 @@
     </a>
     <button type="button" class="nav-toggle" aria-controls="site-navigation" aria-expanded="false" data-nav-toggle aria-label="Open navigation"><span aria-hidden="true">☰</span><span class="sr-only">Menu</span></button>
     <nav class="site-nav" id="site-navigation" aria-label="Main navigation" data-mobile-nav>
-      <a href="/" <% if(typeof activeNav !== 'undefined' && activeNav === 'home'){ %>aria-current="page"<% } %>>Home</a>
+      <% if (!currentUser || currentUser.role !== 'admin') { %><a href="/" <% if(typeof activeNav !== 'undefined' && activeNav === 'home'){ %>aria-current="page"<% } %>>Home</a>
       <a href="/about" <% if(typeof activeNav !== 'undefined' && activeNav === 'about'){ %>aria-current="page"<% } %>>About</a>
       <a href="/trips" <% if(typeof activeNav !== 'undefined' && activeNav === 'trips'){ %>aria-current="page"<% } %>>College Trips</a>
-      <a href="/destinations" <% if(typeof activeNav !== 'undefined' && activeNav === 'destinations'){ %>aria-current="page"<% } %>>Destinations</a>
+      <a href="/destinations" <% if(typeof activeNav !== 'undefined' && activeNav === 'destinations'){ %>aria-current="page"<% } %>>Destinations</a><% } %>
       <% if (currentUser) { %>
         <% if(currentUser.role === 'student') { %>
           <details class="nav-group" <% if(reqPath && reqPath.startsWith('/workspace')){ %>open<% } %>><summary>Student Workspace</summary><div class="nav-group-menu">
@@ -33,7 +33,7 @@
             <% if(typeof hasCoordinatingTrips !== 'undefined' && hasCoordinatingTrips){ %><a href="/workspace/coordinating-trips" <% if(reqPath==='/workspace/coordinating-trips'){ %>aria-current="page"<% } %>>My Coordinating Trips</a><% } %>
           </div></details>
         <% } else if(currentUser.role === 'dsa') { %><details class="nav-group"><summary>DSA Workspace</summary><div class="nav-group-menu"><a href="/workspace/dsa">DSA workspace</a><a href="/workspace/dsa/proposals">Proposal reviews</a><a href="/workspace/dsa/deadline-extensions">Deadline extension requests</a><a href="/workspace/dsa/final-namelists">Final namelist approvals</a><a href="/workspace/dsa/trip-lifecycle">Trip lifecycle</a><a href="/workspace/dsa/history">Review history</a></div></details>
-        <% } else if(currentUser.role === 'admin') { %><a href="/workspace/superadmin">Superadmin</a><% } %>
+        <% } else if(currentUser.role === 'admin') { %><a href="/workspace/superadmin">Superadmin Workspace</a><% } %>
         <a href="/account" class="nav-account">My Account</a>
         <form method="post" action="/auth/logout" class="nav-logout"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button type="submit" class="nav-link-button">Log out</button></form>
       <% } else { %>
@@ -43,3 +43,4 @@
   </div>
 </header>
 <main id="main-content" class="shell page-content">
+<% if(currentUser && currentUser.role==='admin'){ %><aside class="admin-sidebar" aria-label="Superadmin navigation"><strong>Administration</strong><a href="/workspace/superadmin" <%= reqPath==='/workspace/superadmin'?'aria-current="page"':'' %>>Overview</a><a href="/workspace/superadmin/manage/users" <%= reqPath.includes('/manage/users')?'aria-current="page"':'' %>>User Management</a><a href="/workspace/superadmin/trips" <%= reqPath.includes('/trips')?'aria-current="page"':'' %>>Trip Monitoring</a><details <%= reqPath.includes('/manage/')&&reqPath!=='/workspace/superadmin/manage/users'?'open':'' %>><summary>Content Management</summary><a href="/workspace/superadmin/manage/destinations">Destinations</a><a href="/workspace/superadmin/manage/programmes">Academic Programmes</a><a href="/workspace/superadmin/manage/faqs">Help & FAQs</a><a href="/workspace/superadmin/manage/trip_rules">Trip Guidelines & Policies</a></details><a href="/workspace/superadmin/audit" <%= reqPath.includes('/audit')?'aria-current="page"':'' %>>Audit Logs</a><a href="/workspace/superadmin/reports" <%= reqPath.includes('/reports')?'aria-current="page"':'' %>>Reports</a><a href="/account">Settings & Security</a></aside><div class="admin-content"><% } %>

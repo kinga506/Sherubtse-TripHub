@@ -3,6 +3,7 @@ const bcrypt=require('bcrypt');
 const User=require('../models/User');
 const PasswordReset=require('../models/PasswordReset');
 const {sendEmail}=require('../services/mailer');
+const {getDb}=require('../config/db');
 
 const TOKEN_REGEX=/^[a-f0-9]{64}$/;
 const GENERIC_MESSAGE='If the account is eligible, password-reset instructions will be sent to that email address.';
@@ -26,6 +27,7 @@ async function forgot(req,res,next) {
         const raw=crypto.randomBytes(32).toString('hex');
         const hash=hashToken(raw);
         await PasswordReset.issueToken(user.id,hash,new Date(Date.now()+60*60*1000));
+        if(user.role==='admin')await getDb().none(`INSERT INTO admin_audit_logs(actor_id,action,target_type,target_id) VALUES($1,'admin_password_reset_initiated','user',$1)`,[user.id]);
         try {
           await sendEmail({to:user.email,subject:'Reset your Sherubtse TripHub password',
             text:`Use this single-use link within one hour to reset your password: ${resetUrl(raw)}\nIf you did not request this, ignore the email.`});

@@ -7,6 +7,7 @@
     <div class="account-identity-copy"><h2><%= user.name || 'Account holder' %></h2><p><%= user.email %></p></div>
     <div class="account-identity-status"><span class="status-badge <%= user.is_verified ? 'badge-success' : 'badge-warning' %>"><%= user.is_verified ? 'Email verified' : 'Email not verified' %></span><span class="status-badge badge-neutral"><%= roleLabel %></span></div>
   </section>
+  <% if(user.role==='admin'){ %><section class="account-card surface-card" aria-label="Superadmin profile settings"><p class="eyebrow">SETTINGS & SECURITY</p><h2>Profile name</h2><% if(req.query.profile==='updated'){ %><p role="status">Profile updated.</p><% } %><form method="post" action="/workspace/superadmin/settings/profile" class="admin-form-grid"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><label>Full name<input name="name" maxlength="100" value="<%= user.name %>" required></label><label>Current password<input type="password" name="currentPassword" required autocomplete="current-password"></label><button class="btn" type="submit">Save profile</button></form></section><% } %>
   <div class="account-card-grid">
     <section class="account-card surface-card" aria-labelledby="profile-information-heading">
       <p class="eyebrow">YOUR DETAILS</p><h2 id="profile-information-heading">Profile Information</h2>
@@ -22,6 +23,7 @@
       <p class="eyebrow">ACCOUNT SECURITY</p><h2 id="account-security-heading">Keep your account secure</h2>
       <div class="security-action"><span class="security-icon" aria-hidden="true">⌑</span><div><h3>Change Password</h3><p>Update your password to keep your account secure.</p><a class="btn btn-primary" href="/auth/change-password">Change Password</a></div></div>
       <p class="account-security-note">Your account access is protected by your verified institutional email.</p>
+      <% if(user.role==='admin'){ %><div class="security-action"><div><h3>Change login email</h3><p>The current address stays active until the new address is verified. Email changes expire after one hour.</p><% if(req.query.emailChange==='sent'){ %><p role="status">A verification message was sent to the new address.</p><% }else if(req.query.emailChange==='delivery-failed'){ %><p role="alert">The verification message could not be delivered. Request another change after checking mail configuration.</p><% } %><form method="post" action="/workspace/superadmin/settings/email" class="admin-form-grid"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><label>New email address<input type="email" name="email" maxlength="254" required autocomplete="email"></label><label>Current password<input type="password" name="currentPassword" required autocomplete="current-password"></label><button class="btn btn-primary" type="submit">Send verification email</button></form></div></div><% } %>
     </section>
   </div>
 </div>

@@ -25,7 +25,7 @@ No signup or trip functionality exists yet. The `DB_SSL=true` option uses TLS ce
 
 ## Temporary Render beta without MongoDB
 
-MongoDB feedback is optional and remains enabled by default for backward compatibility. To deploy a temporary PostgreSQL-only beta on Render, set `ENABLE_MONGODB=false` and omit `MONGO_URI`. Neon PostgreSQL remains required for application data and sessions. Startup logs that MongoDB is disabled; feedback pages and submissions return HTTP 503 with “Trip feedback is temporarily unavailable.” Final reports continue to work and record that feedback was unavailable at submission time. Existing MongoDB feedback is not deleted and remains available if MongoDB is enabled again later.
+MongoDB feedback is optional and remains enabled by default for backward compatibility. If MongoDB is enabled but cannot be reached at startup, the app logs a safe diagnostic and continues with feedback disabled for that process; feedback pages and submissions return HTTP 503 with “Trip feedback is temporarily unavailable.” Restore Atlas connectivity and restart to re-enable feedback. To deploy a temporary PostgreSQL-only beta on Render, set `ENABLE_MONGODB=false` and omit `MONGO_URI`. Neon PostgreSQL remains required for application data and sessions. Final reports continue to work and record that feedback was unavailable at submission time. Existing MongoDB feedback is not deleted and remains available if MongoDB is enabled again later.
 
 For local development with MongoDB feedback, leave `ENABLE_MONGODB=true` (or unset it) and configure `MONGO_URI`. Do not use ephemeral file storage for real student information or consent documents.
 

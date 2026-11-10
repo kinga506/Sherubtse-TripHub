@@ -1,3 +1,5 @@
+const mockDb={none:jest.fn()};
+jest.mock('../config/db',()=>({getDb:()=>mockDb}));
 const bcrypt=require('bcrypt');
 const crypto=require('node:crypto');
 const User=require('../models/User');
@@ -16,7 +18,7 @@ const resetToken='a'.repeat(64);
 const digest=crypto.createHash('sha256').update(resetToken).digest('hex');
 
 describe('Step 4 password recovery',()=>{
-  beforeEach(()=>{jest.resetAllMocks();process.env.APP_URL='http://localhost:3000';process.env.NODE_ENV='test';});
+  beforeEach(()=>{jest.resetAllMocks();mockDb.none.mockResolvedValue();process.env.APP_URL='http://localhost:3000';process.env.NODE_ENV='test';});
   test('password policy applies consistently (12–72 characters)',()=>{
     expect(password.validPassword('x'.repeat(11))).toBe(false);
     expect(password.validPassword('x'.repeat(12))).toBe(true);
@@ -28,6 +30,7 @@ describe('Step 4 password recovery',()=>{
     const r=res();await password.forgot({body:{email:student.email}},r,next);
     expect(PasswordReset.issueToken).toHaveBeenCalledWith(10,expect.stringMatching(/^[a-f0-9]{64}$/),expect.any(Date));
     expect(sendEmail).toHaveBeenCalledWith(expect.objectContaining({to:student.email,subject:expect.stringMatching(/Reset/)}));
+    if(role==='admin')expect(mockDb.none).toHaveBeenCalledWith(expect.stringContaining('admin_password_reset_initiated'),[10]);
     expect(getMessage(r).message).toBe(password.GENERIC_MESSAGE);
   });
   test('unknown, inactive and unverified accounts receive identical confirmation',async()=>{
