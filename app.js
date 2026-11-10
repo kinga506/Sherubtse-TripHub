@@ -28,6 +28,7 @@ const feedbackRoutes=require('./routes/feedback');
 const finalReportRoutes=require('./routes/finalReport');
 const {requestTimeReconcile}=require('./services/tripLifecycle');
 const siteAdminRoutes=require('./routes/siteAdmin');
+const dsaTransitionRoutes=require('./routes/dsaTransitions');
 const {parseAdminPhotoUpload}=require('./middleware/adminPhotoUpload');
 
 function createApp(config=getConfig()) {
@@ -66,6 +67,7 @@ function createApp(config=getConfig()) {
  app.use('/',feedbackRoutes);
  app.use('/',finalReportRoutes);
  app.use('/',siteAdminRoutes);
+ app.use('/',dsaTransitionRoutes);
  app.use('/workspace',workspaceRoutes);
  app.get('/account',requireAuth,account);
  app.use('/',indexRoutes);

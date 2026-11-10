@@ -1,0 +1,10 @@
+const router=require('express').Router();
+const auth=require('../middleware/authorization');
+const {authLimiter}=require('../middleware/security');
+const controller=require('../controllers/dsaTransitionController');
+router.get('/workspace/superadmin/dsa-transitions',auth.requireSuperadmin,controller.dashboard);
+router.post('/workspace/superadmin/dsa-transitions',auth.requireSuperadmin,authLimiter,controller.begin);
+router.get('/workspace/superadmin/dsa-transitions/:id/review',auth.requireSuperadmin,controller.review);
+router.post('/workspace/superadmin/dsa-transitions/:id/complete',auth.requireSuperadmin,authLimiter,controller.complete);
+router.post('/workspace/superadmin/dsa-transitions/emergency-revoke',auth.requireSuperadmin,authLimiter,controller.emergencyRevoke);
+module.exports=router;

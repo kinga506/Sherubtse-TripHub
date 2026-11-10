@@ -10,11 +10,13 @@ async function createStudent({ name, email, passwordHash, studentId, tokenHash, 
 async function verifyToken(tokenHash) {
   return getDb().oneOrNone(`UPDATE users SET is_verified=true,verification_token=NULL,verification_token_expires=NULL,
   verification_sent_at=NULL WHERE verification_token=$1 AND verification_token_expires>NOW() AND is_active=true
+  AND role='student'
   RETURNING id,email`, [tokenHash]);
 }
+const findDsaInvitation=tokenHash=>getDb().oneOrNone(`SELECT id,name,email FROM users WHERE verification_token=$1 AND verification_token_expires>NOW() AND role='dsa' AND is_verified=false AND is_active=true`,[tokenHash]);
 async function setVerificationToken(id, hash, expires) {
   return getDb().oneOrNone(`UPDATE users SET verification_token=$2,verification_token_expires=$3,verification_sent_at=NOW()
   WHERE id=$1 AND is_verified=false AND is_active=true AND
   (verification_sent_at IS NULL OR verification_sent_at < NOW()-INTERVAL '2 minutes') RETURNING id,email`, [id,hash,expires]);
 }
-module.exports = {findByEmail,findById,createStudent,verifyToken,setVerificationToken};
+module.exports = {findByEmail,findById,createStudent,verifyToken,findDsaInvitation,setVerificationToken};

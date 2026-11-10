@@ -4,6 +4,8 @@ const {authLimiter,resendLimiter,requireAuth}=require('../middleware/security');
 router.get('/signup',controller.showSignup);
 router.post('/signup',authLimiter,controller.signup);
 router.get('/verify',controller.verify);
+router.get('/activate-dsa',controller.showDsaActivation);
+router.post('/activate-dsa',authLimiter,controller.activateDsa);
 router.get('/login',controller.showLogin);
 router.post('/login',authLimiter,controller.login);
 router.post('/logout',requireAuth,controller.logout);

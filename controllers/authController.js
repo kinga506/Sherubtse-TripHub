@@ -1,6 +1,7 @@
 const crypto=require('node:crypto');
 const bcrypt=require('bcrypt');
 const User=require('../models/User');
+const {getDb}=require('../config/db');
 const {sendEmail}=require('../services/mailer');
 const {dashboardPath}=require('../services/roleDashboard');
 const EMAIL_RE=/^[0-9]+\.sherubtse@rub\.edu\.bt$/;
@@ -34,10 +35,43 @@ async function verify(req,res,next) {
     const token=req.query.token;
     if(typeof token!=='string'||!/^[a-f0-9]{64}$/.test(token)) return res.status(400).send('Verification link invalid or expired');
     const hash=crypto.createHash('sha256').update(token).digest('hex');
+    const invitedDsa=await User.findDsaInvitation(hash);
+    if(invitedDsa)return res.redirect(`/auth/activate-dsa?token=${encodeURIComponent(token)}`);
     const account=await User.verifyToken(hash);
     if(!account) return res.status(400).send('Verification link invalid or expired');
     return render(res,'message',{title:'Email verified',message:'Email verified. You can now log in.'});
   } catch(err){next(err);}
+}
+function dsaActivationError(res,status=400){return res.status(status).render('auth/dsa-activation-error',{title:'Invitation link unavailable'});}
+async function showDsaActivation(req,res,next){
+  try{
+    const raw=req.query.token;
+    if(typeof raw!=='string'||!/^[a-f0-9]{64}$/.test(raw))return dsaActivationError(res);
+    const invite=await User.findDsaInvitation(crypto.createHash('sha256').update(raw).digest('hex'));
+    if(!invite)return dsaActivationError(res);
+    return render(res,'dsa-activate',{title:'Activate Your DSA Account',invite,token:raw,error:null});
+  }catch(err){next(err);}
+}
+async function activateDsa(req,res,next){
+  try{
+    const raw=req.body.token,password=req.body.password,confirmPassword=req.body.confirmPassword;
+    if(typeof raw!=='string'||!/^[a-f0-9]{64}$/.test(raw))return dsaActivationError(res);
+    if(typeof password!=='string'||password.length<12||password.length>72||password!==confirmPassword){
+      const invite=await User.findDsaInvitation(crypto.createHash('sha256').update(raw).digest('hex'));
+      if(!invite)return dsaActivationError(res);
+      return res.status(422).render('auth/dsa-activate',{title:'Activate Your DSA Account',invite,token:raw,error:password!==confirmPassword?'Passwords do not match.':'Password must be 12–72 characters.'});
+    }
+    const hash=crypto.createHash('sha256').update(raw).digest('hex'),passwordHash=await bcrypt.hash(password,12);
+    const activated=await getDb().tx(async tx=>{
+      const invite=await tx.oneOrNone(`SELECT id,name,email FROM users WHERE verification_token=$1 AND verification_token_expires>NOW() AND role='dsa' AND is_verified=false AND is_active=true FOR UPDATE`,[hash]);
+      if(!invite)return null;
+      const row=await tx.one(`UPDATE users SET password_hash=$1,is_verified=true,is_active=true,verification_token=NULL,verification_token_expires=NULL,verification_sent_at=NULL WHERE id=$2 AND role='dsa' AND is_verified=false RETURNING id`,[passwordHash,invite.id]);
+      await tx.none(`INSERT INTO admin_audit_logs(actor_id,action,target_type,target_id) VALUES(NULL,'dsa_invitation_activated','user',$1)`,[row.id]);
+      return invite;
+    });
+    if(!activated)return dsaActivationError(res);
+    return res.render('auth/dsa-activation-success',{title:'DSA account activated'});
+  }catch(err){next(err);}
 }
 const showLogin=(req,res)=>{
   if(req.currentUser) return res.redirect(dashboardPath(req.currentUser.role));
@@ -79,4 +113,4 @@ async function resend(req,res,next) {
 }
 function showResend(req,res) {return render(res,'resend',{title:'Resend verification'});}
 function account(req,res) {return render(res,'account',{title:'My account',user:req.currentUser,dashboardPath:dashboardPath(req.currentUser.role)});}
-module.exports={EMAIL_RE,validStudentEmail,normalizeEmail,showSignup,signup,verify,showLogin,login,logout,resend,showResend,account};
+module.exports={EMAIL_RE,validStudentEmail,normalizeEmail,showSignup,signup,verify,showDsaActivation,activateDsa,showLogin,login,logout,resend,showResend,account};

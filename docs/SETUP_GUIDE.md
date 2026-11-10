@@ -30,9 +30,12 @@ db/step13a-student-travel-form-migration.sql
 db/step14-packing-migration.sql
 db/step18-lifecycle-migration.sql
 db/step19-trip-visibility-migration.sql
+db/step23-superadmin-audit-migration.sql
+db/step24-superadmin-email-change-migration.sql
+db/step25-dsa-transition-migration.sql
 ```
 
-**Important:** The project's schema evolved across steps. Some fresh-install columns are included in `schema.sql`, and some migrations may repeat safe alterations; check each SQL file and run the full sequence first against a disposable database. The Step 19 migration is additive: it adds `trips.is_publicly_hidden` and `trip_public_visibility_events` without changing or deleting trip or participant records. Apply it after Step 18 before deploying the visibility feature. The above ordering matches `.github/workflows/test.yml` but it has **not passed an actual database run** here.
+**Important:** The project's schema evolved across steps. Some fresh-install columns are included in `schema.sql`, and some migrations may repeat safe alterations; check each SQL file and run the full sequence first against a disposable database. The Step 19 migration is additive: it adds `trips.is_publicly_hidden` and `trip_public_visibility_events` without changing or deleting trip or participant records. Apply it after Step 18 before deploying the visibility feature. Steps 23, 24 and 25 add Superadmin audit history, email-change reservations and DSA transition history. Apply them in order after Step 19 on an existing database. The above ordering matches `.github/workflows/test.yml` but it has **not passed an actual database run** here.
 
 To load sample content for a safe local demo, set `DEMO_MODE=true` and fill `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD`, `SEED_DSA_EMAIL`, `SEED_DSA_PASSWORD`, `DEMO_PASSWORD` in your private `.env`, then run `npm run seed`. Use nonproduction credentials and clearly label all simulated trip approvals. Return `DEMO_MODE=false` after seeding.
 
@@ -122,8 +125,8 @@ docker build -t sherubtse-triphub:local .
 
 ### Superadmin V2 database preparation
 
-For an existing database, manually review and apply `db/step23-superadmin-audit-migration.sql`, followed by `db/step24-superadmin-email-change-migration.sql`, using the intended local or staging database connection. These scripts are additive and are not run automatically by the app. Do not apply them to Neon until you have reviewed and approved that production action. Run each file's verification SQL after application. Fresh installations also receive the audit table and email-change columns, indexes, and email-reservation trigger from `db/schema.sql`.
+For an existing database, manually review and apply `db/step23-superadmin-audit-migration.sql`, `db/step24-superadmin-email-change-migration.sql`, then `db/step25-dsa-transition-migration.sql`, using the intended local or staging database connection. These scripts are additive and are not run automatically by the app. Do not apply them to Neon until you have reviewed and approved that production action. Run each file's verification SQL after application. Fresh installations also receive the audit table, email-change fields and trigger, and DSA transition history table from `db/schema.sql`.
 
-DSA provisioning sends a one-hour, single-use verification link through the configured mail service. After verification the recipient uses the existing password recovery flow to set a password. Development log email mode intentionally does not expose activation links; use a local SMTP test mailbox to exercise delivery.
+DSA provisioning sends a one-hour, single-use activation link through the configured mail service. The recipient creates a password on the dedicated activation page. Superadmin can then initiate a DSA transition, wait for activation if needed, and explicitly confirm the immediate handoff. Emergency revocation requires a reason and typed confirmation. Development log email mode intentionally does not expose activation links; use a local SMTP test mailbox to exercise delivery.
 
 The Jest suite and dependency-free release preflight pass, but end-to-end browser checks, applying PostgreSQL migrations, MongoDB integration, R2 integration, live email delivery, Docker build, and a deployed Render smoke test have not been performed in this task. Original destination photo attribution and usage rights remain unverified. The source travel-time instruction needs DSA interpretation; TripHub DSA approval never substitutes for the signed official Student Travel Form or other permissions.

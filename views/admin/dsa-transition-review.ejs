@@ -1,0 +1,13 @@
+<%- include('../partials/header') %><section class="admin-page">
+  <p><a href="/workspace/superadmin/dsa-transitions">← DSA Transition Management</a></p>
+  <header class="admin-page-heading"><div><p class="eyebrow">Final confirmation</p><h1>Review DSA Transition</h1><p>Review each account and the immediate access changes before completion.</p></div></header>
+  <% if(errorMessage){ %><p class="admin-notice" role="alert"><%= errorMessage %></p><% } %>
+  <section class="admin-panel"><dl class="admin-detail-list">
+    <div><dt>Outgoing DSA</dt><dd><%= transition.outgoing_name %> · <%= transition.outgoing_email %></dd></div>
+    <div><dt>Incoming DSA</dt><dd><%= transition.incoming_name %> · <%= transition.incoming_email %></dd></div>
+    <div><dt>Effective date</dt><dd><%= String(transition.effective_date).slice(0,10) %></dd></div>
+    <div><dt>Reason</dt><dd><%= transition.reason %></dd></div>
+    <% if(transition.appointment_reference){ %><div><dt>Appointment reference</dt><dd><%= transition.appointment_reference %></dd></div><% } %>
+  </dl><h2>Access changes when confirmed</h2><ul><li>Outgoing DSA access and existing sessions will be revoked.</li><li>Incoming DSA remains active with DSA privileges.</li><li>Previous approvals remain attributed to their original reviewer.</li><li>Coordinator assignments, pending proposals and pending final namelists remain unchanged.</li><li>The transition takes effect immediately at confirmation time.</li></ul></section>
+  <form method="post" class="admin-panel admin-form-grid" action="/workspace/superadmin/dsa-transitions/<%= transition.id %>/complete"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><label>Type COMPLETE to confirm<input name="confirmation" autocomplete="off" required pattern="COMPLETE"></label><button class="btn btn-primary" type="submit">Complete DSA Transition</button><a class="btn btn-outline" href="/workspace/superadmin/dsa-transitions">Cancel</a></form>
+</section><%- include('../partials/footer') %>

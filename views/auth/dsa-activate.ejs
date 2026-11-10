@@ -1,0 +1,14 @@
+<%- include('../partials/header') %>
+<main class="auth-page"><section class="auth-card" aria-labelledby="activation-title">
+  <p class="eyebrow">Dean of Student Affairs</p><h1 id="activation-title">Activate Your DSA Account</h1>
+  <p>Welcome, <strong><%= invite.name %></strong>. Create a password to activate your Sherubtse TripHub DSA account.</p>
+  <p><strong>Email:</strong> <%= invite.email %></p>
+  <% if(error){ %><p class="form-message form-error" role="alert"><%= error %></p><% } %>
+  <form method="post" action="/auth/activate-dsa" class="stack-form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="token" value="<%= token %>">
+    <label for="activation-password">Create Password<input id="activation-password" name="password" type="password" autocomplete="new-password" minlength="12" maxlength="72" required></label>
+    <label for="activation-confirm">Confirm Password<input id="activation-confirm" name="confirmPassword" type="password" autocomplete="new-password" minlength="12" maxlength="72" required></label>
+    <p class="small-muted">Use 12–72 characters. Your password will be stored securely.</p>
+    <button class="btn btn-primary" type="submit">Activate Account</button>
+  </form>
+</section></main><%- include('../partials/footer') %>
