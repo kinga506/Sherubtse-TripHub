@@ -36,7 +36,7 @@ async function coordinatorAction(tripId,userId,action){
   if(action==='open'){
    if(trip.vacancies_held_closed)throw problem('Vacancy must be explicitly reopened using Reopen Available Slot',409);
    if(Number(c.occupied)>=trip.max_participants)throw problem('Slots Full',409);
-   for(const key of ['title','purpose','description','meeting_point','meeting_time','transport_information','safety_information','emergency_contact_name','emergency_contact_phone'])if(!String(trip[key]||'').trim())throw problem(`Complete the required trip field: ${key}`);
+   for(const key of ['title','purpose','description','transport_information','safety_information','emergency_contact_name','emergency_contact_phone'])if(!String(trip[key]||'').trim())throw problem(`Complete the required trip field: ${key}`);
    await itineraryReady(t,trip);await costReady(t,trip);
    await t.none('UPDATE trips SET registration_open=TRUE,updated_at=NOW() WHERE id=$1',[tripId]);
   }else if(action==='close'){

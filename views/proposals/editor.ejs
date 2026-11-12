@@ -12,8 +12,8 @@
 <label>Description <textarea name="description" maxlength="4000" rows="3"><%= values.description||'' %></textarea></label>
 <label>Start date <input name="start_date" type="date" required value="<%= values.start_date||'' %>"></label>
 <label>End date <input name="end_date" type="date" required value="<%= values.end_date||'' %>"></label>
-<label>Meeting point <input name="meeting_point" maxlength="250" value="<%= values.meeting_point||'' %>"></label>
-<label>Meeting time <input name="meeting_time" type="time" value="<%= values.meeting_time||'' %>"></label>
+<% if(values.meeting_point){ %><input type="hidden" name="meeting_point" value="<%= values.meeting_point %>"><% } %>
+<% if(values.meeting_time){ %><input type="hidden" name="meeting_time" value="<%= values.meeting_time %>"><% } %>
 <label>Transport arrangements <textarea name="transport_information" maxlength="2000" rows="3"><%= values.transport_information||'' %></textarea></label>
 <label>Maximum participants <input name="max_participants" type="number" min="1" max="1000" required value="<%= values.max_participants||'' %>"></label>
 <label>Registration deadline <input name="registration_deadline" type="datetime-local" value="<%= values.registration_deadline||'' %>"></label>

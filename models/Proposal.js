@@ -15,14 +15,13 @@ function validate(input,{strict=false}={}){
  const data={}; for(const k of FIELDS)data[k]=text(k);
  const check=(k,max,required=true)=>{if(required&&!data[k])errors.push(`${k.replaceAll('_',' ')} is required`);if(data[k].length>max)errors.push(`${k.replaceAll('_',' ')} is too long`);};
  check('title',160);check('purpose',2000,strict);check('description',4000,strict);
- check('meeting_point',250,strict);check('transport_information',2000,strict);
+ check('meeting_point',250,false);check('transport_information',2000,strict);
  check('safety_information',4000,strict);check('emergency_contact_name',160,strict);check('emergency_contact_phone',80,strict);
  check('estimated_budget_note',1500,false);
  if(!/^\d+$/.test(data.destination_id)||Number(data.destination_id)<1) errors.push('Choose a destination');
  if(!dateString(data.start_date)||!dateString(data.end_date))errors.push('Enter valid start and end dates');
  else if(data.end_date<data.start_date)errors.push('End date cannot precede start date');
  if(data.meeting_time&&!validTime(data.meeting_time))errors.push('Use a valid meeting time');
- if(strict&&!data.meeting_time)errors.push('Meeting time is required');
  if(!/^\d+$/.test(data.max_participants)||Number(data.max_participants)<1||Number(data.max_participants)>1000)errors.push('Participant limit must be 1–1000');
  if(!/^\d+(\.\d{1,2})?$/.test(data.estimated_cost)||Number(data.estimated_cost)>10000000)errors.push('Enter a valid nonnegative estimated cost');
  if(data.registration_deadline){const deadline=new Date(data.registration_deadline);if(Number.isNaN(deadline.getTime())) errors.push('Invalid registration deadline');else if(dateString(data.start_date)&&deadline>=new Date(`${data.start_date}T23:59:59+06:00`))errors.push('Registration deadline must be before trip start');}

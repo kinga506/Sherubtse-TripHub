@@ -4,7 +4,7 @@
 <% const snapshot=sub.proposal_snapshot; %>
 <p><strong>Purpose:</strong> <%= snapshot.trip.purpose %></p><p><strong>Description:</strong> <%= snapshot.trip.description %></p>
 <p><strong>Dates:</strong> <%= String(snapshot.trip.start_date).slice(0,10) %> to <%= String(snapshot.trip.end_date).slice(0,10) %></p>
-<p><strong>Meeting:</strong> <%= snapshot.trip.meeting_point %> · <%= snapshot.trip.meeting_time %></p>
+<% if(snapshot.trip.meeting_point||snapshot.trip.meeting_time){ %><p><strong>Meeting:</strong> <%= snapshot.trip.meeting_point||'Not provided' %> · <%= snapshot.trip.meeting_time||'Not provided' %></p><% } %>
 <p><strong>Transport:</strong> <%= snapshot.trip.transport_information %></p><p><strong>Limit:</strong> <%= snapshot.trip.max_participants %> students</p><p><strong>Estimated cost:</strong> Nu. <%= snapshot.trip.estimated_cost %></p>
 <p><strong>Safety:</strong> <%= snapshot.trip.safety_information %></p><p><strong>Emergency:</strong> <%= snapshot.trip.emergency_contact_name %>, <%= snapshot.trip.emergency_contact_phone %></p>
 <h3>Itinerary</h3><ol><% snapshot.itinerary.forEach(function(i){%><li>Day <%= i.day_number %>: <%= i.title %> — <%= i.description %></li><%});%></ol>
