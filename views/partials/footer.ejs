@@ -1,7 +1,47 @@
-<% if(currentUser&&currentUser.role==='admin'){ %></div></main><footer class="workspace-footer"><a href="/help">Help & FAQs</a><span>Project demonstration · Sherubtse TripHub</span><span>This project does not imply institutional approval.</span></footer><div class="toast-region" aria-live="polite" aria-atomic="true" id="toast-region"></div></body></html><% } else if(currentUser){ %></main><footer class="workspace-footer"><a href="/help">Help & FAQs</a><span>Sherubtse TripHub · Project demonstration</span></footer><div class="toast-region" aria-live="polite" aria-atomic="true" id="toast-region"></div></body></html><% } else { %></main><footer class="site-footer"><div class="shell footer-grid">
-<div><a href="/" class="footer-brand">Sherubtse TripHub</a><p>Explore. Experience. Connect.</p><p class="small-muted">A student-focused college trip planning project based in Kanglung, Trashigang, Bhutan.</p></div>
-<div><strong>Quick Links</strong><a href="/">Home</a><a href="/about">About</a><a href="/trips">College Trips</a><a href="/destinations">Destinations</a><a href="/help">Help & FAQs</a><a href="https://www.sherubtse.edu.bt/" rel="noopener noreferrer" target="_blank">Sherubtse College website</a></div>
-<div><strong>Important notice</strong><p>This is a project demonstration. It does not imply official college endorsement or replace DSA permission, signed forms, or any other institutional requirement.</p></div>
-</div><div class="shell footer-bottom"><span>&copy; <%= new Date().getFullYear() %> Sherubtse TripHub project</span><span>Built for accessibility and responsive layouts</span></div></footer>
+<% if(currentUser&&currentUser.role==='admin'){ %></div><% } %></main>
+<footer class="site-footer" aria-label="Site information">
+  <div class="shell footer-inner">
+    <div class="footer-brand-row">
+      <div>
+        <a href="/" class="footer-brand">Sherubtse TripHub</a>
+        <p>Explore. Experience. Connect.</p>
+      </div>
+      <span class="footer-project-label">Academic project demonstration</span>
+    </div>
+    <div class="footer-grid">
+      <section class="footer-column" aria-labelledby="footer-legal-heading">
+        <h2 id="footer-legal-heading">Legal and Compliance</h2>
+        <p>This academic project is not an official Sherubtse College service. Trip information does not replace DSA approval, signed consent, or other college requirements.</p>
+      </section>
+      <nav class="footer-column" aria-labelledby="footer-navigation-heading">
+        <h2 id="footer-navigation-heading">Core Navigation</h2>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/trips">College Trips</a>
+        <a href="/destinations">Destinations</a>
+        <a href="/help">Help &amp; FAQs</a>
+      </nav>
+      <section class="footer-column" aria-labelledby="footer-contact-heading">
+        <h2 id="footer-contact-heading">Contact</h2>
+        <p>For help using TripHub, visit the Help &amp; FAQs page.</p>
+        <a href="/help">Help &amp; FAQs</a>
+        <p>For trip questions, use the coordinator contact details on the trip page.</p>
+        <a href="https://www.sherubtse.edu.bt/" rel="noopener noreferrer" target="_blank">Sherubtse College website <span aria-hidden="true">↗</span></a>
+      </section>
+      <section class="footer-column" aria-labelledby="footer-trust-heading">
+        <h2 id="footer-trust-heading">Trust Signals</h2>
+        <ul class="footer-trust-list">
+          <li>Student email verification</li>
+          <li>DSA proposal review</li>
+          <li>Final namelist and consent review before departure clearance</li>
+        </ul>
+      </section>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <%= new Date().getFullYear() %> Sherubtse TripHub · Academic project</span>
+      <span>Kanglung, Trashigang, Bhutan</span>
+    </div>
+  </div>
+</footer>
 <div class="toast-region" aria-live="polite" aria-atomic="true" id="toast-region"></div>
-</body></html><% } %>
+</body></html>
