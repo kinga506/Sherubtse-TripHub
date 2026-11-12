@@ -24,6 +24,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = pendingAdminForm; pendingAdminForm = null; adminDialog.close();
     form.dataset.confirmed = 'true'; form.requestSubmit();
   });
+  let pendingLogoutForm = null;
+  const logoutDialog = document.createElement('dialog');
+  logoutDialog.className = 'visibility-modal';
+  logoutDialog.setAttribute('aria-labelledby', 'logout-confirm-title');
+  logoutDialog.innerHTML = '<h2 id="logout-confirm-title">Log out of Sherubtse TripHub?</h2><p>You will need to log in again to access your account.</p><div class="triphub-modal-actions"><button type="button" class="btn" data-logout-cancel>Stay logged in</button><button type="button" class="btn btn-primary" data-logout-accept>Log out</button></div>';
+  document.body.appendChild(logoutDialog);
+  document.querySelectorAll('[data-logout-confirm]').forEach(form => form.addEventListener('submit', event => {
+    if (form.dataset.confirmed === 'true') { form.dataset.confirmed = 'false'; return; }
+    event.preventDefault(); pendingLogoutForm = form;
+    logoutDialog.showModal(); logoutDialog.querySelector('[data-logout-cancel]').focus();
+  }));
+  logoutDialog.querySelector('[data-logout-cancel]').addEventListener('click', () => {
+    pendingLogoutForm = null; logoutDialog.close();
+  });
+  logoutDialog.querySelector('[data-logout-accept]').addEventListener('click', () => {
+    if (!pendingLogoutForm) return;
+    const form = pendingLogoutForm; pendingLogoutForm = null; logoutDialog.close();
+    form.dataset.confirmed = 'true'; form.requestSubmit();
+  });
+  logoutDialog.addEventListener('cancel', () => { pendingLogoutForm = null; });
   const toggle = document.querySelector('[data-nav-toggle]');
   const nav = document.querySelector('[data-mobile-nav]');
   if (toggle && nav) {

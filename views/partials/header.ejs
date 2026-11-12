@@ -35,7 +35,7 @@
         <% } else if(currentUser.role === 'dsa') { %><details class="nav-group"><summary>DSA Workspace</summary><div class="nav-group-menu"><a href="/workspace/dsa">DSA workspace</a><a href="/workspace/dsa/proposals">Proposal reviews</a><a href="/workspace/dsa/deadline-extensions">Deadline extension requests</a><a href="/workspace/dsa/final-namelists">Final namelist approvals</a><a href="/workspace/dsa/trip-lifecycle">Trip lifecycle</a><a href="/workspace/dsa/history">Review history</a></div></details>
         <% } else if(currentUser.role === 'admin') { %><a href="/workspace/superadmin">Superadmin Workspace</a><% } %>
         <a href="/account" class="nav-account">My Account</a>
-        <form method="post" action="/auth/logout" class="nav-logout" onsubmit="return confirm('Are you sure you want to log out?')"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button type="submit" class="nav-link-button">Log out</button></form>
+        <form method="post" action="/auth/logout" class="nav-logout" data-logout-confirm><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button type="submit" class="nav-link-button">Log out</button></form>
       <% } else { %>
         <a href="/auth/login">Log in</a><a class="nav-signup" href="/auth/signup">Sign Up</a>
       <% } %>
