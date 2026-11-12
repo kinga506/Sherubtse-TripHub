@@ -10,14 +10,14 @@ function normalizeEmail(value) {return String(value||'').trim().toLowerCase();}
 function validStudentEmail(email) {return EMAIL_RE.test(email);}
 function makeToken() { const raw=crypto.randomBytes(32).toString('hex'); return {raw,hash:crypto.createHash('sha256').update(raw).digest('hex')}; }
 function render(res,page,options={}) {return res.render('auth/'+page,{...options,title:options.title||'Sherubtse TripHub'});}
-const showSignup=(req,res)=>render(res,'signup',{title:'Student signup',error:null});
+const showSignup=(req,res)=>render(res,'signup',{title:'Sign Up',error:null});
 async function signup(req,res,next) {
   try {
     const {name, password, confirmPassword}=req.body;
     const email=normalizeEmail(req.body.email);
     if ('role' in req.body || 'is_verified' in req.body) return res.status(400).send('Role cannot be selected');
     if(!validStudentEmail(email) || !name || !String(name).trim() || String(name).length>100 || !password || password.length<12 || password.length>72 || password!==confirmPassword)
-      return res.status(400).render('auth/signup',{title:'Student signup',error:'Check your college email, name and matching passwords (12–72 characters).'});
+      return res.status(400).render('auth/signup',{title:'Sign Up',error:'Check your college email, name and matching passwords (12–72 characters).'});
     const studentId=email.split('.')[0];
     const found=await User.findByEmail(email);
     if(found) return res.status(200).render('auth/message',{title:'Check your email',message:SIGNUP_GENERIC_MESSAGE});
